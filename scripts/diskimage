@@ -34,20 +34,22 @@ hdid tmp.dmg
 cd $BASEPATH
 sudo cp -a polymake.app /Volumes/polybundle/
 chmod u-w /Volumes/polybundle/polymake.app/Contents/Resources/polymake/lib/polymake/lib/*.bundle 
-sudo cp -a ../tarballs /Volumes/polybundle/
-sudo cp -a ../scripts /Volumes/polybundle/
+mkdir /Volumes/polymake/src
+sudo cp -a ../tarballs /Volumes/polybundle/src
+sudo cp -a ../scripts /Volumes/polybundle/src
+cp ../Makefile /Volumes/polybundle/src/
+cp ../install.sh /Volumes/polybundle/src/
+cp ../fix_lc_load_dylib.sh /Volumes/polybundle/src/
+cp ../fix_libname.sh /Volumes/polybundle/src/
+cp ../build.sh /Volumes/polybundle/src/
+
 cp ../scripts/README.pdf /Volumes/polybundle/
-cp ../Makefile /Volumes/polybundle/scripts/
-cp ../install.sh /Volumes/polybundle/scripts/
-cp ../fix_lc_load_dylib.sh /Volumes/polybundle/scripts/
-cp ../fix_libname.sh /Volumes/polybundle/scripts/
-cp ../build.sh /Volumes/polybundle/scripts/
 
 cd $BASEPATH
 sync
 sleep 30
 
-@./scripts/custom_dmg
+#@./scripts/custom_dmg
 
 hdiutil eject $MYDEV
 hdiutil convert -format UDZO tmp.dmg -o polybundle.dmg && rm tmp.dmg

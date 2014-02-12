@@ -1,5 +1,5 @@
 
-# this Makefile is for 10.8 only
+# this Makefile is for OS X 10.8 or 10.9
 # includes compilation of a proper gcc
 
 ### change into the base directory
