@@ -17,7 +17,7 @@ KB=$((psize+ssize))
 KB=$((KB+rsize)) 
 KB=$((KB+tsize)) 
 # account for overhead
-KB=$((KB*12/10)) 
+KB=$((KB*14/10)) 
 
 echo "creating a disk image of size $KB..."
 hdiutil create -size ${KB}k tmp.dmg -layout NONE 
@@ -49,7 +49,7 @@ cd $BASEPATH
 sync
 sleep 30
 
-#@./scripts/custom_dmg
+@./custom_dmg
 
 hdiutil eject $MYDEV
 hdiutil convert -format UDZO tmp.dmg -o polybundle.dmg && rm tmp.dmg
