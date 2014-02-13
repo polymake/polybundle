@@ -4,8 +4,19 @@ dir=$(cd "$(dirname "$0")"; pwd)
 ResourcesDir="$dir/../Resources/"
 perlversion=`perl --version | grep -o "5[.][0-9]*[.][0-9]"`
 
-a="abcd"
-b="abc"
+if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then 
+   echo "=========================================================================="
+   echo "your perl version does not match the perl version this app was built for";
+   echo "please download and install the version of polymake that corresponds"
+   echo "to the version of your system perl"
+   echo "You can find the version number by executing"
+   echo "perl --version" 
+   echo "in a terminal."
+   echo "If there is no version of the polymake app matching your perl version"
+   echo "please contact us at "forum.polymake.org"
+   echo "=========================================================================="
+   exit
+fi;
 
 if [ -f ${HOME}/.polymake-macbundle/customize.pl ]; then
   base=`grep -m 1 "polymake.app/Contents/MacOS" ${HOME}/.polymake-macbundle/customize.pl` 
