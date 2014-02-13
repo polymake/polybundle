@@ -13,7 +13,7 @@ if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then
    echo "perl --version" 
    echo "in a terminal."
    echo "If there is no version of the polymake app matching your perl version"
-   echo "please contact us at "forum.polymake.org"
+   echo "please contact us at http://forum.polymake.org"
    echo "=========================================================================="
    exit
 fi;
