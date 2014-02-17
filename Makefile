@@ -23,7 +23,7 @@ CXX :=$(PREFIX)/bin/g++
 CFLAGS="  -m64 -mtune=generic"
 CXXFLAGS="  -m64 -mtune=generic"
 
-.PHONY: all skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable xsexternal_error
+.PHONY: all skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable xsexternal_error finalize
 
 ### default target
 all : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg  
@@ -303,6 +303,10 @@ clean-install :
 dmg : 
 	@echo "creating a disk image needs administrator rights. You will be asked for your password..."
 	@./scripts/diskimage
+
+finalize : 
+	@./scripts/finish-diskimage
+
 
 clean : 
 	@rm -rf polymake.app

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# change into the base directory
+BASEPATH=$( (cd -P $(dirname $0) && pwd) )
+BASEPATH=${BASEPATH%scripts}/dmg
+
+
+cd $BASEPATH
+
+hdiutil convert -format UDZO tmp.dmg -o polybundle.dmg && rm tmp.dmg
+
+cd ..
+mv dmg/polybundle.dmg .
+rm -rf dmg

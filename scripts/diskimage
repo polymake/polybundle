@@ -49,11 +49,13 @@ cd $BASEPATH
 sync
 sleep 30
 
-@./custom_dmg
+#@./custom_dmg
 
 hdiutil eject $MYDEV
-hdiutil convert -format UDZO tmp.dmg -o polybundle.dmg && rm tmp.dmg
+echo "Now you can customize the diskimage at tmp/tmp.dmg by setting icons and background image etc. Run 'make finalize' afterwards."
 
-cd ..
-mv dmg/polybundle.dmg .
-rm -rf dmg
+#hdiutil convert -format UDZO tmp.dmg -o polybundle.dmg && rm tmp.dmg
+
+#cd ..
+#mv dmg/polybundle.dmg .
+#rm -rf dmg
