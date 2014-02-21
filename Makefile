@@ -35,10 +35,15 @@ skeleton :
 	@mkdir -p polymake.app/Contents/Resources
 	@mkdir -p polymake.app/Contents/MacOS
 
+
 	@cd scripts; $(SED) 's/REPLACE_PERLVERSION/${PERLVERSION}/' polymake.start > polymake.start.tmp; 
+	@cd scripts; $(SED) 's/REPLACE_PERLVERSION/${PERLVERSION}/' polymake.debug > polymake.debug.tmp; 
 	@install -m 550 scripts/polymake polymake.app/Contents/MacOS/
 	@install -m 550 scripts/polymake.start.tmp polymake.app/Contents/MacOS/polymake.start
+	@install -m 550 scripts/polymake.debug.tmp polymake.app/Contents/MacOS/polymake.debug
+	@install -m 550 scripts/debug.commands polymake.app/Contents/Resources/
 	@cd scripts; rm polymake.start.tmp;
+	@cd scripts; rm polymake.debug.tmp;
 
 	@cp scripts/Info.plist polymake.app/Contents/
 	@cp scripts/*.icns polymake.app/Contents/Resources/

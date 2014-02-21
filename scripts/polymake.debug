@@ -4,6 +4,9 @@ dir=$(cd "$(dirname "$0")"; pwd)
 ResourcesDir="$dir/../Resources/"
 perlversion=`perl --version | grep -o "5[.][0-9]*[.][0-9]"`
 
+COMMAND=""
+[[ "$1" == "-c" ]] && COMMAND="--script $ResourcesDir/debug.commands"
+
 if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then 
    echo "=========================================================================="
    echo "your perl version does not match the perl version this app was built for";
@@ -117,4 +120,4 @@ echo "-----------------" >>$LOGFILE
 
 
 # start polymake
-$ResourcesDir/polymake/bin/polymake  -ddd 2>> $LOGFILE
+$ResourcesDir/polymake/bin/polymake  -ddd $COMMAND 2>> $LOGFILE
