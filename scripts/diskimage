@@ -45,6 +45,8 @@ cp ../build.sh /Volumes/polybundle/src/
 
 cp ../scripts/README.pdf /Volumes/polybundle/
 
+ln -s /Applications/ /Volumes/polybundle/.
+
 cd $BASEPATH
 sync
 sleep 30
