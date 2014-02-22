@@ -88,6 +88,19 @@ g++ --version  >>$LOGFILE
 echo "---------------" >>$LOGFILE
 
 echo >>$LOGFILE
+echo "developer dir" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+xcode-select -p >>$LOGFILE
+DEVDIR=`xcode-select -p`
+echo "---------------" >>$LOGFILE
+
+echo >>$LOGFILE
+echo "contents of developer dir" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+ls $DEVDIR/usr/bin  >>$LOGFILE
+echo "---------------" >>$LOGFILE
+
+echo >>$LOGFILE
 echo "Perl includes" >>$LOGFILE
 echo "-----------------" >>$LOGFILE
 perl -e 'print join "\n", @INC' >>$LOGFILE
