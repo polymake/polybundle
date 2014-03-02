@@ -137,8 +137,9 @@ boost :
 	@rm -rf polymake.app/Contents/Resources/include/boost_1_47_0/libs
 
 
+### fix the snapshot we use: This is necessary as we apply patches obtained from latest trunk. This will fail for newer snapshots
 polymake-prepare : 
-	@cd $(TMP); mkdir -p polymake-beta; cd polymake-beta; svn checkout --username "guest" --password "" http://polymake.mathematik.tu-darmstadt.de/svn/polymake/snapshots/latest/ .
+	@cd $(TMP); mkdir -p polymake-beta; cd polymake-beta; svn checkout --username "guest" --password "" http://polymake.mathematik.tu-darmstadt.de/svn/polymake/snapshots/20131128/ .
 	@cd $(TMP)/polymake-beta/trunk; patch -p0 < ../../../scripts/java_configure_pl-patch
 	@cd $(TMP)/polymake-beta/trunk; patch -p0 < ../../../scripts/libnormaliz_configure_pl-patch
 	@cd $(TMP)/polymake-beta/trunk; PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/:${PERL5LIB} ./configure  --without-fink --with-readline=$(PREFIX)/lib --prefix=$(PREFIX)/polymake --with-jni-headers=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers --with-boost=$(PREFIX)/include/boost_1_47_0/ --with-gmp=$(PREFIX)/ --with-mpfr=$(PREFIX)/ --with-ant=$(PREFIX)/apache-ant-1.9.3/bin/ant PERL=$(PERL) CXXFLAGS="-I$(PREFIX)/include" LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" CFLAGS=" -m64 -mtune=generic"
