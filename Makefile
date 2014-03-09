@@ -23,10 +23,10 @@ CXX :=$(PREFIX)/bin/g++
 CFLAGS="  -m64 -mtune=generic"
 CXXFLAGS="  -m64 -mtune=generic"
 
-.PHONY: all skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable xsexternal_error finalize
+.PHONY: all skeleton boost ppl gcc rpath perl gmp readline mpfr ant singular polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable xsexternal_error finalize
 
 ### default target
-all : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg  
+all : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant singular polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg  
 
 xsexternal_error : polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg
 
@@ -135,23 +135,32 @@ boost :
 	@rm -rf polymake.app/Contents/Resources/include/boost_1_47_0/status
 	@rm -rf polymake.app/Contents/Resources/include/boost_1_47_0/more
 	@rm -rf polymake.app/Contents/Resources/include/boost_1_47_0/libs
-
+	
+singular :
+	@cd $(TMP); mkdir singular
+	@cd $(TMP)/singular; git clone https://github.com/Singular/Sources
+	@cd $(TMP)/singular/Sources; git checkout master
+	@cd $(TMP)/singular/Sources; patch -p0 < ../../../scripts/singular-patch
+	@cd $(TMP)/singular/Sources; CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX)
+	@make -C $(TMP)/singular/Sources install-libsingular
+	@./fix_libname.sh "$(PREFIX)/lib" "libsingular.dylib" 
+	
 
 ### fix the snapshot we use: This is necessary as we apply patches obtained from latest trunk. This will fail for newer snapshots
 polymake-prepare : 
 	@cd $(TMP); mkdir -p polymake-beta; cd polymake-beta; svn checkout --username "guest" --password "" http://polymake.mathematik.tu-darmstadt.de/svn/polymake/snapshots/20131128/ .
-	@cd $(TMP)/polymake-beta/trunk; patch -p0 < ../../../scripts/java_configure_pl-patch
-	@cd $(TMP)/polymake-beta/trunk; patch -p0 < ../../../scripts/libnormaliz_configure_pl-patch
-	@cd $(TMP)/polymake-beta/trunk; PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/:${PERL5LIB} ./configure  --without-fink --with-readline=$(PREFIX)/lib --prefix=$(PREFIX)/polymake --with-jni-headers=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers --with-boost=$(PREFIX)/include/boost_1_47_0/ --with-gmp=$(PREFIX)/ --with-mpfr=$(PREFIX)/ --with-ant=$(PREFIX)/apache-ant-1.9.3/bin/ant PERL=$(PERL) CXXFLAGS="-I$(PREFIX)/include" LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" CFLAGS=" -m64 -mtune=generic"
+	@cd $(TMP)/polymake-beta; patch -p0 < ../../scripts/java_configure_pl-patch
+	@cd $(TMP)/polymake-beta; patch -p0 < ../../scripts/libnormaliz_configure_pl-patch
+	@cd $(TMP)/polymake-beta; PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/:${PERL5LIB} ./configure  --without-fink --with-readline=$(PREFIX)/lib --prefix=$(PREFIX)/polymake --with-jni-headers=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers --with-boost=$(PREFIX)/include/boost_1_47_0/ --with-gmp=$(PREFIX)/ --with-ppl=$(PREFIX)/  --with-mpfr=$(PREFIX)/ --with-ant=$(PREFIX)/apache-ant-1.9.3/bin/ant PERL=$(PERL) --with-singular=$(PREFIX) CXXFLAGS="-I$(PREFIX)/include" LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" CFLAGS=" -m64 -mtune=generic"
 
 polymake-compile :
-	@make -j2 -C $(TMP)/polymake-beta/trunk
+	@make -j2 -C $(TMP)/polymake-beta
 
 polymake-docs :
-	@make -j2 -C $(TMP)/polymake-beta/trunk docs
+	@make -j2 -C $(TMP)/polymake-beta docs
 
 polymake-install : 
-	@make -C $(TMP)/polymake-beta/trunk install
+	@make -C $(TMP)/polymake-beta install
 
 polymake_env_var :
 ### adjust the polymake script to the new paths
