@@ -296,7 +296,7 @@ polymake_rpath :
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/bundled/nauty/lib/graph.bundle
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/bundled/ppl/lib/polytope.bundle
 #leftovers
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libmpfr.4.dylib
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Res			ources/lib" $(PREFIX)/lib/libmpfr.4.dylib
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libppl.13.dylib
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libppl_c.4.dylib
 
@@ -319,8 +319,8 @@ dmg :
 	@echo "creating a disk image needs administrator rights. You will be asked for your password..."
 	@./scripts/diskimage
 
-finalize : 
-	@./scripts/finish-diskimage
+#finalize : 
+#	@./scripts/finish-diskimage
 
 
 clean : 
