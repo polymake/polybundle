@@ -333,10 +333,7 @@ clean :
 	@rm -f README.pdf
 
 doc: 
-	${SED} -E 's/[\]newcommand{[\]macversion}{.*}/\\newcommand{\\macversion}{$(MACVERSION)}/g' $(CURDIR)/scripts/README.tex > $(CURDIR)/scripts/README.tmp
-	@mv $(CURDIR)/scripts/README.tmp $(CURDIR)/scripts/README.tex
 	@cd scripts; pdflatex README
 	@cd scripts; pdflatex README
 	@cd scripts; rm -f README.aux README.log README.out
-#	@mv scripts/README.pdf .
 
