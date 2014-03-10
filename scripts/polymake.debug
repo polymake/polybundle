@@ -16,7 +16,7 @@ if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then
    echo "please download and install the version of polymake that corresponds"
    echo "to the version of your system perl"
    echo "You can find the version number by executing"
-   echo "perl --version" 
+   echo "/usr/bin/perl --version" 
    echo "in a terminal."
    echo "If there is no version of the polymake app matching your perl version"
    echo "please contact us at http://forum.polymake.org"
