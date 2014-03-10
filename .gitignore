@@ -1,3 +1,4 @@
 tarballs
 tmp
 polymake.app
+*.out
