@@ -140,6 +140,8 @@ singular :
 	@cd $(TMP); mkdir singular
 	@cd $(TMP)/singular; git clone https://github.com/Singular/Sources
 	@cd $(TMP)/singular/Sources; git checkout master
+	# we patch a file, so we should fix the revision we use
+	@cd $(TMP)/singular/Sources; git checkout 4ed86341d5d2626ed91cbd40751801c58a8be5ac
 	@cd $(TMP)/singular/Sources; patch -p0 < ../../../scripts/singular-patch
 	@cd $(TMP)/singular/Sources; CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX)
 	@make -C $(TMP)/singular/Sources install-libsingular
