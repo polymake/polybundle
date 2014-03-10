@@ -3,6 +3,10 @@ use application "polytope";
 
 my $s=new Array<SparseMatrix<Float>>(3);
 
+my $h=new HashMap<Array<Int>,Rational>;
+
 my $c=cube(3);
+
 $c->HILBERT_BASIS;
+
 $c->VISUAL;
