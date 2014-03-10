@@ -32,22 +32,29 @@ please contact us.
 
 \section*{System Requirements}
 
-The \polymake package was built and tested on an Intel-based Mac
-running Mac OS X \macversion using the \polymakeversion of
+The \polymake package was built and tested on Intel-based Macs
+running Mac OS X 10.8 and \macversion using the \polymakeversion of
 \polymake. Due to system package dependencies it won't work on Macs
 with \textbf{any} other Mac OS X version or architecture.
 
+Note that there are different packages for different perl versions. Make sure you download the version of the \polymake app that was built for the perl version that corresponds to your system perl. You can find the version number by executing
+\[\texttt{/usr/bin/perl --version}\] in a terminal.
+
+If there is no version of the \polymake app matching your perl version please contact us at \texttt{http://forum.polymake.org}.
+
+\bigskip
 \ifx\macversion\macsix%
 The package requires Apple's \texttt{Xcode}.  You can find this among
 the optional packages on your Mac OS X installation DVD. To install it
 insert the DVD and follow the given instruction.%
 \else%
-The package requires Apple's \texttt{Xcode} and java. The first can be
-obtained in the Appstore (free), at the time of writing java could be
-obtained at \url{http://support.apple.com/kb/DL1421} (otherwise search
-Apple's web pages).
-
-After installing \texttt{XCode} please run \texttt{xcode-select --install} in a terminal to obtain the command line tools of XCode (the C-Compiler).
+The package requires Apple's \texttt{Xcode} and java. When you are working with \polymake, you should be guided through the installation process for both as soon as they are needed. (Click \texttt{Install}; you will an administrator account.)%
+%The first can be
+%obtained in the App Store (free), at the time of writing java could be
+%obtained at \url{http://support.apple.com/kb/DL1421} (otherwise search
+%Apple's web pages).
+%
+%After installing \texttt{XCode} please run \texttt{xcode-select --install} in a terminal to obtain the command line tools of XCode (the C-Compiler).
 \fi%
 
 \section*{Installation}
@@ -93,9 +100,7 @@ closing the terminal.
 
 \polymake puts its customization files into the directory 
 
-\smallskip
-\texttt{.polymake-macbundle/} 
-\smallskip
+\[\texttt{.polymake-macbundle/} \]
 
 in your home directory. The directory is created at the first start of
 \polymake. If you want to reset \polymake to default values then you
@@ -200,9 +205,10 @@ versions of several packages necessary for polymake:
 \item \href{http://search.cpan.org/~hayashi/Term-ReadLine-Gnu-1.20/Gnu.pm}{\texttt{Term-Readline-Gnu 1.20}}
 \item \href{http://search.cpan.org/~shlomif/XML-LibXSLT-1.87/LibXSLT.pm}{\texttt{XML-LibXSLT 1.71}}
 \item \href{http://www.math.uni-rostock.de/~rehn/software/permlib.html}{\texttt{permlib}}
+\item \href{https://github.com/Singular/Sources}{\texttt{Singular}}
 \end{enumerate}
 Also these packages are protected by open source licences compliant to
-the GPL. All sources are either directly contained in the 
+the GPL. The sources for \polymake are available on \href{http://polymake.org/doku.php/perpetualbeta}. With the exception of Singular (which is available on GitHub), all other sources are either directly contained in the 
 polymake distribution or included as compressed tar archives in the
 \texttt{tarballs/} directory of the disk image. Check the
 corresponding COPYING or README files included in the packages for the
