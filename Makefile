@@ -23,7 +23,7 @@ CXX :=$(PREFIX)/bin/g++
 CFLAGS="  -m64 -mtune=generic"
 CXXFLAGS="  -m64 -mtune=generic"
 
-.PHONY: all skeleton boost ppl gcc rpath perl gmp readline mpfr ant singular polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable xsexternal_error finalize
+.PHONY: all skeleton boost ppl gcc rpath perl gmp readline mpfr ant singular polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable xsexternal_error
 
 ### default target
 all : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant singular polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg  
@@ -137,12 +137,14 @@ boost :
 	@rm -rf polymake.app/Contents/Resources/include/boost_1_47_0/libs
 	
 singular :
-	@cd $(TMP); mkdir singular
-	@cd $(TMP)/singular; git clone https://github.com/Singular/Sources
+	@cd $(TMP); mkdir -p singular
+	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/Singular/Sources; fi
 	@cd $(TMP)/singular/Sources; git checkout master
 	# we patch a file, so we should fix the revision we use
 	@cd $(TMP)/singular/Sources; git checkout 4ed86341d5d2626ed91cbd40751801c58a8be5ac
-	@cd $(TMP)/singular/Sources; patch -p0 < ../../../scripts/singular-patch
+	@cd $(TMP)/singular/Sources; ./autogen.sh
+	$(SED) 's@exec_prefix=${prefix}/${ac_cv_singuname}@exec_prefix=${prefix}@g' $(TMP)/singular/Sources/configure
+	#@cd $(TMP)/singular/Sources; patch -p0 < ../../../scripts/singular-patch
 	@cd $(TMP)/singular/Sources; CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX)
 	@make -C $(TMP)/singular/Sources install-libsingular
 	@./fix_libname.sh "$(PREFIX)/lib" "libsingular.dylib" 
