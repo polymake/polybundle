@@ -2,7 +2,10 @@
 
 dir=$(cd "$(dirname "$0")"; pwd)
 ResourcesDir="$dir/../Resources/"
-perlversion=`perl --version | grep -o "5[.][0-9]*[.][0-9]"`
+
+alias perl=/usr/bin/perl
+
+perlversion=`/usr/bin/perl --version | grep -o "5[.][0-9]*[.][0-9]"`
 
 if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then 
    echo "=========================================================================="
