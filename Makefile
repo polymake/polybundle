@@ -142,10 +142,10 @@ singular :
 	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/Singular/Sources; fi
 	@cd $(TMP)/singular/Sources; git checkout master
 	# we patch a file, so we should fix the revision we use
-	@cd $(TMP)/singular/Sources; git checkout 75a95804a920c32ef1483488eebbcb533a7f701a
+	@cd $(TMP)/singular/Sources; git checkout 66ca052753697160d155306764023138cda7cc03
 	@cd $(TMP)/singular/Sources; $(SED) 's|exec_prefix=${prefix}/${ac_cv_singuname}|exec_prefix=${prefix}|g' configure > configure.tmp; mv configure.tmp configure; chmod a+x configure
-	#@cd $(TMP)/singular/Sources; patch -p0 < ../../../scripts/singular-patch
-	@cd $(TMP)/singular/Sources; $(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX)
+	@cd $(TMP)/singular/Sources; patch -p0 < ../../../scripts/singular-patch
+	@cd $(TMP)/singular/Sources; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX)
 	@make -C $(TMP)/singular/Sources install-libsingular
 	@./fix_libname.sh "$(PREFIX)/lib" "libsingular.dylib" 
 	
