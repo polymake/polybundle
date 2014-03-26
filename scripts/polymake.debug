@@ -158,3 +158,4 @@ echo "-----------------" >>$LOGFILE
 
 # start polymake
 $ResourcesDir/polymake/bin/polymake  -ddd $COMMAND 2>> $LOGFILE
+[[ $COMMAND != "" ]] && $ResourcesDir/polymake/bin/polymake  -ddd 'my $x=1' 2>> $LOGFILE

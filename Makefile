@@ -142,19 +142,18 @@ singular :
 	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/Singular/Sources; fi
 	@cd $(TMP)/singular/Sources; git checkout master
 	# we patch a file, so we should fix the revision we use
-	@cd $(TMP)/singular/Sources; git checkout 75a95804a920c32ef1483488eebbcb533a7f701a
+	@cd $(TMP)/singular/Sources; git checkout 66ca052753697160d155306764023138cda7cc03
 	@cd $(TMP)/singular/Sources; $(SED) 's|exec_prefix=${prefix}/${ac_cv_singuname}|exec_prefix=${prefix}|g' configure > configure.tmp; mv configure.tmp configure; chmod a+x configure
-	#@cd $(TMP)/singular/Sources; patch -p0 < ../../../scripts/singular-patch
-	@cd $(TMP)/singular/Sources; $(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX)
+### we must check whether patch has been applied already
+	@cd $(TMP)/singular/Sources; patch -p0 -N --dry-run --silent < ../../../scripts/singular-patch 2>/dev/null; if [ $$? -eq 0 ]; then patch -p0 < ../../../scripts/singular-patch; else echo "configure already patched"; fi
+	@cd $(TMP)/singular/Sources; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX)
 	@make -C $(TMP)/singular/Sources install-libsingular
 	@./fix_libname.sh "$(PREFIX)/lib" "libsingular.dylib" 
 	
 
 ### fix the snapshot we use: This is necessary as we apply patches obtained from latest trunk. This will fail for newer snapshots
 polymake-prepare : 
-	@cd $(TMP); mkdir -p polymake-beta; cd polymake-beta; svn checkout --username "guest" --password "" http://polymake.mathematik.tu-darmstadt.de/svn/polymake/snapshots/20131128/ .
-	@cd $(TMP)/polymake-beta; patch -p0 < ../../scripts/java_configure_pl-patch
-	@cd $(TMP)/polymake-beta; patch -p0 < ../../scripts/libnormaliz_configure_pl-patch
+	@cd $(TMP); mkdir -p polymake-beta; cd polymake-beta; svn checkout --username "guest" --password "" http://polymake.mathematik.tu-darmstadt.de/svn/polymake/snapshots/20140326/ .
 	cd $(TMP)/polymake-beta; LD_LIBRARY_PATH=$(PREFIX)/lib PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ ./configure  --without-fink --with-readline=$(PREFIX)/lib --prefix=$(PREFIX)/polymake --with-jni-headers=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers --with-boost=$(PREFIX)/include/boost_1_47_0/ --with-gmp=$(PREFIX)/ --with-ppl=$(PREFIX)/  --with-mpfr=$(PREFIX)/ --with-ant=$(PREFIX)/apache-ant-1.9.3/bin/ant PERL=$(PERL) --with-singular=$(PREFIX) CXXFLAGS="-I$(PREFIX)/include" LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" CFLAGS=" -m64 -mtune=generic" 
 
 polymake-compile :
