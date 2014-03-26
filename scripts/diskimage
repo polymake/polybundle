@@ -15,28 +15,7 @@ hdiutil mount polybundle.sparseimage
 
 cp -pr ../polymake.app .
 rm -rf polymake.app/Contents/Resources/Bootstrap
-#psize=`du -ks $BASEPATH/polymake.app | awk '{ print $1 }'`
-#tsize=`du -ks $BASEPATH/../tarballs | awk '{ print $1 }'`
-#ssize=`du -ks $BASEPATH/../scripts | awk '{ print $1 }'`
-#rsize=`du -ks $BASEPATH/../scripts/README.pdf | awk '{ print $1 }'`
-#KB=$((psize+ssize)) 
-#KB=$((KB+rsize)) 
-#KB=$((KB+tsize)) 
-## account for overhead
-#KB=$((KB*14/10)) 
 
-#echo "creating a disk image of size $KB..."
-#hdiutil create -size ${KB}k tmp.dmg -layout NONE 
-#MYDEV=`hdid -nomount tmp.dmg` 
-
-#echo "formatting, needs super user rights..."
-
-#sudo newfs_hfs -v polybundle $MYDEV 
-
-#cd $BASEPATH 
-#sync
-#hdiutil eject $MYDEV 
-#hdid tmp.dmg
 cd $BASEPATH
 sudo cp -a polymake.app /Volumes/polybundle/
 chmod u-w /Volumes/polybundle/polymake.app/Contents/Resources/polymake/lib/polymake/lib/*.bundle 
@@ -52,20 +31,9 @@ cp ../template.dmg /Volumes/polybundle/src/
 
 cp ../scripts/README.pdf /Volumes/polybundle/
 
-#ln -s /Applications/ /Volumes/polybundle/.
-
 hdiutil eject /Volumes/polybundle
 
 cd $BASEPATH
-#sync
-#sleep 30
-
-#@./custom_dmg
-
-#hdiutil eject $MYDEV
-#echo "Now you can customize the diskimage at tmp/tmp.dmg by setting icons and background image etc. Run 'make finalize' afterwards."
-
-#hdiutil convert -format UDZO tmp.dmg -o polybundle.dmg && rm tmp.dmg
 
 hdiutil convert polybundle.sparseimage -format UDBZ -o polybundle.dmg
 

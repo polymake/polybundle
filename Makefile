@@ -323,9 +323,6 @@ dmg :
 	@echo "creating a disk image needs administrator rights. You will be asked for your password..."
 	@./scripts/diskimage
 
-#finalize : 
-#	@./scripts/finish-diskimage
-
 
 clean : 
 	@rm -rf polymake.app
