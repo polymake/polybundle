@@ -144,7 +144,8 @@ singular :
 	# we patch a file, so we should fix the revision we use
 	@cd $(TMP)/singular/Sources; git checkout 66ca052753697160d155306764023138cda7cc03
 	@cd $(TMP)/singular/Sources; $(SED) 's|exec_prefix=${prefix}/${ac_cv_singuname}|exec_prefix=${prefix}|g' configure > configure.tmp; mv configure.tmp configure; chmod a+x configure
-	@cd $(TMP)/singular/Sources; patch -p0 < ../../../scripts/singular-patch
+### we must check whether patch has been applied already
+	@cd $(TMP)/singular/Sources; patch -p0 -N --dry-run --silent < ../../../scripts/singular-patch 2>/dev/null; if [ $$? -eq 0 ]; then patch -p0 < ../../../scripts/singular-patch; else echo "configure already patched"; fi
 	@cd $(TMP)/singular/Sources; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX)
 	@make -C $(TMP)/singular/Sources install-libsingular
 	@./fix_libname.sh "$(PREFIX)/lib" "libsingular.dylib" 
