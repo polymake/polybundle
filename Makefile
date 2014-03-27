@@ -144,6 +144,7 @@ singular :
 	# we patch a file, so we should fix the revision we use
 ### apparently checking out a revision does not work, try by date	
 	@cd $(TMP)/singular/Sources; git checkout `git rev-list -n 1 --before="2014-03-25 00:00" master`
+	@cd $(TMP)/singular/Sources; git archive master | bzip2 > ../../../tarballs/singular-github-version-branch-master-20140325.tar.bz2
 	@cd $(TMP)/singular/Sources; $(SED) 's|exec_prefix=${prefix}/${ac_cv_singuname}|exec_prefix=${prefix}|g' configure > configure.tmp; mv configure.tmp configure; chmod a+x configure
 ### we must check whether patch has been applied already
 	@cd $(TMP)/singular/Sources; patch -p0 -N --dry-run --silent < ../../../scripts/singular-patch 2>/dev/null; if [ $$? -eq 0 ]; then patch -p0 < ../../../scripts/singular-patch; else echo "configure already patched"; fi
