@@ -156,6 +156,14 @@ echo "\$perlversion=$perlversion" >>$LOGFILE
 echo "-----------------" >>$LOGFILE
 
 
+echo "\n\n-----------------" >>$LOGFILE
+echo "contents of conf.make" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+cat  $ResourcesDir/polymake/lib/polymake/conf.make >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+
+lib/polymake/conf.make
+
 # start polymake
 $ResourcesDir/polymake/bin/polymake  -ddd $COMMAND 2>> $LOGFILE
 [[ $COMMAND != "" ]] && $ResourcesDir/polymake/bin/polymake  -ddd 'my $x=1' 2>> $LOGFILE
