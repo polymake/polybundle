@@ -157,7 +157,7 @@ singular :
 	
 flint :
 	@cd $(TMP); mkdir -p flint
-	@cd $(TMP)/flint; git clone https://github.com/wbhart/flint2.git .
+	@cd $(TMP)/flint; if [ ! -d .git ]; git clone https://github.com/wbhart/flint2.git .; fi
 	@cd $(TMP)/flint; git archive master | bzip2 > ../../tarballs/flint-github-$(DATE).tar.bz2	
 	@cd $(TMP)/flint; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure  --with-gmp=$(PREFIX)/ --with-mpfr=$(PREFIX)/ --disable-shared --prefix=$(PREFIX)
 	@make -C $(TMP)/flint/
