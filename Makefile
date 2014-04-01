@@ -7,6 +7,7 @@
 SED := "/usr/bin/sed"
 TMP := $(CURDIR)/tmp
 PERL := /usr/bin/perl
+DATE := `date +'%y.%m.%d'`
 
 MACVERSION := $(shell sw_vers | grep -o "10[.][0-9]")
 PERLVERSION := $(shell $(PERL) --version | grep -o "5[.][0-9]*[.][0-9]")
@@ -151,6 +152,31 @@ singular :
 	@cd $(TMP)/singular/Sources; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX)
 	@make -C $(TMP)/singular/Sources install-libsingular
 	@./fix_libname.sh "$(PREFIX)/lib" "libsingular.dylib" 
+	
+flint :
+	@cd $(TMP); mkdir -p flint
+	@cd $(TMP); git clone https://github.com/wbhart/flint2.git
+	@cd $(TMP)/singular/Sources; git archive master | bzip2 > ../../../tarballs/flint-github-$(DATE).tar.bz2	
+	@cd $(TMP)/singular/Sources; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure  --with-gmp=$(PREFIX)/ --with-mpfr=$(PREFIX)/ --disable-shared --prefix=$(PREFIX)
+	@make -C $(TMP)/flint/
+	@make -C $(TMP)/flint/ install
+	
+_4ti2 :
+	@cd $(TMP); mkdir -p 4ti2
+	@tar xvfz tarballs 4ti2-1.6.tar.gz -C $(TMP)
+	@cd $(TMP)/4ti2-1.6; ./configure --prefix=$(PREFIX)
+	@cd $(TMP)/4ti2-1.6; make
+	@cd $(TMP)/4ti2-1.6; make install
+	
+singular4 :
+	@cd $(TMP); mkdir -p singular
+	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/Singular/Sources; fi
+	@cd $(TMP)/singular/Sources; git archive spielwiese | bzip2 > ../../../tarballs/singular-github-version-branch-spielwiese-$(DATE).tar.bz2
+	@cd $(TMP)/singular/Sources; ./autogen.sh
+	@cd $(TMP)/singular/Sources; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX) --with-flint=$(PREFIX) --enable-gfanlib
+	@cd $(TMP)/singular/Sources; make
+	@cd $(TMP)/singular/Sources; make install
+
 	
 
 ### fix the snapshot we use: This is necessary as we apply patches obtained from latest trunk. This will fail for newer snapshots
