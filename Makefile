@@ -182,9 +182,9 @@ singular4 :
 
 ### fix the snapshot we use: This is necessary as we apply patches obtained from latest trunk. This will fail for newer snapshots
 polymake-prepare : 
-	@cd $(TMP); mkdir -p polymake; cd polymake; git clone git@git.polymake.org:polymake .
+	@cd $(TMP); mkdir -p polymake; 
 ### FIXME replace with tag of release version	
-	@cd $(TMP)/polymake; git checkout tags/final_svn_commit; 
+	@cd $(TMP)/polymake;  if [ ! -d .git ]; then git clone git@git.polymake.org:polymake .; git checkout  `git rev-list -n 1 --before="2014-04-01 00:00" master`; fi
 	@cd $(TMP)/polymake; git archive master | bzip2 > ../../tarballs/polymake-2.13.tar.bz2
 	@cd $(TMP)/polymake; LD_LIBRARY_PATH=$(PREFIX)/lib PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ ./configure  --without-fink --with-readline=$(PREFIX)/lib --prefix=$(PREFIX)/polymake --with-jni-headers=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers --with-boost=$(PREFIX)/include/boost_1_47_0/ --with-gmp=$(PREFIX)/ --with-ppl=$(PREFIX)/  --with-mpfr=$(PREFIX)/ --with-ant=$(PREFIX)/apache-ant-1.9.3/bin/ant PERL=$(PERL) --with-singular=$(PREFIX) CXXFLAGS="-I$(PREFIX)/include" LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" CFLAGS=" -m64 -mtune=generic" 
 
