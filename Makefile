@@ -162,11 +162,10 @@ flint :
 	@make -C $(TMP)/flint/ install
 	
 _4ti2 :
-	@cd $(TMP); mkdir -p 4ti2
-	@tar xvfz tarballs 4ti2-1.6.tar.gz -C $(TMP)
-	@cd $(TMP)/4ti2-1.6; ./configure --prefix=$(PREFIX)
-	@cd $(TMP)/4ti2-1.6; make
-	@cd $(TMP)/4ti2-1.6; make install
+	@tar xvfz tarballs/4ti2-1.6.2.tar.gz -C $(TMP)
+	@cd $(TMP)/4ti2-1.6.2; ./configure --prefix=$(PREFIX)
+	@cd $(TMP)/4ti2-1.6.2; make
+	@cd $(TMP)/4ti2-1.6.2; make install
 	
 singular4 :
 	@cd $(TMP); mkdir -p singular
