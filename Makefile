@@ -7,6 +7,7 @@
 SED := "/usr/bin/sed"
 TMP := $(CURDIR)/tmp
 PERL := /usr/bin/perl
+DATE := `date +'%Y-%m-%d'`
 
 MACVERSION := $(shell sw_vers | grep -o "10[.][0-9]")
 PERLVERSION := $(shell $(PERL) --version | grep -o "5[.][0-9]*[.][0-9]")
@@ -24,10 +25,12 @@ CXX :=$(PREFIX)/bin/g++
 CFLAGS="  -m64 -mtune=generic"
 CXXFLAGS="  -m64 -mtune=generic"
 
-.PHONY: all skeleton boost ppl gcc rpath perl gmp readline mpfr ant singular polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable xsexternal_error
+.PHONY: all skeleton boost ppl gcc rpath perl gmp readline mpfr ant singular polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable xsexternal_error flint _4ti2 singular4
 
 ### default target
-all : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant singular polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg  
+all_old : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant singular polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg  
+
+all : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant flint _4ti2 singular4 polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg  
 
 xsexternal_error : polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg
 
@@ -152,20 +155,47 @@ singular :
 	@make -C $(TMP)/singular/Sources install-libsingular
 	@./fix_libname.sh "$(PREFIX)/lib" "libsingular.dylib" 
 	
+flint :
+	@cd $(TMP); mkdir -p flint
+	@cd $(TMP)/flint; if [ ! -d .git ]; git clone https://github.com/wbhart/flint2.git .; fi
+	@cd $(TMP)/flint; git archive master | bzip2 > ../../tarballs/flint-github-$(DATE).tar.bz2	
+	@cd $(TMP)/flint; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure  --with-gmp=$(PREFIX)/ --with-mpfr=$(PREFIX)/ --disable-shared --prefix=$(PREFIX)
+	@make -C $(TMP)/flint/
+	@make -C $(TMP)/flint/ install
+	
+_4ti2 :
+	@tar xvfz tarballs/4ti2-1.6.2.tar.gz -C $(TMP)
+	@cd $(TMP)/4ti2-1.6.2; ./configure --prefix=$(PREFIX)
+	@cd $(TMP)/4ti2-1.6.2; make
+	@cd $(TMP)/4ti2-1.6.2; make install
+	
+singular4 :
+	@cd $(TMP); mkdir -p singular
+	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/Singular/Sources; fi
+	@cd $(TMP)/singular/Sources; git archive spielwiese | bzip2 > ../../../tarballs/singular-github-version-branch-spielwiese-$(DATE).tar.bz2
+	@cd $(TMP)/singular/Sources; ./autogen.sh
+	@cd $(TMP)/singular/Sources; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX) --with-flint=$(PREFIX) --enable-gfanlib --with-gmp=$(PREFIX)
+	@cd $(TMP)/singular/Sources; make
+	@cd $(TMP)/singular/Sources; make install
+
+	
 
 ### fix the snapshot we use: This is necessary as we apply patches obtained from latest trunk. This will fail for newer snapshots
 polymake-prepare : 
-	@cd $(TMP); mkdir -p polymake-beta; cd polymake-beta; svn checkout --username "guest" --password "" http://polymake.mathematik.tu-darmstadt.de/svn/polymake/snapshots/20140326/ .
-	cd $(TMP)/polymake-beta; LD_LIBRARY_PATH=$(PREFIX)/lib PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ ./configure  --without-fink --with-readline=$(PREFIX)/lib --prefix=$(PREFIX)/polymake --with-jni-headers=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers --with-boost=$(PREFIX)/include/boost_1_47_0/ --with-gmp=$(PREFIX)/ --with-ppl=$(PREFIX)/  --with-mpfr=$(PREFIX)/ --with-ant=$(PREFIX)/apache-ant-1.9.3/bin/ant PERL=$(PERL) --with-singular=$(PREFIX) CXXFLAGS="-I$(PREFIX)/include" LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" CFLAGS=" -m64 -mtune=generic" 
+	@cd $(TMP); mkdir -p polymake; 
+### FIXME replace with tag of release version	
+	@cd $(TMP)/polymake;  if [ ! -d .git ]; then git clone git@git.polymake.org:polymake .; git checkout  `git rev-list -n 1 --before="2014-04-01 00:00" master`; fi
+	@cd $(TMP)/polymake; git archive master | bzip2 > ../../tarballs/polymake-2.13.tar.bz2
+	@cd $(TMP)/polymake; LD_LIBRARY_PATH=$(PREFIX)/lib PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ ./configure  --without-fink --with-readline=$(PREFIX)/lib --prefix=$(PREFIX)/polymake --with-jni-headers=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers --with-boost=$(PREFIX)/include/boost_1_47_0/ --with-gmp=$(PREFIX)/ --with-ppl=$(PREFIX)/  --with-mpfr=$(PREFIX)/ --with-ant=$(PREFIX)/apache-ant-1.9.3/bin/ant PERL=$(PERL) --with-singular=$(PREFIX) CXXFLAGS="-I$(PREFIX)/include" LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" CFLAGS=" -m64 -mtune=generic" 
 
 polymake-compile :
-	@make -j2 -C $(TMP)/polymake-beta
+	@make -j2 -C $(TMP)/polymake
 
 polymake-docs :
-	@make -j2 -C $(TMP)/polymake-beta docs
+	@make -j2 -C $(TMP)/polymake docs
 
 polymake-install : 
-	@make -C $(TMP)/polymake-beta install
+	@make -C $(TMP)/polymake install
 
 polymake_env_var :
 ### adjust the polymake script to the new paths

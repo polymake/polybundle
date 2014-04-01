@@ -14,7 +14,6 @@ hdiutil mount polybundle.sparseimage
 
 
 cp -pr ../polymake.app .
-rm -rf polymake.app/Contents/Resources/Bootstrap
 
 cd $BASEPATH
 sudo cp -a polymake.app /Volumes/polybundle/
