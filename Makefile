@@ -7,7 +7,7 @@
 SED := "/usr/bin/sed"
 TMP := $(CURDIR)/tmp
 PERL := /usr/bin/perl
-DATE := `date +'%y.%m.%d'`
+DATE := `date +'%Y-%m-%d'`
 
 MACVERSION := $(shell sw_vers | grep -o "10[.][0-9]")
 PERLVERSION := $(shell $(PERL) --version | grep -o "5[.][0-9]*[.][0-9]")
@@ -155,9 +155,9 @@ singular :
 	
 flint :
 	@cd $(TMP); mkdir -p flint
-	@cd $(TMP); git clone https://github.com/wbhart/flint2.git
-	@cd $(TMP)/singular/Sources; git archive master | bzip2 > ../../../tarballs/flint-github-$(DATE).tar.bz2	
-	@cd $(TMP)/singular/Sources; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure  --with-gmp=$(PREFIX)/ --with-mpfr=$(PREFIX)/ --disable-shared --prefix=$(PREFIX)
+	@cd $(TMP)/flint; git clone https://github.com/wbhart/flint2.git .
+	@cd $(TMP)/flint; git archive master | bzip2 > ../../tarballs/flint-github-$(DATE).tar.bz2	
+	@cd $(TMP)/flint; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure  --with-gmp=$(PREFIX)/ --with-mpfr=$(PREFIX)/ --disable-shared --prefix=$(PREFIX)
 	@make -C $(TMP)/flint/
 	@make -C $(TMP)/flint/ install
 	
