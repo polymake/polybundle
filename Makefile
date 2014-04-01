@@ -25,10 +25,12 @@ CXX :=$(PREFIX)/bin/g++
 CFLAGS="  -m64 -mtune=generic"
 CXXFLAGS="  -m64 -mtune=generic"
 
-.PHONY: all skeleton boost ppl gcc rpath perl gmp readline mpfr ant singular polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable xsexternal_error
+.PHONY: all skeleton boost ppl gcc rpath perl gmp readline mpfr ant singular polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable xsexternal_error flint _4ti2 singular4
 
 ### default target
-all : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant singular polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg  
+all_old : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant singular polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg  
+
+all : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant flint _4ti2 singular4 polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg  
 
 xsexternal_error : polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg
 
@@ -180,20 +182,20 @@ singular4 :
 
 ### fix the snapshot we use: This is necessary as we apply patches obtained from latest trunk. This will fail for newer snapshots
 polymake-prepare : 
-	@cd $(TMP); mkdir -p polymake-beta; cd polymake-beta; git clone git@git.polymake.org:polymake .
+	@cd $(TMP); mkdir -p polymake; cd polymake; git clone git@git.polymake.org:polymake .
 ### FIXME replace with tag of release version	
 	@cd $(TMP)/polymake; git checkout tags/final_svn_commit; 
-	@cd $(TMP)/polymake; git archive master | bzip2 > ../../../tarballs/polymake-2.13.tar.bz2
-	cd $(TMP)/polymake-beta; LD_LIBRARY_PATH=$(PREFIX)/lib PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ ./configure  --without-fink --with-readline=$(PREFIX)/lib --prefix=$(PREFIX)/polymake --with-jni-headers=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers --with-boost=$(PREFIX)/include/boost_1_47_0/ --with-gmp=$(PREFIX)/ --with-ppl=$(PREFIX)/  --with-mpfr=$(PREFIX)/ --with-ant=$(PREFIX)/apache-ant-1.9.3/bin/ant PERL=$(PERL) --with-singular=$(PREFIX) CXXFLAGS="-I$(PREFIX)/include" LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" CFLAGS=" -m64 -mtune=generic" 
+	@cd $(TMP)/polymake; git archive master | bzip2 > ../../tarballs/polymake-2.13.tar.bz2
+	@cd $(TMP)/polymake; LD_LIBRARY_PATH=$(PREFIX)/lib PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ ./configure  --without-fink --with-readline=$(PREFIX)/lib --prefix=$(PREFIX)/polymake --with-jni-headers=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers --with-boost=$(PREFIX)/include/boost_1_47_0/ --with-gmp=$(PREFIX)/ --with-ppl=$(PREFIX)/  --with-mpfr=$(PREFIX)/ --with-ant=$(PREFIX)/apache-ant-1.9.3/bin/ant PERL=$(PERL) --with-singular=$(PREFIX) CXXFLAGS="-I$(PREFIX)/include" LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" CFLAGS=" -m64 -mtune=generic" 
 
 polymake-compile :
-	@make -j2 -C $(TMP)/polymake-beta
+	@make -j2 -C $(TMP)/polymake
 
 polymake-docs :
-	@make -j2 -C $(TMP)/polymake-beta docs
+	@make -j2 -C $(TMP)/polymake docs
 
 polymake-install : 
-	@make -C $(TMP)/polymake-beta install
+	@make -C $(TMP)/polymake install
 
 polymake_env_var :
 ### adjust the polymake script to the new paths
