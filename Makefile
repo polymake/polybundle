@@ -157,8 +157,8 @@ singular :
 	
 flint :
 	@cd $(TMP); mkdir -p flint
-	@cd $(TMP)/flint; if [ ! -d .git ]; git clone https://github.com/wbhart/flint2.git .; fi
-	@cd $(TMP)/flint; git archive master | bzip2 > ../../tarballs/flint-github-$(DATE).tar.bz2	
+	@cd $(TMP)/flint; if [ ! -d .git ]; then git clone https://github.com/wbhart/flint2.git .; fi
+	@cd $(TMP)/flint; git archive trunk | bzip2 > ../../tarballs/flint-github-$(DATE).tar.bz2	
 	@cd $(TMP)/flint; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure  --with-gmp=$(PREFIX)/ --with-mpfr=$(PREFIX)/ --disable-shared --prefix=$(PREFIX)
 	@make -C $(TMP)/flint/
 	@make -C $(TMP)/flint/ install
@@ -182,7 +182,7 @@ singular4 :
 polymake-prepare : 
 	@cd $(TMP); mkdir -p polymake; 
 	@cd $(TMP)/polymake;  if [ ! -d .git ]; then git clone https://github.com/polymake/polymake.git .; fi
-	@cd $(TMP)/polymake; git archive master | bzip2 > ../../tarballs/polymake-2.13.tar.bz2
+	@cd $(TMP)/polymake; git archive Releases | bzip2 > ../../tarballs/polymake-2.13.tar.bz2
 	@cd $(TMP)/polymake; LD_LIBRARY_PATH=$(PREFIX)/lib PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ ./configure  --without-fink --with-readline=$(PREFIX)/lib --prefix=$(PREFIX)/polymake --with-jni-headers=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers --with-boost=$(PREFIX)/include/boost_1_47_0/ --with-gmp=$(PREFIX)/ --with-ppl=$(PREFIX)/  --with-mpfr=$(PREFIX)/ --with-ant=$(PREFIX)/apache-ant-1.9.3/bin/ant PERL=$(PERL) --with-singular=$(PREFIX) CXXFLAGS="-I$(PREFIX)/include" LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" CFLAGS=" -m64 -mtune=generic" 
 
 polymake-compile :
