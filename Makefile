@@ -84,7 +84,8 @@ mpfr_install :
 mpfr_name :
 	@echo "fixing names in mpfr"
 	@./fix_libname.sh "$(PREFIX)/lib" "libmpfr.4.dylib" 
-	
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libmpfr.4.dylib
+		
 mpfr : mpfr_install mpfr_name
 
 ppl_build : 
@@ -98,11 +99,13 @@ ppl_install :
 
 ppl_name :
 	@echo "fixing names in ppl"
-#	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libppl.13.dylib" "libppl_c.4.dylib"
-#	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libppl_c.4.dylib" "libppl.13.dylib"
-##############
-#	@./fix_libname.sh "$(PREFIX)/lib" "libppl_c.4.dylib" 
-#	@./fix_libname.sh "$(PREFIX)/lib" "libppl.13.dylib" 
+	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libppl.13.dylib" "libppl_c.4.dylib"
+	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libppl_c.4.dylib" "libppl.13.dylib"
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libppl_c.4.dylib
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libppl.13.dylib
+	##############
+	@./fix_libname.sh "$(PREFIX)/lib" "libppl_c.4.dylib" 
+	@./fix_libname.sh "$(PREFIX)/lib" "libppl.13.dylib" 
 	@./fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl-config" "libppl.13.dylib"
 	@./fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl_pips" "libppl.13.dylib"
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ppl-config
@@ -212,20 +215,20 @@ singularfournames :
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ESingular
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/TSingular
 ### libs
-	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.0.dylib" "libSingular-4.0.0.dylib"
+	@./fix_libname.sh "$(PREFIX)/lib" "libSingular-4.0.0.dylib"	
+	@./fix_libname.sh "$(PREFIX)/lib" "libfactory-4.0.0.dylib"
+	@./fix_libname.sh "$(PREFIX)/lib" "libomalloc-0.9.6.dylib"
+	@./fix_libname.sh "$(PREFIX)/lib" "libpolys-4.0.0.dylib"
+	@./fix_libname.sh "$(PREFIX)/lib" "libresources-4.0.0.dylib"
 	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.0.dylib" "libresources-4.0.0.dylib"
 	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.0.dylib" "libomalloc-0.9.6.dylib" 
 	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.0.dylib" "libfactory-4.0.0.dylib"
 	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.0.dylib" "libpolys-4.0.0.dylib"
 	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.0.dylib" "libresources-4.0.0.dylib"
 	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.0.dylib" "libomalloc-0.9.6.dylib"
-	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.0.dylib" "libfactory-4.0.0.dylib"
-	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libomalloc-0.9.6.dylib" "libomalloc-0.9.6.dylib"
-	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.0.dylib" "libpolys-4.0.0.dylib"
 	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.0.dylib" "libresources-4.0.0.dylib"
 	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.0.dylib" "libomalloc-0.9.6.dylib"
 	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.0.dylib" "libfactory-4.0.0.dylib"
-	@./fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libresources-4.0.0.dylib" "libresources-4.0.0.dylib"
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libSingular-4.0.0.dylib
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libfactory-4.0.0.dylib
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libomalloc-0.9.6.dylib
