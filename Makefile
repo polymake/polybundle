@@ -178,13 +178,10 @@ singular4 :
 	@cd $(TMP)/singular/Sources; make
 	@cd $(TMP)/singular/Sources; make install
 
-	
 
-### fix the snapshot we use: This is necessary as we apply patches obtained from latest trunk. This will fail for newer snapshots
 polymake-prepare : 
 	@cd $(TMP); mkdir -p polymake; 
-### FIXME replace with tag of release version	
-	@cd $(TMP)/polymake;  if [ ! -d .git ]; then git clone git@git.polymake.org:polymake .; git checkout  `git rev-list -n 1 --before="2014-04-01 00:00" master`; fi
+	@cd $(TMP)/polymake;  if [ ! -d .git ]; then git clone https://github.com/polymake/polymake.git .; fi
 	@cd $(TMP)/polymake; git archive master | bzip2 > ../../tarballs/polymake-2.13.tar.bz2
 	@cd $(TMP)/polymake; LD_LIBRARY_PATH=$(PREFIX)/lib PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ ./configure  --without-fink --with-readline=$(PREFIX)/lib --prefix=$(PREFIX)/polymake --with-jni-headers=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers --with-boost=$(PREFIX)/include/boost_1_47_0/ --with-gmp=$(PREFIX)/ --with-ppl=$(PREFIX)/  --with-mpfr=$(PREFIX)/ --with-ant=$(PREFIX)/apache-ant-1.9.3/bin/ant PERL=$(PERL) --with-singular=$(PREFIX) CXXFLAGS="-I$(PREFIX)/include" LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" CFLAGS=" -m64 -mtune=generic" 
 
@@ -268,10 +265,10 @@ polymake_env_var :
 polymake_name :
 	@chmod u+w $(PREFIX)/polymake/lib/libpolymake.dylib
 	@chmod u+w $(PREFIX)/polymake/lib/libpolymake-apps.dylib
-	@chmod u+w $(PREFIX)/polymake/lib/libpolymake-apps.2.12.dylib
+	@chmod u+w $(PREFIX)/polymake/lib/libpolymake-apps.2.13.dylib
 	@install_name_tool -id "@rpath/../polymake/lib/libpolymake.dylib" $(PREFIX)/polymake/lib/libpolymake.dylib
 	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.dylib
-	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.2.12.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.2.12.dylib
+	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.2.13.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.2.13.dylib
 #########	
 	@chmod u+w $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/Gnu.bundle; install_name_tool -change "$(PREFIX)/lib/libreadline.6.2.dylib" "@rpath/libreadline.6.2.dylib" $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/Gnu.bundle
 	@chmod u+w $(PREFIX)/polymake/lib/polymake/lib/*.bundle 
