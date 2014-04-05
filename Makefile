@@ -191,7 +191,7 @@ singularfour :
 	@echo "building singular 4"
 	@cd $(TMP); mkdir -p singular
 	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/Singular/Sources; fi
-	@cd $(TMP)/singular/; git archive spielwiese | bzip2 > ../../tarballs/singular-github-version-branch-spielwiese-$(DATE).tar.bz2
+	@cd $(TMP)/singular/Sources; git archive spielwiese | bzip2 > ../../../tarballs/singular-github-version-branch-spielwiese-$(DATE).tar.bz2
 	@cd $(TMP)/singular/Sources; ./autogen.sh
 	@cd $(TMP)/singular/Sources; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX) --with-flint=$(PREFIX) --enable-gfanlib --with-gmp=$(PREFIX)
 	@cd $(TMP)/singular/Sources; make
