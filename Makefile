@@ -51,6 +51,8 @@ skeleton :
 	@cd scripts; rm polymake.start.tmp;
 	@cd scripts; rm polymake.debug.tmp;
 
+	@install -m 550 scripts/Singular polymake.app/Contents/MacOS/
+
 	@cp scripts/Info.plist polymake.app/Contents/
 	@cp scripts/*.icns polymake.app/Contents/Resources/
 

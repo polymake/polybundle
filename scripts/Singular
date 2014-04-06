@@ -1,0 +1,15 @@
+#!/bin/bash
+
+dir=$(cd "$(dirname "$0")"; pwd)
+ResourcesDir="$dir/../Resources/"
+
+export PATH=$PATH:${ResourcesDir}/bin
+export LD_LIBRARY_PATH=$ResourcesDir/lib:$LD_LIBRARY_PATH
+export CPLUS_INCLUDE_PATH=$ResourcesDir/include/
+export CFLAGS=-I$ResourcesDir/include/
+export CPPFLAGS=-I$ResourcesDir/include/
+
+dir=$(cd "$(dirname "$0")"; pwd)
+
+# start Singular
+$ResourcesDir/bin/Singular
