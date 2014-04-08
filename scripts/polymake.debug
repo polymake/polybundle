@@ -21,7 +21,6 @@ if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then
    echo "If there is no version of the polymake app matching your perl version"
    echo "please contact us at http://forum.polymake.org"
    echo "=========================================================================="
-   exit
 fi;
 
 if [ -f ${HOME}/.polymake-macbundle/customize.pl ]; then
