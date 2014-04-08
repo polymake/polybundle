@@ -10,47 +10,11 @@ perlversion=`/usr/bin/perl --version | grep -o "5[.][0-9]*[.][0-9]"`
 COMMAND=""
 [[ "$1" == "-c" ]] && COMMAND="--script $ResourcesDir/debug.commands"
 
-if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then 
-   echo "=========================================================================="
-   echo "your perl version does not match the perl version this app was built for";
-   echo "please download and install the version of polymake that corresponds"
-   echo "to the version of your system perl"
-   echo "You can find the version number by executing"
-   echo "/usr/bin/perl --version" 
-   echo "in a terminal."
-   echo "If there is no version of the polymake app matching your perl version"
-   echo "please contact us at http://forum.polymake.org"
-   echo "=========================================================================="
-   exit
-fi;
-
-if [ -f ${HOME}/.polymake-macbundle/customize.pl ]; then
-  base=`grep -m 1 "polymake.app/Contents/MacOS" ${HOME}/.polymake-macbundle/customize.pl` 
-  if [[ ! -z "$base" ]] && [[ ! $base =~ $ResourcesDir ]]; then
-    echo "========================================================================="
-    echo "Your polymake customization files in"
-    echo
-    echo "${HOME}/.polymake-macbundle"
-    echo
-    echo "correspond to a different installation of polymake"
-    echo "(or you have moved your installation to a different location on your Mac)"
-    echo "if you continue then all files in this directory will be reset to default values".
-    echo "If you have imported extensions into polymake then you have to reset those"
-    echo " prior to starting polymake, "
-    echo "similarly, if you want to save some of your previous settings you should abort now"
-    echo "(see the README.pdf that came with the bundle if you need help)"
-    echo "otherwise you can continue now"
-    read -p "[a]bort or [c]ontinue? "
-   [ "$REPLY" == "c" ] || exit
-   rm -rf "${HOME}/.polymake-macbundle"
-  fi
-fi
-
 # the user might have a 32bit version of fink which conflicts with 64bit polymake, so
 unset VERSIONER_PERL_PREFER_32_BIT
 
 export PATH=$PATH:${ResourcesDir}/bin
-export POLYMAKE_USER_DIR="${HOME}/.polymake-macbundle"
+export POLYMAKE_USER_DIR="${HOME}/.polymake-macbundle-debug"
 export POLYMAKE_BASE_PATH=$ResourcesDir/polymake
 export LD_LIBRARY_PATH=$ResourcesDir/lib:$ResourcesDir/include/boost_1_47_0/:$LD_LIBRARY_PATH
 export CPLUS_INCLUDE_PATH=$ResourcesDir/include/
