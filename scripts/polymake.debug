@@ -41,7 +41,7 @@ perl --version >>$LOGFILE
 echo "---------------" >>$LOGFILE
 echo "perl path: " >>$LOGFILE
 which perl >> $LOGFILE
-echo "perl version test:"
+echo "perl version test:" >> $LOGFILE
 echo "testing for perl version: REPLACE_PERLVERSION" >> $LOGFILE
 echo "result is: " >> $LOGFILE
 perlversion=`/usr/bin/perl --version | grep -o "5[.][0-9]*[.][0-9]"`; if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then echo "version is not correct"; else echo "version is correct"; fi >> $LOGFILE
@@ -63,7 +63,7 @@ echo "---------------" >>$LOGFILE
 echo >>$LOGFILE
 echo "clang version" >>$LOGFILE
 echo "-----------------" >>$LOGFILE
-g++ --version  >>$LOGFILE
+g++ --version  >> $LOGFILE 2>&1
 echo "---------------" >>$LOGFILE
 
 echo >>$LOGFILE
@@ -129,8 +129,6 @@ echo "contents of conf.make" >>$LOGFILE
 echo "-----------------" >>$LOGFILE
 cat  $ResourcesDir/polymake/lib/polymake/conf.make >>$LOGFILE
 echo "-----------------" >>$LOGFILE
-
-lib/polymake/conf.make
 
 # start polymake
 $ResourcesDir/polymake/bin/polymake  -ddd $COMMAND 2>> $LOGFILE
