@@ -41,6 +41,10 @@ perl --version >>$LOGFILE
 echo "---------------" >>$LOGFILE
 echo "perl path: " >>$LOGFILE
 which perl >> $LOGFILE
+echo "perl version test:"
+echo "testing for perl version: REPLACE_PERLVERSION" >> $LOGFILE
+echo "result is: " >> $LOGFILE
+perlversion=`/usr/bin/perl --version | grep -o "5[.][0-9]*[.][0-9]"`; if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then echo "version is not correct"; else echo "version is correct"; fi >> $LOGFILE
 echo "---------------" >>$LOGFILE
 
 echo >>$LOGFILE
