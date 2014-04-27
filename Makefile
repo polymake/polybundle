@@ -38,10 +38,11 @@ xsexternal_error : polymake-compile polymake-install polymake_env_var polymake_n
 # get all sources not obtained form github
 # rebuilds the src-directory, except for flint and singular, which are obtained from github in their specific targets below
 fetch_sources :
+	@mkdir -p src
 	@cd src; curl -O http://artfiles.org/apache.org//ant/binaries/apache-ant-1.9.3-bin.tar.bz2
 	@cd src; curl -O http://www.4ti2.de/version_1.6.2/4ti2-1.6.2.tar.gz
-	@cd src; curl -O http://search.cpan.org/CPAN/authors/id/H/HA/HAYASHI/Term-ReadLine-Gnu-1.24.tar.gz
-	@cd src; curl -O http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/XML-LibXSLT-1.92.tar.gz
+	@cd src; curl -O -L http://search.cpan.org/CPAN/authors/id/H/HA/HAYASHI/Term-ReadLine-Gnu-1.24.tar.gz
+	@cd src; curl -O -L http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/XML-LibXSLT-1.92.tar.gz
 	@cd src; curl -O -L http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2
 	@cd src; curl -O https://gmplib.org/download/gmp/gmp-6.0.0a.tar.bz2
 	@cd src; curl -O http://www.mpfr.org/mpfr-current/mpfr-3.1.2.tar.bz2
