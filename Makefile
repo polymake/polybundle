@@ -72,12 +72,12 @@ skeleton :
 
 gmp_build :
 	@echo "building gmp"
-	@./build_scripts/build.sh gmp-6.0.0a "$(TMP)" build \
+	@./build_scripts/build.sh gmp-6.0.0a gmp-6.0.0 "$(TMP)" build \
 	--prefix=$(PREFIX) --enable-cxx=yes
 
 gmp_install :
 	@echo "installing gmp"
-	@./build_scripts/install.sh gmp-5.1.3 "$(TMP)" build
+	@./build_scripts/install.sh gmp-6.0.0 "$(TMP)" build
 	
 gmp_name :
 		@echo "fixing names in gmp"
@@ -90,7 +90,7 @@ gmp : gmp_install gmp_name
  
 mpfr_build : 
 	@echo "building mpfg"
-	@./build_scripts/build.sh mpfr-3.1.2 "$(TMP)" build \
+	@./build_scripts/build.sh mpfr-3.1.2 mpfr-3.1.2 "$(TMP)" build \
 	--prefix=$(PREFIX) --with-gmp=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib"
 
 mpfr_install : 
@@ -106,7 +106,7 @@ mpfr : mpfr_install mpfr_name
 
 ppl_build : 
 	@echo "building ppl"
-	@./build_scripts/build.sh ppl-1.1 "$(TMP)" build \
+	@./build_scripts/build.sh ppl-1.1 ppl-1.1 "$(TMP)" build \
 	  --prefix=$(PREFIX) --with-gmp=$(PREFIX) --with-mpfr=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib"
 
 ppl_install : 
