@@ -1,0 +1,135 @@
+#!/bin/bash
+
+dir=$(cd "$(dirname "$0")"; pwd)
+ResourcesDir="$dir/../Resources/"
+
+alias perl=/usr/bin/perl
+
+perlversion=`/usr/bin/perl --version | grep -o "5[.][0-9]*[.][0-9]"`
+
+COMMAND=""
+[[ "$1" == "-c" ]] && COMMAND="--script $ResourcesDir/debug.commands"
+
+# the user might have a 32bit version of fink which conflicts with 64bit polymake, so
+unset VERSIONER_PERL_PREFER_32_BIT
+
+export PATH=$PATH:${ResourcesDir}/bin
+export POLYMAKE_USER_DIR="${HOME}/.polymake-macbundle-debug"
+export POLYMAKE_BASE_PATH=$ResourcesDir/polymake
+export LD_LIBRARY_PATH=$ResourcesDir/lib:$ResourcesDir/include/boost_1_47_0/:$LD_LIBRARY_PATH
+export CPLUS_INCLUDE_PATH=$ResourcesDir/include/
+export CFLAGS=-I$ResourcesDir/include/
+export CPPFLAGS=-I$ResourcesDir/include/
+export PERL5LIB=$ResourcesDir/lib/perl5/site_perl/REPLACE_PERLVERSION/darwin-thread-multi-2level/:$ResourcesDir/polymake/lib/polymake/lib/:$ResourcesDir/lib/perl5/:$ResourcesDir/polymake/lib/polymake/perlx/:$ResourcesDir/polymake/share/polymake/perllib/:$PERL5LIB
+
+# seems necessary, why?
+dir=$(cd "$(dirname "$0")"; pwd)
+
+g=`date "+%Y%m%d-%H%M%S"`; 
+LOGFILE=$HOME/poly.log.$g
+touch $LOGFILE
+
+echo "Mac OS version" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+sw_vers >>$LOGFILE
+echo "---------------" >>$LOGFILE
+
+echo >>$LOGFILE
+echo "Perl version in PATH" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+perl --version >>$LOGFILE
+echo "---------------" >>$LOGFILE
+echo "perl path: " >>$LOGFILE
+which perl >> $LOGFILE
+echo "perl version test:" >> $LOGFILE
+echo "testing for perl version: REPLACE_PERLVERSION" >> $LOGFILE
+echo "result is: " >> $LOGFILE
+perlversion=`/usr/bin/perl --version | grep -o "5[.][0-9]*[.][0-9]"`; if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then echo "version is not correct"; else echo "version is correct"; fi >> $LOGFILE
+echo "---------------" >>$LOGFILE
+
+echo >>$LOGFILE
+echo "system Perl version" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+/usr/bin/perl --version >>$LOGFILE
+echo "---------------" >>$LOGFILE
+
+echo >>$LOGFILE
+echo "XCode version" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+plutil -p $HOME/Library/Preferences/com.apple.dt.Xcode.plist | grep "LaunchServicesItem" >>$LOGFILE
+echo "---------------" >>$LOGFILE
+
+
+echo >>$LOGFILE
+echo "clang version" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+g++ --version  >> $LOGFILE 2>&1
+echo "---------------" >>$LOGFILE
+
+echo >>$LOGFILE
+echo "developer dir" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+xcode-select -p >>$LOGFILE
+DEVDIR=`xcode-select -p`
+echo "---------------" >>$LOGFILE
+
+echo >>$LOGFILE
+echo "contents of developer dir" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+ls $DEVDIR/usr/bin  >>$LOGFILE
+echo "---------------" >>$LOGFILE
+
+echo >>$LOGFILE
+echo "Perl includes" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+perl -e 'print join "\n", @INC' >>$LOGFILE
+echo "---------------" >>$LOGFILE
+
+echo >>$LOGFILE
+echo "Perl load path of Term::Readline" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+perl -M'Term::Readline' -e 'print join "\n", %INC' >>$LOGFILE
+echo >>$LOGFILE
+echo "---------------" >>$LOGFILE
+
+echo >>$LOGFILE
+echo "Perl load path of XML::LibXSLT" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+perl -M'XML::LibXSLT' -e 'print join "\n", %INC' >>$LOGFILE
+echo >>$LOGFILE
+echo "---------------" >>$LOGFILE
+
+echo >>$LOGFILE
+echo "environment pathes" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+echo "\$PATH=$PATH" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+echo "\$POLYMAKE_BASE_PATH=$POLYMAKE_BASE_PATH" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+echo "\$LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+echo "\$CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+echo "\$CFLAGS=$CFLAGS" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+echo "\$CFLAGS=$CFLAGS" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+echo "\$PERL5LIB=$PERL5LIB" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+echo "\$dir=$dir" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+echo "\$ResourcesDir=$ResourcesDir" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+echo "\$perlversion=$perlversion" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+
+
+echo "\n\n-----------------" >>$LOGFILE
+echo "contents of conf.make" >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+cat  $ResourcesDir/polymake/lib/polymake/conf.make >>$LOGFILE
+echo "-----------------" >>$LOGFILE
+
+# start polymake
+$ResourcesDir/polymake/bin/polymake  -ddd $COMMAND 2>> $LOGFILE
+[[ $COMMAND != "" ]] && $ResourcesDir/polymake/bin/polymake  -ddd 'my $x=1' 2>> $LOGFILE

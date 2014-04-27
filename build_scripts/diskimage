@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# change into the base directory
+BASEPATH=$( (cd -P $(dirname $0) && pwd) )
+BASEPATH=${BASEPATH%build_scripts}/dmg
+SED="/usr/bin/sed"
+
+mkdir dmg
+cd ${BASEPATH}
+
+hdiutil convert ../build_scripts/template.dmg -format UDSP -o polybundle
+
+hdiutil mount polybundle.sparseimage
+
+
+cp -pr ../polymake.app .
+
+cd $BASEPATH
+sudo cp -a polymake.app /Volumes/polybundle/
+chmod u-w /Volumes/polybundle/polymake.app/Contents/Resources/polymake/lib/polymake/lib/*.bundle 
+#mkdir /Volumes/polybundle/src
+sudo cp -a ../tarballs /Volumes/polybundle/src
+sudo cp -a ../scripts /Volumes/polybundle/src
+cp ../Makefile /Volumes/polybundle/src/
+cp ../install.sh /Volumes/polybundle/src/
+cp ../fix_lc_load_dylib.sh /Volumes/polybundle/src/
+cp ../fix_libname.sh /Volumes/polybundle/src/
+cp ../build.sh /Volumes/polybundle/src/
+cp ../template.dmg /Volumes/polybundle/src/
+
+cp ../scripts/README.pdf /Volumes/polybundle/
+
+hdiutil eject /Volumes/polybundle
+
+cd $BASEPATH
+
+hdiutil convert polybundle.sparseimage -format UDBZ -o polybundle.dmg
+
+cd ..
+mv dmg/polybundle.dmg .
+rm -rf dmg
+
+echo "Now you can set the icon of the dmg. (Open the Info window of polybundle.dmg with Cmd-I and then drag the file scripts/pm-cube.icns onto the icon in the upper left corner of the Info window.)"

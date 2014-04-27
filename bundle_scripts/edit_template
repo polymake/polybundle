@@ -1,0 +1,15 @@
+To edit the template.dmg, proceed as follows.
+
+* Convert the dmg to a sparseimage:
+
+hdiutil convert template.dmg -format UDSP -o polybundle
+
+* Mount.
+
+* Now change everything you want to change (icons, windows size, background, icon positions, ...). Note that you have to copy the background image file to the disk image.
+
+* Eject.
+
+* Convert back:
+
+hdiutil convert polybundle.sparseimage -format UDBZ -o template.dmg

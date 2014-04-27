@@ -1,0 +1,6 @@
+#!/bin/sh
+
+dirtmp=$(cd "$(dirname "$0")"; pwd)
+dir=`echo $dirtmp | awk '{ print $1 }'`
+open -a Terminal $dir/polymake.start
+exit 0

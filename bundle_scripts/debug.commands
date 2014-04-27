@@ -1,0 +1,29 @@
+use application "polytope";
+
+# try some compilations
+my $s=new Array<SparseMatrix<Float>>(3);
+
+my $h=new HashMap<Array<Int>,Rational>;
+
+my $c=cube(3);
+
+# check libnormaliz
+$c->HILBERT_BASIS;
+
+# check jreality
+$c->VISUAL;
+
+# check singular
+use application "ideal";
+
+my $r=new Ring(qw(x y w z));
+
+(my $x,my $y, my $w, my $z)=$r->variables;
+
+my $p= -1* ($x^3) + ($x^2)*$y*$z*$w + $z*$w - $x*$y*$z*$w + ($y^3)*$w; 
+
+my $q= ($x^3) - ($y^4);
+
+my  $j=new Ideal(GENERATORS=>[$p,$q],RING=>$r);
+
+$j->DIM;
