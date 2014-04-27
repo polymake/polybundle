@@ -18,17 +18,11 @@ cp -pr ../polymake.app .
 cd $BASEPATH
 sudo cp -a polymake.app /Volumes/polybundle/
 chmod u-w /Volumes/polybundle/polymake.app/Contents/Resources/polymake/lib/polymake/lib/*.bundle 
-#mkdir /Volumes/polybundle/src
 sudo cp -a ../tarballs /Volumes/polybundle/src
-sudo cp -a ../scripts /Volumes/polybundle/src
+sudo cp -a ../bundle_scripts /Volumes/polybundle/src
+sudo cp -a ../build_scripts /Volumes/polybundle/src
 cp ../Makefile /Volumes/polybundle/src/
-cp ../install.sh /Volumes/polybundle/src/
-cp ../fix_lc_load_dylib.sh /Volumes/polybundle/src/
-cp ../fix_libname.sh /Volumes/polybundle/src/
-cp ../build.sh /Volumes/polybundle/src/
-cp ../template.dmg /Volumes/polybundle/src/
-
-cp ../scripts/README.pdf /Volumes/polybundle/
+cp ../README.pdf /Volumes/polybundle/
 
 hdiutil eject /Volumes/polybundle
 

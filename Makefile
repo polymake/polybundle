@@ -35,6 +35,7 @@ allold : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build rea
 
 xsexternal_error : polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg
 
+
 ### create the polymake package skeleton
 skeleton : 
 	@echo "creating skeleton"
@@ -425,5 +426,6 @@ doc :
 	@echo "create readme"
 	@cd build_scripts; pdflatex README
 	@cd build_scripts; pdflatex README
+	@cd build_scripts; mv README.pdf ../
 	@cd build_scripts; rm -f README.aux README.log README.out
 
