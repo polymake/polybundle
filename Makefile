@@ -166,8 +166,10 @@ perl :
 	@make -C $(TMP)/XML-LibXSLT-1.92 install
 ### term-readline-gnu
 	@tar xvfz src/Term-ReadLine-Gnu-1.24.tar.gz -C $(TMP)
+### FIXME this is a rather crude hack to add an rpath to rlver, as I don't know how to add an env variable to the call to Makefile.PL in the following line
+	@${SED} -i '' -e "s|Config{cc}|Config{cc} -Wl,-rpath,\$(PREFIX)/lib|g" $(TMP)/Term-ReadLine-Gnu-1.24/Makefile.PL
 ### have to pass ARCHFLAG again?
-	@cd $(TMP)/Term-ReadLine-Gnu-1.24; ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX) CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib" --includedir=$(PREFIX)/include --libdir=$(PREFIX)/lib 
+	@cd $(TMP)/Term-ReadLine-Gnu-1.24;  ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX) --includedir=$(PREFIX)/include --libdir=$(PREFIX)/lib 
 	@make -C $(TMP)/Term-ReadLine-Gnu-1.24
 	@make -C $(TMP)/Term-ReadLine-Gnu-1.24 install 
 
@@ -217,7 +219,9 @@ singularfour :
 	@echo "building singular 4"
 	@cd $(TMP); mkdir -p singular
 	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/Singular/Sources; fi
-	@cd $(TMP)/singular/Sources; git archive spielwiese | bzip2 > ../../../src/singular-github-version-branch-spielwiese-$(DATE).tar.bz2
+### FIXME the current git checkout (April 27, 2014) doesn't compile (GMP flgas missing in some compile command), so we revert to an old one
+	@cd $(TMP)/singular/Sources; git checkout `git rev-list -n 1 --before="2014-03-25 00:00" spielwiese`
+	@cd $(TMP)/singular/Sources; git archive spielwiese | bzip2 > ../../../src/singular-github-version-branch-spielwiese-2014-03-25.tar.bz2
 	@cd $(TMP)/singular/Sources; ./autogen.sh
 	@cd $(TMP)/singular/Sources; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX) --with-flint=$(PREFIX) --enable-gfanlib --with-gmp=$(PREFIX)
 	@cd $(TMP)/singular/Sources; make
