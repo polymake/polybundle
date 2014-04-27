@@ -35,6 +35,20 @@ allold : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build rea
 
 xsexternal_error : polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg
 
+# get all sources not obtained form github
+# rebuilds the src-directory, except for flint and singular, which are obtained from github in their specific targets below
+fetch_sources :
+	@cd src; curl -O http://artfiles.org/apache.org//ant/binaries/apache-ant-1.9.3-bin.tar.bz2
+	@cd src; curl -O http://www.4ti2.de/version_1.6.2/4ti2-1.6.2.tar.gz
+	@cd src; curl -O http://search.cpan.org/CPAN/authors/id/H/HA/HAYASHI/Term-ReadLine-Gnu-1.24.tar.gz
+	@cd src; curl -O http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/XML-LibXSLT-1.92.tar.gz
+	@cd src; curl -O -L http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2
+	@cd src; curl -O https://gmplib.org/download/gmp/gmp-6.0.0a.tar.bz2
+	@cd src; curl -O http://www.mpfr.org/mpfr-current/mpfr-3.1.2.tar.bz2
+	@cd src; curl -O http://www.polymake.org/lib/exe/fetch.php/download/polymake-2.13.tar.bz2
+	@cd src; curl -O http://bugseng.com/products/ppl/download/ftp/releases/1.1/ppl-1.1.tar.bz2
+	@cd src; curl -O ftp://ftp.cwru.edu/pub/bash/readline-6.3.tar.gz
+
 
 ### create the polymake package skeleton
 skeleton : 
@@ -57,7 +71,7 @@ skeleton :
 
 gmp_build :
 	@echo "building gmp"
-	@./build_scripts/build.sh gmp-5.1.3 "$(TMP)" build \
+	@./build_scripts/build.sh gmp-6.0.0a "$(TMP)" build \
 	--prefix=$(PREFIX) --enable-cxx=yes
 
 gmp_install :
@@ -123,47 +137,47 @@ ant :
 readline_build :
 	@echo building readline in $(TMP) 
 	@mkdir -p $(TMP)
-	@tar xvfz src/readline-6.2.tar.gz -C $(TMP)
+	@tar xvfz src/readline-6.3.tar.gz -C $(TMP)
 ### fix the arch flag settings for compilation
-	@${SED} -i '' -e 's|-arch_only `/usr/bin/arch`|-dynamiclib|g' $(TMP)/readline-6.2/support/shobj-conf
-	@cd $(TMP)/readline-6.2; ./configure --prefix=$(PREFIX)
-	@make -C $(TMP)/readline-6.2
-	@make -C $(TMP)/readline-6.2 install
+	@${SED} -i '' -e 's|-arch_only `/usr/bin/arch`|-dynamiclib|g' $(TMP)/readline-6.3/support/shobj-conf
+	@cd $(TMP)/readline-6.3; ./configure --prefix=$(PREFIX)
+	@make -C $(TMP)/readline-6.3
+	@make -C $(TMP)/readline-6.3 install
 
 readline :
 	@echo "fixing names in readline"
-		@cd $(PREFIX)/lib; chmod u+w libreadline.6.2.dylib;  chmod u+w libhistory.6.2.dylib
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libreadline.6.2.dylib" "libgcc_s.1.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libhistory.6.2.dylib" "libgcc_s.1.dylib"	
+	@cd $(PREFIX)/lib; chmod u+w libreadline.6.3.dylib;  chmod u+w libhistory.6.3.dylib
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libreadline.6.3.dylib" "libgcc_s.1.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libhistory.6.3.dylib" "libgcc_s.1.dylib"	
 ##############
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libreadline.6.2.dylib" 
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libhistory.6.2.dylib" 
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libreadline.6.3.dylib" 
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libhistory.6.3.dylib" 
 
 
 ### XML-LibXSLT
 ### Term-Gnu-Readline
 perl : 
 	@echo "building perl modules"
-	@tar xvfz src/XML-LibXSLT-1.71.tar.gz -C $(TMP)
+	@tar xvfz src/XML-LibXSLT-1.92.tar.gz -C $(TMP)
 	@cd $(TMP)/XML-LibXSLT-1.71; ARCHFLAGS='-arch x86_64' /usr/bin/perl Makefile.PL PREFIX=$(PREFIX)  
-	@make -C $(TMP)/XML-LibXSLT-1.71
-	@make -C $(TMP)/XML-LibXSLT-1.71 install
+	@make -C $(TMP)/XML-LibXSLT-1.92
+	@make -C $(TMP)/XML-LibXSLT-1.92 install
 ### term-readline-gnu
-	@tar xvfz src/Term-ReadLine-Gnu-1.20.tar.gz -C $(TMP)
+	@tar xvfz src/Term-ReadLine-Gnu-1.24.tar.gz -C $(TMP)
 ### have to pass ARCHFLAG again?
-	@cd $(TMP)/Term-ReadLine-Gnu-1.20; ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX) CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib" --includedir=$(PREFIX)/include --libdir=$(PREFIX)/lib 
-	@make -C $(TMP)/Term-ReadLine-Gnu-1.20
-	@make -C $(TMP)/Term-ReadLine-Gnu-1.20 install 
+	@cd $(TMP)/Term-ReadLine-Gnu-1.24; ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX) CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib" --includedir=$(PREFIX)/include --libdir=$(PREFIX)/lib 
+	@make -C $(TMP)/Term-ReadLine-Gnu-1.24
+	@make -C $(TMP)/Term-ReadLine-Gnu-1.24 install 
 
 boost : 
 	@echo "extracting boost"
-	@tar xfj src/boost_1_47_0.tar.bz2 -C polymake.app/Contents/Resources/include
+	@tar xfj src/boost_1_55_0.tar.bz2 -C polymake.app/Contents/Resources/include
 ### remove junk
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_47_0/doc
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_47_0/tools
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_47_0/status
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_47_0/more
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_47_0/libs
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/doc
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/tools
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/status
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/more
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/libs
 	
 singular :
 	@echo "building singular"
