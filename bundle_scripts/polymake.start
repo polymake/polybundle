@@ -10,7 +10,7 @@ perlversion=`/usr/bin/perl --version | grep -o "5[.][0-9]*[.][0-9]"`
 
 if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then 
    echo "=========================================================================="
-   echo "your perl version does not match the perl version this app was built for";
+   echo "your perl version ($perlversion) does not match the perl version this" echo "app was built for (REPLACE_PERLVERSION)"
    echo "please download and install the version of polymake that corresponds"
    echo "to the version of your system perl"
    echo "You can find the version number by executing"

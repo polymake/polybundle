@@ -2,3 +2,5 @@ tarballs
 tmp
 polymake.app
 *.out
+*.sparsebundle
+*.sparseimage

@@ -71,9 +71,9 @@ skeleton :
 	@install -m 550 bundle_scripts/debug.commands polymake.app/Contents/Resources/
 	@cd bundle_scripts; rm polymake.start.tmp;
 	@cd bundle_scripts; rm polymake.debug.tmp;
-
 	@cp bundle_scripts/Info.plist polymake.app/Contents/
 	@cp bundle_scripts/*.icns polymake.app/Contents/Resources/
+	@install -m 550 bundle_scripts/Singular polymake.app/Contents/MacOS/
 
 gmp_build :
 	@echo "building gmp"
