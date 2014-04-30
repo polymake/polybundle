@@ -235,14 +235,13 @@ ftit :
 singularfour :
 	@echo "building singular 4"
 	@cd $(TMP); mkdir -p singular
-	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/Singular/Sources; fi
-### FIXME the current git checkout (April 27, 2014) doesn't compile (GMP flgas missing in some compile command), so we revert to an old one
-	@cd $(TMP)/singular/Sources; git checkout `git rev-list -n 1 --before="2014-04-05 00:00" spielwiese`
-	@cd $(TMP)/singular/Sources; git archive spielwiese | bzip2 > ../../../src/singular-github-version-branch-spielwiese-2014-04-05.tar.bz2
-	@cd $(TMP)/singular/Sources; ./autogen.sh
-	@cd $(TMP)/singular/Sources; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX) --with-flint=$(PREFIX) --enable-gfanlib --with-gmp=$(PREFIX)
-	@cd $(TMP)/singular/Sources; make
-	@cd $(TMP)/singular/Sources; make install
+	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/polymake/Singular Sources; fi
+	### FIXME: else??
+	@cd $(TMP)/singular/Sources && \
+		git archive spielwiese | bzip2 > $(CURDIR)/src/singular-github-version-$(DATE).tar.bz2 && \
+		./autogen.sh && \
+		PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX) --with-flint=$(PREFIX) --enable-gfanlib --with-gmp=$(PREFIX) && \
+		make -j2 && make install
 	
 singularfournames :
 ### binaries
