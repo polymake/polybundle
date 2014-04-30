@@ -25,7 +25,7 @@ CXX :=$(PREFIX)/bin/g++
 CFLAGS="  -m64 -mtune=generic"
 CXXFLAGS="  -m64 -mtune=generic"
 
-.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant singular polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable xsexternal_error flint ftit singularfour singularfournames bundle compile
+.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant singular polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable flint ftit singularfour singularfournames bundle compile
 
 ### default target
 all : fetch_sources compile
@@ -38,22 +38,34 @@ bundle : compile dmg
 allold : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant singular polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg  
 
 
-xsexternal_error : polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg
-
-# get all sources not obtained form github
+# get all sources not obtained from github
 # rebuilds the src-directory, except for flint and singular, which are obtained from github in their specific targets below
 fetch_sources :
 	@mkdir -p src
+	@echo "fetching ant"
 	@cd src; curl -O http://artfiles.org/apache.org//ant/binaries/apache-ant-1.9.3-bin.tar.bz2
+	@echo "fetching 4ti2"
 	@cd src; curl -O http://www.4ti2.de/version_1.6.2/4ti2-1.6.2.tar.gz
+	@echo "fetching term-readline-gnu"
 	@cd src; curl -O -L http://search.cpan.org/CPAN/authors/id/H/HA/HAYASHI/Term-ReadLine-Gnu-1.24.tar.gz
+	@echo "fetching libxslt"
 	@cd src; curl -O -L http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/XML-LibXSLT-1.92.tar.gz
+	@echo "fetching boost"
 	@cd src; curl -O -L http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2
+	@echo "fetching gmp"
 	@cd src; curl -O https://gmplib.org/download/gmp/gmp-6.0.0a.tar.bz2
+	@echo "fetching mpfr"
 	@cd src; curl -O http://www.mpfr.org/mpfr-current/mpfr-3.1.2.tar.bz2
+	@echo "fetching polymake"
 	@cd src; curl -O http://www.polymake.org/lib/exe/fetch.php/download/polymake-2.13.tar.bz2
+	@echo "fetching ppl"
 	@cd src; curl -O http://bugseng.com/products/ppl/download/ftp/releases/1.1/ppl-1.1.tar.bz2
+	@echo "fetching readline"
 	@cd src; curl -O ftp://ftp.cwru.edu/pub/bash/readline-6.3.tar.gz
+
+fetch_autoconf :
+	@echo "fetching autoconf"
+	@cd src; curl -0 http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
 
 
 ### create the polymake package skeleton
