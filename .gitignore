@@ -1,5 +1,6 @@
 tarballs
 tmp
+src
 polymake.app
 *.out
 *.sparsebundle
