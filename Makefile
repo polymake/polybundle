@@ -25,12 +25,12 @@ CXX :=$(PREFIX)/bin/g++
 CFLAGS="  -m64 -mtune=generic"
 CXXFLAGS="  -m64 -mtune=generic"
 
-.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant singular polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable flint ftit singularfour singularfournames bundle compile
+.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant singular polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable flint ftit singularfour singularfournames bundle compile gnu_auto_stuff autoconf automake libtool
 
 ### default target
 all : fetch_sources compile
 
-compile : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant flint ftit singularfour singularfournames polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc
+compile : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant flint ftit gnu_auto_stuff singularfour singularfournames polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc
 
 bundle : compile dmg
 
@@ -62,11 +62,12 @@ fetch_sources :
 	@cd src; curl -O http://bugseng.com/products/ppl/download/ftp/releases/1.1/ppl-1.1.tar.bz2
 	@echo "fetching readline"
 	@cd src; curl -O ftp://ftp.cwru.edu/pub/bash/readline-6.3.tar.gz
-
-fetch_autoconf :
 	@echo "fetching autoconf"
-	@cd src; curl -0 http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
-
+	@cd src; curl --remote-name http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
+	@echo "fetching automake"
+	@cd src; curl --remote-name http://ftp.gnu.org/gnu/automake/automake-1.14.tar.gz
+	@echo "fetching libtool"
+	@cd src; curl --remote-name http://ftp.gnu.org/gnu/libtool/libtool-2.4.tar.gz
 
 ### create the polymake package skeleton
 skeleton : 
@@ -199,7 +200,7 @@ boost :
 	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/status
 	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/more
 	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/libs
-	
+
 singular :
 	@echo "building singular"
 	@cd $(TMP); mkdir -p singular
@@ -231,7 +232,32 @@ ftit :
 	@cd $(TMP)/4ti2-1.6.2; ./configure --prefix=$(PREFIX)
 	@cd $(TMP)/4ti2-1.6.2; make
 	@cd $(TMP)/4ti2-1.6.2; make install
+
+gnu_auto_stuff : autoconf automake libtool
 	
+autoconf :
+	@echo "building autoconf"
+	@mkdir -p $(TMP)/local
+	@tar xvfz src/autoconf-2.69.tar.gz -C $(TMP)
+	@cd $(TMP)/autoconf-2.69 && \
+		./configure --prefix=$(TMP)/local && \
+		make && make install
+
+automake :
+	@echo "building automake"
+	@tar xvfz src/automake-1.14.tar.gz -C $(TMP)
+	@cd $(TMP)/automake-1.14 && \
+		PATH=$(TMP)/local/bin:${PATH} ./configure --prefix=$(TMP)/local && \
+		make && make install
+
+libtool :
+	@echo "building libtool"
+	@tar xvfz src/libtool-2.4.tar.gz -C $(TMP)
+	@cd $(TMP)/libtool-2.4 && \
+		PATH=$(TMP)/local/bin:${PATH} ./configure --prefix=$(TMP)/local && \
+		make && make install
+
+
 singularfour :
 	@echo "building singular 4"
 	@cd $(TMP); mkdir -p singular
@@ -239,7 +265,7 @@ singularfour :
 	### FIXME: else??
 	@cd $(TMP)/singular/Sources && \
 		git archive spielwiese | bzip2 > $(CURDIR)/src/singular-github-version-$(DATE).tar.bz2 && \
-		./autogen.sh && \
+		PATH=$(TMP)/local/bin:${PATH} ./autogen.sh && \
 		PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX) --with-flint=$(PREFIX) --enable-gfanlib --with-gmp=$(PREFIX) && \
 		make -j2 && make install
 	
