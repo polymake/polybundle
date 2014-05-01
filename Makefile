@@ -158,9 +158,12 @@ readline_build :
 	@mkdir -p $(TMP)
 	@tar xvfz src/readline-6.3.tar.gz -C $(TMP)
 ### fix the arch flag settings for compilation
-#	@${SED} -i '' -e 's|-arch_only `/usr/bin/arch`|-dynamiclib|g' $(TMP)/readline-6.3/support/shobj-conf
-	@${SED} -i '' -e "s|SHOBJ_ARCHFLAGS=|SHOBJ_ARCHFLAGS=\'-dynamiclib\'|g" $(TMP)/readline-6.3/support/shobj-conf
-	@cd $(TMP)/readline-6.3; ./configure --prefix=$(PREFIX)
+	@if [ "$(MACVERSION)" = "10.8" ]; then \
+	${SED} -i '' -e 's|-arch_only `/usr/bin/arch`|-dynamiclib|g' $(TMP)/readline-6.3/support/shobj-conf; \
+	else \
+	${SED} -i '' -e "s|SHOBJ_ARCHFLAGS=|SHOBJ_ARCHFLAGS=\'-dynamiclib\'|g" $(TMP)/readline-6.3/support/shobj-conf; \
+	fi
+		@cd $(TMP)/readline-6.3; ./configure --prefix=$(PREFIX)
 	@make -C $(TMP)/readline-6.3
 	@make -C $(TMP)/readline-6.3 install
 
