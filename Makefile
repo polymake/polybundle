@@ -8,7 +8,7 @@ SED := "/usr/bin/sed"
 TMP := $(CURDIR)/tmp/
 PERL := /usr/bin/perl
 DATE := `date +'%Y-%m-%d'`
-PATH := /usr/bin/:$(PATH)
+PATH := /usr/bin:$(PATH)
 JNIHEADERS = "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers"
 
 MACVERSION := $(shell sw_vers | grep -o "10[.][0-9]")
