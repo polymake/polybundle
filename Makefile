@@ -9,7 +9,7 @@ TMP := $(CURDIR)/tmp/
 PERL := /usr/bin/perl
 DATE := `date +'%Y-%m-%d'`
 PATH := /usr/bin/:$(PATH)
-JNIHEADERS := "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers"
+JNIHEADERS = "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers"
 
 MACVERSION := $(shell sw_vers | grep -o "10[.][0-9]")
 PERLVERSION := $(shell $(PERL) --version | grep -o "5[.][0-9]*[.][0-9]")
@@ -265,7 +265,7 @@ singularfour :
 	@echo "building singular 4"
 	@cd $(TMP); mkdir -p singular
 	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/polymake/Singular Sources; fi
-	@cd $(TMP)/singular/Sources && \
+	@cd $(TMP)/singular/Sources && git checkout `git rev-list -n 1 --before="2014-04-22 00:00" spielwiese` && \
 		git archive spielwiese | bzip2 > $(CURDIR)/src/singular-github-version-$(DATE).tar.bz2 && \
 		PATH=$(TMP)/local/bin:${PATH} \
 		./autogen.sh && \
@@ -318,7 +318,7 @@ polymake-prepare :
 	@cd $(TMP); mkdir -p polymake; 
 	@cd $(TMP)/polymake;  if [ ! -d .git ]; then git clone https://github.com/polymake/polymake.git .; fi
 	@cd $(TMP)/polymake; git archive Releases | bzip2 > ../../src/polymake-2.13.tar.bz2
-	@cd $(TMP)/polymake; \
+	cd $(TMP)/polymake; \
 	  LD_LIBRARY_PATH=$(PREFIX)/lib \
 	  PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ \
 	  ./configure  --without-fink \
