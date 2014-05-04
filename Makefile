@@ -265,16 +265,17 @@ singularfour :
 	@echo "building singular 4"
 	@cd $(TMP); mkdir -p singular
 	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/polymake/Singular Sources; fi
-	### FIXME: else??
 	@cd $(TMP)/singular/Sources && \
 		git archive spielwiese | bzip2 > $(CURDIR)/src/singular-github-version-$(DATE).tar.bz2 && \
-		PATH=$(TMP)/local/bin:${PATH} ./autogen.sh && \
+		PATH=$(TMP)/local/bin:${PATH} \
+		./autogen.sh && \
 		   PERL5LIB=$(PERL5LIB) \
 		   CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" \
 		   LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" \
 		   CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" \
 		./configure --without-dynamic-kernel \
-		            --without-MP --prefix=$(PREFIX)\ 
+		            --without-MP \
+					--prefix=$(PREFIX) \
 		            --with-flint=$(PREFIX) \
 					--enable-gfanlib \
 					--with-gmp=$(PREFIX) && \
