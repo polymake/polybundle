@@ -8,22 +8,23 @@ SED := "/usr/bin/sed"
 TMP := $(CURDIR)/tmp/
 PERL := /usr/bin/perl
 DATE := `date +'%Y-%m-%d'`
+PATH := /usr/bin/:$(PATH)
+JNIHEADERS := "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers"
 
 MACVERSION := $(shell sw_vers | grep -o "10[.][0-9]")
 PERLVERSION := $(shell $(PERL) --version | grep -o "5[.][0-9]*[.][0-9]")
 
 PREFIX := $(CURDIR)/polymake.app/Contents/Resources
 
-
-### pick the right gcc
-CC := $(PREFIX)/bin/gcc
-CXX :=$(PREFIX)/bin/g++
+# fix the compiler
+CC  := /usr/bin/cc
+CXX := /usr/bin/g++
 
 ### only 64bit, first for gcc, second for perl (with gcc)
 #CFLAGS="-arch x86_64"
 #ARCHFLAGS='-arch x86_64'
-CFLAGS="  -m64 -mtune=generic"
-CXXFLAGS="  -m64 -mtune=generic"
+CFLAGS   = " -m64 -mtune=generic"
+CXXFLAGS = " -m64 -mtune=generic"
 
 .PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant singular polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable flint ftit singularfour singularfournames bundle compile gnu_auto_stuff autoconf automake libtool
 
@@ -91,7 +92,7 @@ skeleton :
 gmp_build :
 	@echo "building gmp"
 	@./build_scripts/build.sh gmp-6.0.0a gmp-6.0.0 "$(TMP)" build \
-	--prefix=$(PREFIX) --enable-cxx=yes
+	--prefix=$(PREFIX) --enable-cxx=yes 
 
 gmp_install :
 	@echo "installing gmp"
@@ -225,7 +226,15 @@ flint :
 	@cd $(TMP); mkdir -p flint
 	@cd $(TMP)/flint; if [ ! -d .git ]; then git clone https://github.com/wbhart/flint2.git .; fi
 	@cd $(TMP)/flint; git archive trunk | bzip2 > ../../src/flint-github-$(DATE).tar.bz2	
-	@cd $(TMP)/flint; PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure  --with-gmp=$(PREFIX)/ --with-mpfr=$(PREFIX)/ --disable-shared --prefix=$(PREFIX)
+	@cd $(TMP)/flint; \
+	PERL5LIB=$(PERL5LIB) \
+	   CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" \
+	   LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" \
+	   CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" \
+	./configure  --with-gmp=$(PREFIX)/ \
+	             --with-mpfr=$(PREFIX)/ \
+				 --disable-shared \
+				 --prefix=$(PREFIX)
 	@make -C $(TMP)/flint/
 	@make -C $(TMP)/flint/ install
 	
@@ -269,7 +278,15 @@ singularfour :
 	@cd $(TMP)/singular/Sources && \
 		git archive spielwiese | bzip2 > $(CURDIR)/src/singular-github-version-$(DATE).tar.bz2 && \
 		PATH=$(TMP)/local/bin:${PATH} ./autogen.sh && \
-		PERL5LIB=$(PERL5LIB) CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" ./configure --without-dynamic-kernel --without-MP --prefix=$(PREFIX) --with-flint=$(PREFIX) --enable-gfanlib --with-gmp=$(PREFIX) && \
+		   PERL5LIB=$(PERL5LIB) \
+		   CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" \
+		   LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" \
+		   CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" \
+		./configure --without-dynamic-kernel \
+		            --without-MP --prefix=$(PREFIX)\ 
+		            --with-flint=$(PREFIX) \
+					--enable-gfanlib \
+					--with-gmp=$(PREFIX) && \
 		make -j2 && make install
 	
 singularfournames :
@@ -308,7 +325,24 @@ polymake-prepare :
 	@cd $(TMP); mkdir -p polymake; 
 	@cd $(TMP)/polymake;  if [ ! -d .git ]; then git clone https://github.com/polymake/polymake.git .; fi
 	@cd $(TMP)/polymake; git archive Releases | bzip2 > ../../src/polymake-2.13.tar.bz2
-	@cd $(TMP)/polymake; LD_LIBRARY_PATH=$(PREFIX)/lib PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ ./configure  --without-fink --with-readline=$(PREFIX)/lib --prefix=$(PREFIX)/polymake --with-jni-headers=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers --with-boost=$(PREFIX)/include/boost_1_55_0/ --with-gmp=$(PREFIX)/ --with-ppl=$(PREFIX)/  --with-mpfr=$(PREFIX)/ --with-ant=$(PREFIX)/apache-ant-1.9.3/bin/ant PERL=$(PERL) --with-singular=$(PREFIX) CXXFLAGS="-I$(PREFIX)/include" LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" CFLAGS=" -m64 -mtune=generic" 
+	@cd $(TMP)/polymake; \
+	  LD_LIBRARY_PATH=$(PREFIX)/lib \
+	  PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ \
+	  ./configure  --without-fink \
+	               --with-readline=$(PREFIX)/lib \
+	               --prefix=$(PREFIX)/polymake \
+				   --with-jni-headers=$(JNIHEADERS) \
+				   --with-boost=$(PREFIX)/include/boost_1_55_0/ \
+				   --with-gmp=$(PREFIX)/ \
+				   --with-ppl=$(PREFIX)/  \
+				   --with-mpfr=$(PREFIX)/ \
+				   --with-ant=$(PREFIX)/apache-ant-1.9.3/bin/ant PERL=$(PERL) \
+				   --with-singular=$(PREFIX) \
+				   CXXFLAGS="-I$(PREFIX)/include" \
+				   LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  \
+				   CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" \
+				   CFLAGS=" -m64 -mtune=generic" \
+				   CC=$(CC) CXX=$(CXX)
 
 polymake-compile :
 	@echo "building polymake"
