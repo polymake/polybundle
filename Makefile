@@ -89,6 +89,7 @@ skeleton :
 	@cp bundle_scripts/*.icns polymake.app/Contents/Resources/
 	@install -m 550 bundle_scripts/Singular polymake.app/Contents/MacOS/
 
+### gmp build
 gmp_build :
 	@echo "building gmp"
 	@./build_scripts/build.sh gmp-6.0.0a gmp-6.0.0 "$(TMP)" build \
@@ -101,12 +102,12 @@ gmp_install :
 gmp_name :
 		@echo "fixing names in gmp"
 	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libgmpxx.4.dylib" "libgmp.10.dylib"
-##############
 	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libgmpxx.4.dylib" 
 	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libgmp.10.dylib"
 	
 gmp : gmp_install gmp_name
  
+### mpfr build
 mpfr_build : 
 	@echo "building mpfg"
 	@./build_scripts/build.sh mpfr-3.1.2 mpfr-3.1.2 "$(TMP)" build \
@@ -123,6 +124,7 @@ mpfr_name :
 		
 mpfr : mpfr_install mpfr_name
 
+### ppl build
 ppl_build : 
 	@echo "building ppl"
 	@./build_scripts/build.sh ppl-1.1 ppl-1.1 "$(TMP)" build \
@@ -150,10 +152,13 @@ ppl_name :
 
 ppl : ppl_install ppl_name
 
+
+### ant
 ant : 
 	@echo "extracting ant"
 	@tar xvfj src/apache-ant-1.9.3-bin.tar.bz2 -C $(PREFIX)
 
+### readline 
 readline_build :
 	@echo building readline in $(TMP) 
 	@mkdir -p $(TMP)
@@ -173,7 +178,6 @@ readline :
 	@cd $(PREFIX)/lib; chmod u+w libreadline.6.3.dylib;  chmod u+w libhistory.6.3.dylib
 	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libreadline.6.3.dylib" "libgcc_s.1.dylib"
 	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libhistory.6.3.dylib" "libgcc_s.1.dylib"	
-##############
 	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libreadline.6.3.dylib" 
 	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libhistory.6.3.dylib" 
 
@@ -195,6 +199,7 @@ perl :
 	@make -C $(TMP)/Term-ReadLine-Gnu-1.24
 	@make -C $(TMP)/Term-ReadLine-Gnu-1.24 install 
 
+### boost
 boost : 
 	@echo "extracting boost"
 	@tar xfj src/boost_1_55_0.tar.bz2 -C polymake.app/Contents/Resources/include
@@ -205,7 +210,8 @@ boost :
 	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/more
 	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/libs
 	
-	
+
+### preparations for singular
 flint :
 	@echo "building flint"
 	@cd $(TMP); mkdir -p flint
@@ -254,7 +260,7 @@ libtool :
 		PATH=$(TMP)/local/bin:${PATH} ./configure --prefix=$(TMP)/local && \
 		make && make install
 
-
+### singular
 singularfour :
 	@echo "building singular 4"
 	@cd $(TMP); mkdir -p singular
@@ -304,7 +310,8 @@ singularfournames :
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libpolys-4.0.0.dylib
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libresources-4.0.0.dylib
 	
-		
+
+### polymake 	
 polymake-prepare : 
 	@echo "preparing polymake build"
 	@cd $(TMP); mkdir -p polymake; 
