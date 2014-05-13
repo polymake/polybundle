@@ -331,7 +331,7 @@ polymake-prepare :
 				   --with-gmp=$(PREFIX)/ \
 				   --with-ppl=$(PREFIX)/  \
 				   --with-mpfr=$(PREFIX)/ \
-				   --with-ant=$(PREFIX)/apache-ant-1.9.3/bin/ant PERL=$(PERL) \
+				   --with-ant=$(PREFIX)/apache-ant-$(ANTVERSION)/bin/ant PERL=$(PERL) \
 				   --with-singular=$(PREFIX) \
 				   CXXFLAGS="-I$(PREFIX)/include" \
 				   LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  \
