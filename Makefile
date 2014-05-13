@@ -14,6 +14,8 @@ JNIHEADERS = "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platfo
 MACVERSION := $(shell sw_vers | grep -o "10[.][0-9]")
 PERLVERSION := $(shell $(PERL) --version | grep -o "5[.][0-9]*[.][0-9]")
 
+ANTVERSION := "1.9.4"
+
 PREFIX := $(CURDIR)/polymake.app/Contents/Resources
 
 # fix the compiler
@@ -44,7 +46,7 @@ allold : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build rea
 fetch_sources :
 	@mkdir -p src
 	@echo "fetching ant"
-	@cd src; curl -O http://artfiles.org/apache.org//ant/binaries/apache-ant-1.9.3-bin.tar.bz2
+	@cd src; curl -O http://artfiles.org/apache.org//ant/binaries/apache-ant-$(ANTVERSION)-bin.tar.bz2
 	@echo "fetching 4ti2"
 	@cd src; curl -O http://www.4ti2.de/version_1.6.2/4ti2-1.6.2.tar.gz
 	@echo "fetching term-readline-gnu"
@@ -156,7 +158,7 @@ ppl : ppl_install ppl_name
 ### ant
 ant : 
 	@echo "extracting ant"
-	@tar xvfj src/apache-ant-1.9.3-bin.tar.bz2 -C $(PREFIX)
+	@tar xvfj src/apache-ant-$(ANTVERSION)-bin.tar.bz2 -C $(PREFIX)
 
 ### readline 
 readline_build :
