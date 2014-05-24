@@ -34,4 +34,4 @@ cd ..
 mv dmg/polybundle.dmg .
 rm -rf dmg
 
-echo "Now you can set the icon of the dmg. (Open the Info window of polybundle.dmg with Cmd-I and then drag the file scripts/pm-cube.icns onto the icon in the upper left corner of the Info window.)"
+echo "Now you can set the icon of the dmg. (Open the Info window of polybundle.dmg with Cmd-I and then drag the file bundle_scripts/pm-cube.icns onto the icon in the upper left corner of the Info window.)"
