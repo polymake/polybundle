@@ -313,6 +313,7 @@ singularfournames :
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libpolys-4.0.0.dylib
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libresources-4.0.0.dylib
 	
+	
 
 ### polymake 	
 polymake-prepare : 
@@ -401,6 +402,13 @@ polymake_env_var :
 	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
 	> conf.make.tmp; mv conf.make.tmp conf.make
 	@cd $(PREFIX)/polymake/lib/polymake/bundled/nauty; \
+	chmod u+w conf.make; \
+	$(SED) 's/\# .*//g' conf.make | \
+	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
+	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
+	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
+	> conf.make.tmp; mv conf.make.tmp conf.make
+	@cd $(PREFIX)/polymake/lib/polymake/bundled/singular; \
 	chmod u+w conf.make; \
 	$(SED) 's/\# .*//g' conf.make | \
 	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
