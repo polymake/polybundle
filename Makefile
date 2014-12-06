@@ -1,6 +1,8 @@
 
-# this Makefile is for OS X 10.8 or 10.9
-# includes compilation of a proper gcc
+# this Makefile is for OS X Yosemite
+# prior installation of Xcode command line tools and java required
+
+ANTVERSION := "1.9.4"
 
 ### change into the base directory
 ###BASEPATH := $( (cd -P $(dirname $0) && pwd) )
@@ -9,12 +11,10 @@ TMP := $(CURDIR)/tmp/
 PERL := /usr/bin/perl
 DATE := `date +'%Y-%m-%d'`
 PATH := /usr/bin:$(PATH)
-JNIHEADERS = "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACVERSION).sdk/System/Library/Frameworks/JavaVM.framework/Headers"
+JNIHEADERS = "/System/Library/Frameworks/JavaVM.framework/Headers/		"
 
 MACVERSION := $(shell sw_vers | grep -o "10[.][0-9]")
 PERLVERSION := $(shell $(PERL) --version | grep -o "5[.][0-9]*[.][0-9]")
-
-ANTVERSION := "1.9.4"
 
 PREFIX := $(CURDIR)/polymake.app/Contents/Resources
 
@@ -33,10 +33,9 @@ CXXFLAGS = " -m64 -mtune=generic"
 ### default target
 all : fetch_sources compile
 
-compile : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant flint ftit gnu_auto_stuff singularfour singularfournames polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc
+compile : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant ftit gnu_auto_stuff singularfour singularfournames polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc
 
 bundle : compile dmg
-
 
 allold : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant singular polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg  
 
@@ -189,7 +188,7 @@ readline :
 perl : 
 	@echo "building perl modules"
 	@tar xvfz src/XML-LibXSLT-1.92.tar.gz -C $(TMP)
-	@cd $(TMP)/XML-LibXSLT-1.92; ARCHFLAGS='-arch x86_64' /usr/bin/perl Makefile.PL PREFIX=$(PREFIX)  
+	@cd $(TMP)/XML-LibXSLT-1.92; ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX)  
 	@make -C $(TMP)/XML-LibXSLT-1.92
 	@make -C $(TMP)/XML-LibXSLT-1.92 install
 ### term-readline-gnu
@@ -266,8 +265,10 @@ libtool :
 singularfour :
 	@echo "building singular 4"
 	@cd $(TMP); mkdir -p singular
-	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/polymake/Singular Sources; fi
-	@cd $(TMP)/singular/Sources && git checkout spielwiese && git archive spielwiese | bzip2 > $(CURDIR)/src/singular-github-version-$(DATE).tar.bz2 && \
+	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/Singular/Sources Sources; fi
+###	@cd $(TMP)/singular/Sources && git checkout `git rev-list -n 1 --before="2014-04-22 00:00" spielwiese` && 
+		@cd $(TMP)/singular/Sources && \
+		git archive spielwiese | bzip2 > $(CURDIR)/src/singular-github-version-$(DATE).tar.bz2 && \
 		PATH=$(TMP)/local/bin:${PATH} \
 		./autogen.sh && \
 		   PERL5LIB=$(PERL5LIB) \
@@ -277,40 +278,42 @@ singularfour :
 		./configure --without-dynamic-kernel \
 		            --without-MP \
 					--prefix=$(PREFIX) \
-		            --with-flint=$(PREFIX) \
-					--enable-gfanlib \
+					--disable-gfanlib \
+					--without-flint \
 					--with-gmp=$(PREFIX) && \
 		make -j2 && make install
+		
+		###		            --with-flint=$(PREFIX) \
 	
 singularfournames :
 ### binaries
 	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ESingular" "libomalloc-0.9.6.dylib" 
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ESingular" "libresources-4.0.0.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ESingular" "libresources-4.0.1.dylib"
 	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "TSingular" "libomalloc-0.9.6.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "TSingular" "libresources-4.0.0.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "TSingular" "libresources-4.0.1.dylib"
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/Singular
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ESingular
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/TSingular
 ### libs
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libSingular-4.0.0.dylib"	
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libfactory-4.0.0.dylib"
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libSingular-4.0.1.dylib"	
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libfactory-4.0.1.dylib"
 	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libomalloc-0.9.6.dylib"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libpolys-4.0.0.dylib"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libresources-4.0.0.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.0.dylib" "libresources-4.0.0.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.0.dylib" "libomalloc-0.9.6.dylib" 
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.0.dylib" "libfactory-4.0.0.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.0.dylib" "libpolys-4.0.0.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.0.dylib" "libresources-4.0.0.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.0.dylib" "libomalloc-0.9.6.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.0.dylib" "libresources-4.0.0.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.0.dylib" "libomalloc-0.9.6.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.0.dylib" "libfactory-4.0.0.dylib"
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libSingular-4.0.0.dylib
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libfactory-4.0.0.dylib
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libpolys-4.0.1.dylib"
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libresources-4.0.1.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.1.dylib" "libresources-4.0.1.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.1.dylib" "libomalloc-0.9.6.dylib" 
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.1.dylib" "libfactory-4.0.1.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.1.dylib" "libpolys-4.0.1.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.1.dylib" "libresources-4.0.1.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.1.dylib" "libomalloc-0.9.6.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.1.dylib" "libresources-4.0.1.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.1.dylib" "libomalloc-0.9.6.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.1.dylib" "libfactory-4.0.1.dylib"
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libSingular-4.0.1.dylib
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libfactory-4.0.1.dylib
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libomalloc-0.9.6.dylib
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libpolys-4.0.0.dylib
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libresources-4.0.0.dylib
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libpolys-4.0.1.dylib
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libresources-4.0.1.dylib
 	
 	
 
@@ -318,8 +321,8 @@ singularfournames :
 polymake-prepare : 
 	@echo "preparing polymake build"
 	@cd $(TMP); mkdir -p polymake; 
-	@cd $(TMP)/polymake;  if [ ! -d .git ]; then git clone https://github.com/polymake/polymake.git .; fi
-	@cd $(TMP)/polymake; git archive Releases | bzip2 > ../../src/polymake-2.13.tar.bz2
+	@cd $(TMP)/polymake;  if [ ! -d .git ]; then git clone -b Snapshots https://github.com/polymake/polymake.git .; fi
+	@cd $(TMP)/polymake; git archive Releases | bzip2 > ../../src/polymake-snapshots-$(DATE).tar.bz2
 	cd $(TMP)/polymake; \
 	  LD_LIBRARY_PATH=$(PREFIX)/lib \
 	  PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ \
@@ -331,13 +334,14 @@ polymake-prepare :
 				   --with-gmp=$(PREFIX)/ \
 				   --with-ppl=$(PREFIX)/  \
 				   --with-mpfr=$(PREFIX)/ \
+				   --with-singular=$(PREFIX)/ \
 				   --with-ant=$(PREFIX)/apache-ant-$(ANTVERSION)/bin/ant PERL=$(PERL) \
-				   --with-singular=$(PREFIX) \
-				   CXXFLAGS="-I$(PREFIX)/include" \
+				   --with-java=/usr/bin/java \
 				   LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  \
-				   CXXFLAGS="-Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" \
+				   CXXFLAGS="-I$(PREFIX)/include -Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" \
 				   CFLAGS=" -m64 -mtune=generic" \
-				   CC=$(CC) CXX=$(CXX)
+				   CC=$(CC) CXX=$(CXX) \
+				   PERL=$(PERL)
 
 polymake-compile :
 	@echo "building polymake"
@@ -481,7 +485,7 @@ polymake_rpath :
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/polytope.bundle
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/topaz.bundle
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/tropical.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/ideal.bundle
+#	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/ideal.bundle
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/perlx/$(PERLVERSION)/darwin-thread-multi-2level/auto/Polymake/Ext/Ext.bundle
 # bundled extensions
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/bundled/group/lib/common.bundle
@@ -509,6 +513,11 @@ clean-install :
 	@cd polymake.app; find . -name "*.3pm" -exec rm -rf {} \;
 	@cd polymake.app; find . -name "*.packlist" -exec rm -rf {} \;
 	@cd polymake.app; find . -name "*.la" -exec rm -rf {} \;
+	@cd polymake.app; find . -name "*.pc" -exec rm -rf {} \;
+	@cd polymake.app; rm -f Contents/Resources/bin/libpolys-config
+	@cd polymake.app; rm -f Contents/Resources/bin/libsingular-config
+	@cd polymake.app; rmdir Contents/Resources/lib/pkgconfig/
+
 
 
 dmg : 
