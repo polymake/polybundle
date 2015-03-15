@@ -59,7 +59,7 @@ fetch_sources :
 	@echo "fetching mpfr"
 	@cd src; curl -O http://www.mpfr.org/mpfr-current/mpfr-3.1.2.tar.bz2
 	@echo "fetching polymake"
-	@cd src; curl -O http://www.polymake.org/lib/exe/fetch.php/download/polymake-2.13.tar.bz2
+	@cd src; curl -O http://www.polymake.org/lib/exe/fetch.php/download/polymake-2.14.tar.bz2
 	@echo "fetching ppl"
 	@cd src; curl -O http://bugseng.com/products/ppl/download/ftp/releases/1.1/ppl-1.1.tar.bz2
 	@echo "fetching readline"
@@ -435,10 +435,10 @@ polymake_name :
 	@echo "fixing names in polymake"
 	@chmod u+w $(PREFIX)/polymake/lib/libpolymake.dylib
 	@chmod u+w $(PREFIX)/polymake/lib/libpolymake-apps.dylib
-	@chmod u+w $(PREFIX)/polymake/lib/libpolymake-apps.2.13.dylib
+	@chmod u+w $(PREFIX)/polymake/lib/libpolymake-apps.2.14.dylib
 	@install_name_tool -id "@rpath/../polymake/lib/libpolymake.dylib" $(PREFIX)/polymake/lib/libpolymake.dylib
 	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.dylib
-	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.2.13.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.2.13.dylib
+	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.2.14.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.2.14.dylib
 #########	
 	@chmod u+w $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/Gnu.bundle; install_name_tool -change "$(PREFIX)/lib/libreadline.6.3.dylib" "@rpath/libreadline.6.3.dylib" $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/Gnu.bundle
 	@chmod u+w $(PREFIX)/polymake/lib/polymake/lib/*.bundle 
