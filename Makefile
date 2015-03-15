@@ -290,32 +290,32 @@ singularfour :
 singularfournames :
 ### binaries
 	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ESingular" "libomalloc-0.9.6.dylib" 
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ESingular" "libresources-4.0.1.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ESingular" "libresources-4.0.2.dylib"
 	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "TSingular" "libomalloc-0.9.6.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "TSingular" "libresources-4.0.1.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "TSingular" "libresources-4.0.2.dylib"
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/Singular
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ESingular
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/TSingular
 ### libs
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libSingular-4.0.1.dylib"	
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libfactory-4.0.1.dylib"
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libSingular-4.0.2.dylib"	
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libfactory-4.0.2.dylib"
 	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libomalloc-0.9.6.dylib"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libpolys-4.0.1.dylib"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libresources-4.0.1.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.1.dylib" "libresources-4.0.1.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.1.dylib" "libomalloc-0.9.6.dylib" 
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.1.dylib" "libfactory-4.0.1.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.1.dylib" "libpolys-4.0.1.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.1.dylib" "libresources-4.0.1.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.1.dylib" "libomalloc-0.9.6.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.1.dylib" "libresources-4.0.1.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.1.dylib" "libomalloc-0.9.6.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.1.dylib" "libfactory-4.0.1.dylib"
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libSingular-4.0.1.dylib
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libfactory-4.0.1.dylib
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libpolys-4.0.2.dylib"
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libresources-4.0.2.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.2.dylib" "libresources-4.0.2.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.2.dylib" "libomalloc-0.9.6.dylib" 
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.2.dylib" "libfactory-4.0.2.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.2.dylib" "libpolys-4.0.2.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.2.dylib" "libresources-4.0.2.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.2.dylib" "libomalloc-0.9.6.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.2.dylib" "libresources-4.0.2.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.2.dylib" "libomalloc-0.9.6.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.2.dylib" "libfactory-4.0.2.dylib"
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libSingular-4.0.2.dylib
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libfactory-4.0.2.dylib
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libomalloc-0.9.6.dylib
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libpolys-4.0.1.dylib
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libresources-4.0.1.dylib
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libpolys-4.0.2.dylib
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libresources-4.0.2.dylib
 	
 	
 
