@@ -271,6 +271,7 @@ singularfour :
 		git archive spielwiese | bzip2 > $(CURDIR)/src/singular-github-version-$(DATE).tar.bz2 && \
 		PATH=$(TMP)/local/bin:${PATH} \
 		./autogen.sh && \
+		   PATH=$(TMP)/local/bin:${PATH} \
 		   PERL5LIB=$(PERL5LIB) \
 		   CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" \
 		   LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" \
@@ -281,6 +282,7 @@ singularfour :
 					--disable-gfanlib \
 					--without-flint \
 					--with-gmp=$(PREFIX) && \
+		  PATH=$(TMP)/local/bin:${PATH} \
 		make -j2 && make install
 		
 		###		            --with-flint=$(PREFIX) \
