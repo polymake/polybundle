@@ -276,6 +276,7 @@ ntl :
 	@rm $(PREFIX)/lib/libntl.a
 ### fix name of lib
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libntl.9.dylib
+	@install_name_tool -change "$(PREFIX)/lib/libntl.9.dylib" "@rpath/libntl.9.dylib" $(PREFIX)/lib/libntl.9.dylib
 
 
 ### singular
