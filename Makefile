@@ -28,12 +28,12 @@ CXX := /usr/bin/g++
 CFLAGS   = " -m64 -mtune=generic"
 CXXFLAGS = " -m64 -mtune=generic"
 
-.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable flint ftit singularfour singularfournames bundle compile gnu_auto_stuff autoconf automake libtool
+.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable flint ftit ntl singularfour singularfournames bundle compile gnu_auto_stuff autoconf automake libtool
 
 ### default target
 all : fetch_sources compile
 
-compile : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant ftit gnu_auto_stuff singularfour singularfournames polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc
+compile : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant ftit gnu_auto_stuff ntl singularfour singularfournames polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc
 
 bundle : compile dmg
 
@@ -70,7 +70,9 @@ fetch_sources :
 	@cd src; curl --remote-name http://ftp.gnu.org/gnu/automake/automake-1.14.tar.gz
 	@echo "fetching libtool"
 	@cd src; curl --remote-name http://ftp.gnu.org/gnu/libtool/libtool-2.4.tar.gz
-
+	@echo "fetching ntl"
+	@cd src; curl --remote-name http://www.shoup.net/ntl/ntl-8.1.2.tar.gz
+	
 ### create the polymake package skeleton
 skeleton : 
 	@echo "creating skeleton"
@@ -260,6 +262,16 @@ libtool :
 	@cd $(TMP)/libtool-2.4 && \
 		PATH=$(TMP)/local/bin:${PATH} ./configure --prefix=$(TMP)/local && \
 		make && make install
+		
+ntl :
+	@echo "building ntl"
+	@tar xvfz src/ntl-8.1.2.tar.gz -C $(TMP)
+### Caveat: The configure is not a configure but a shell script, we need to source it
+	@cd $(TMP)/ntl-8.1.2/src && \
+		PATH=$(TMP)/local/bin:${PATH} . ./configure PREFIX=$(PREFIX) SHARED=on NTL_GMP_LIP=on GMP_PREFIX=$(PREFIX) && \
+		${SED} -i '' -e "s|CXXFLAGS=-g -O2|CXXFLAGS=-g -O2 -I\$(PREFIX)/include -Wl,-rpath,\$(PREFIX)/lib|g" $(TMP)/ntl-8.1.2/src/makefile && \
+		make && make install
+
 
 ### singular
 singularfour :
@@ -278,6 +290,7 @@ singularfour :
 		   CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" \
 		./configure --without-dynamic-kernel \
 		            --without-MP \
+					--with-ntl=$(PREFIX) \
 					--prefix=$(PREFIX) \
 					--disable-gfanlib \
 					--without-flint \
