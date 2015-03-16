@@ -573,8 +573,5 @@ clean :
 
 doc : 
 	@echo "create readme"
-	@cd build_scripts; pdflatex README
-	@cd build_scripts; pdflatex README
-	@cd build_scripts; mv README.pdf ../
-	@cd build_scripts; rm -f README.aux README.log README.out
+	@cd build_scripts; if [[ README.tex -nt ../README.pdf ]]; then pdflatex README &&  pdflatex README &&  mv README.pdf ../ && rm -f README.aux README.log README.out; fi;
 

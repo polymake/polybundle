@@ -6,7 +6,7 @@
 \usepackage{xspace}
 
 \newcommand{\macversion}{10.10}
-\newcommand{\polymakeversion}{ Snapshot-Release 2.13.2 of December 6, 2014\xspace}
+\newcommand{\polymakeversion}{ Release 2.14 of March 6, 2015\xspace}
 \newcommand{\macsix}{10.6}
 \newcommand{\macseven}{10.7}
 
@@ -193,11 +193,12 @@ versions of several packages necessary for polymake:
 \item \href{http://search.cpan.org/~hayashi/Term-ReadLine-Gnu-1.20/Gnu.pm}{\texttt{Term-Readline-Gnu 1.20}}
 \item \href{http://search.cpan.org/~shlomif/XML-LibXSLT-1.87/LibXSLT.pm}{\texttt{XML-LibXSLT 1.71}}
 \item \href{http://www.math.uni-rostock.de/~rehn/software/permlib.html}{\texttt{permlib}}
+\item \href{http://www.shoup.net/ntl/}{\texttt{ntl}}
 \item \href{https://github.com/Singular/Sources}{\texttt{Singular}}
 \item \href{https://github.com/polymake/polymake}{\texttt{polymake}}
 \end{enumerate}
 Also these packages are protected by open source licences compliant to
-the GPL. The sources for \polymake are also available on \href{http://polymake.org/doku.php/download/start}. 
+the GPL. The sources for \polymake are also available on \href{http://polymake.org/doku.php/download/start}{polymake.org/doku.php/download/start}. 
 All sources are either directly contained in the 
 polymake distribution or included as compressed tar archives in the
 \texttt{tarballs/} directory of the disk image, where you also find the polymake sources. Check the
@@ -210,6 +211,6 @@ of the \polymake archive (currently \texttt{cdd, lrs, nauty, permlib, ppl, libno
 
 If you need to rebuild the disk-image just copy the \texttt{src}
 directory to some location on your Mac. Change to the \texttt{src}
-directory and type \texttt{make}.
+directory and type \texttt{make fetch\_sources \&\& make complile \&\& make dmg}.
 
 \end{document}
