@@ -443,6 +443,20 @@ polymake_env_var :
 	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
 	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
 	> conf.make.tmp; mv conf.make.tmp conf.make
+	@cd $(PREFIX)/polymake/lib/polymake/bundled/cdd; \
+	chmod u+w conf.make; \
+	$(SED) 's/\# .*//g' conf.make | \
+	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
+	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
+	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
+	> conf.make.tmp; mv conf.make.tmp conf.make
+	@cd $(PREFIX)/polymake/lib/polymake/bundled/lrs; \
+	chmod u+w conf.make; \
+	$(SED) 's/\# .*//g' conf.make | \
+	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
+	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
+	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
+	> conf.make.tmp; mv conf.make.tmp conf.make
 	@cd $(PREFIX)/polymake/lib/polymake/bundled/ppl; \
 	chmod u+w conf.make; \
 	$(SED) 's/\# .*//g' conf.make | \
