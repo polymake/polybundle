@@ -275,8 +275,8 @@ ntl :
 ### cleanup: remove unwanted static lib		
 	@rm $(PREFIX)/lib/libntl.a
 ### fix name of lib
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libntl.9.dylib"	
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libntl.9.dylib
-	@install_name_tool -change "$(PREFIX)/lib/libntl.9.dylib" "@rpath/libntl.9.dylib" $(PREFIX)/lib/libntl.9.dylib
 
 
 ### singular
@@ -285,7 +285,7 @@ singularfour :
 	@cd $(TMP); mkdir -p singular
 	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/Singular/Sources Sources; fi
 ###	@cd $(TMP)/singular/Sources && git checkout `git rev-list -n 1 --before="2014-04-22 00:00" spielwiese` && 
-		@cd $(TMP)/singular/Sources && \
+		@cd $(TMP)/singular/Sources && git checkout spielwiese && \
 		git archive spielwiese | bzip2 > $(CURDIR)/src/singular-github-version-$(DATE).tar.bz2 && \
 		PATH=$(TMP)/local/bin:${PATH} \
 		./autogen.sh && \
@@ -296,6 +296,7 @@ singularfour :
 		   CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" \
 		./configure --without-dynamic-kernel \
 		            --without-MP \
+					--disable-static \
 					--with-ntl=$(PREFIX) \
 					--prefix=$(PREFIX) \
 					--disable-gfanlib \
@@ -330,6 +331,9 @@ singularfournames :
 	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.2.dylib" "libresources-4.0.2.dylib"
 	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.2.dylib" "libomalloc-0.9.6.dylib"
 	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.2.dylib" "libfactory-4.0.2.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.2.dylib" "libntl.9.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.2.dylib" "libntl.9.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.2.dylib" "libntl.9.dylib"	
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libSingular-4.0.2.dylib
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libfactory-4.0.2.dylib
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libomalloc-0.9.6.dylib
