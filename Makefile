@@ -267,10 +267,15 @@ ntl :
 	@echo "building ntl"
 	@tar xvfz src/ntl-8.1.2.tar.gz -C $(TMP)
 ### Caveat: The configure is not a configure but a shell script, we need to source it
+###         as such it also does not care about extra CXXFLAGS, so we need to modify the makefile
 	@cd $(TMP)/ntl-8.1.2/src && \
 		PATH=$(TMP)/local/bin:${PATH} . ./configure PREFIX=$(PREFIX) SHARED=on NTL_GMP_LIP=on GMP_PREFIX=$(PREFIX) && \
 		${SED} -i '' -e "s|CXXFLAGS=-g -O2|CXXFLAGS=-g -O2 -I\$(PREFIX)/include -Wl,-rpath,\$(PREFIX)/lib|g" $(TMP)/ntl-8.1.2/src/makefile && \
 		make && make install
+### cleanup: remove unwanted static lib		
+	@rm $(PREFIX)/lib/libntl.a
+### fix name of lib
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libntl.9.dylib
 
 
 ### singular
