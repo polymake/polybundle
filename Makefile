@@ -25,8 +25,8 @@ CXX := /usr/bin/g++
 ### only 64bit, first for gcc, second for perl (with gcc)
 #CFLAGS="-arch x86_64"
 #ARCHFLAGS='-arch x86_64'
-CFLAGS   = " -m64 -mtune=generic"
-CXXFLAGS = " -m64 -mtune=generic"
+CFLAGS   = " -m64 -mcpu=generic -march=x86_64"
+CXXFLAGS = " -m64 -mcpu=generic -march=x86_64"
 
 .PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable flint ftit ntl singularfour singularfournames bundle compile gnu_auto_stuff autoconf automake libtool
 
