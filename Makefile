@@ -25,8 +25,8 @@ CXX := /usr/bin/g++
 ### only 64bit, first for gcc, second for perl (with gcc)
 #CFLAGS="-arch x86_64"
 #ARCHFLAGS='-arch x86_64'
-CFLAGS   = " -m64 -mcpu=generic -march=x86_64"
-CXXFLAGS = " -m64 -mcpu=generic -march=x86_64"
+CFLAGS   =  -m64 -mcpu=generic -march=x86-64
+CXXFLAGS =  -m64 -mcpu=generic -march=x86-64
 
 .PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable flint ftit ntl singularfour singularfournames bundle compile gnu_auto_stuff autoconf automake libtool
 
@@ -95,8 +95,10 @@ skeleton :
 ### gmp build
 gmp_build :
 	@echo "building gmp"
-	@./build_scripts/build.sh gmp-6.0.0a gmp-6.0.0 "$(TMP)" build \
-	--prefix=$(PREFIX) --enable-cxx=yes 
+###@./build_scripts/build.sh gmp-6.0.0a gmp-6.0.0 "$(TMP)" build 	--prefix=$(PREFIX) --enable-fat --enable-cxx=yes 
+	@mkdir -p $(TMP)/gmp-6.0.0_build;
+	@tar xvfj src/gmp-6.0.0a.tar.bz2 -C $(TMP);
+	@cd $(TMP)gmp-6.0.0_build; CFLAGS="$(CFLAGS)" CPPFLAGS="$(CXXFLAGS)" ../gmp-6.0.0/configure --prefix=$(PREFIX) --enable-cxx=yes
 
 gmp_install :
 	@echo "installing gmp"
@@ -172,7 +174,7 @@ readline_build :
 	else \
 	${SED} -i '' -e "s|SHOBJ_ARCHFLAGS=|SHOBJ_ARCHFLAGS=\'-dynamiclib\'|g" $(TMP)/readline-6.3/support/shobj-conf; \
 	fi
-		@cd $(TMP)/readline-6.3; ./configure --prefix=$(PREFIX)
+	@cd $(TMP)/readline-6.3; CFLAGS="$(CLFAGS)" CPPFLAGS="$(CXXFLAGS)"  ./configure --prefix=$(PREFIX) 
 	@make -C $(TMP)/readline-6.3
 	@make -C $(TMP)/readline-6.3 install
 
@@ -285,15 +287,15 @@ singularfour :
 	@cd $(TMP); mkdir -p singular
 	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/Singular/Sources Sources; fi
 ###	@cd $(TMP)/singular/Sources && git checkout `git rev-list -n 1 --before="2014-04-22 00:00" spielwiese` && 
-		@cd $(TMP)/singular/Sources && git checkout spielwiese && \
+		cd $(TMP)/singular/Sources && git checkout spielwiese && \
 		git archive spielwiese | bzip2 > $(CURDIR)/src/singular-github-version-$(DATE).tar.bz2 && \
 		PATH=$(TMP)/local/bin:${PATH} \
 		./autogen.sh && \
 		   PATH=$(TMP)/local/bin:${PATH} \
 		   PERL5LIB=$(PERL5LIB) \
-		   CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" \
+		   CPPFLAGS="-fpic -DPIC -DLIBSINGULAR $(CXXFLAGS)" \
 		   LDFLAGS="-L$(PREFIX)/lib/ -Wl,-rpath,$(PREFIX)/lib" \
-		   CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR" \
+		   CFLAGS="-I$(PREFIX)/include/ -fpic -DPIC -DLIBSINGULAR $(CFLAGS)" \
 		./configure --without-dynamic-kernel \
 		            --without-MP \
 					--disable-static \
@@ -363,8 +365,8 @@ polymake-prepare :
 				   --with-ant=$(PREFIX)/apache-ant-$(ANTVERSION)/bin/ant PERL=$(PERL) \
 				   --with-java=/usr/bin/java \
 				   LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  \
-				   CXXFLAGS="-I$(PREFIX)/include -Wl,-rpath,$(PREFIX)/lib -m64 -mtune=generic -I/usr/include/c++/4.2.1" \
-				   CFLAGS=" -m64 -mtune=generic" \
+				   CXXFLAGS="$(CXXFLAGS) -I$(PREFIX)/include -Wl,-rpath,$(PREFIX)/lib -I/usr/include/c++/4.2.1" \
+				   CFLAGS="$(CFLAGS)" \
 				   CC=$(CC) CXX=$(CXX) \
 				   PERL=$(PERL)
 
