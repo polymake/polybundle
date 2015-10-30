@@ -2,7 +2,9 @@
 # this Makefile is for OS X Yosemite
 # prior installation of Xcode command line tools and java required
 
-ANTVERSION := "1.9.6"
+ANTVERSION  := "1.9.6"
+MPFRVERSION := "3.1.3"
+GMPVERSION  := "6.0.0a"
 
 ### change into the base directory
 ###BASEPATH := $( (cd -P $(dirname $0) && pwd) )
@@ -55,9 +57,9 @@ fetch_sources :
 	@echo "fetching boost"
 	@cd src; curl -O -L http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2
 	@echo "fetching gmp"
-	@cd src; curl -O https://gmplib.org/download/gmp/gmp-6.0.0a.tar.bz2
+	@cd src; curl -O https://gmplib.org/download/gmp/gmp-$(GMPVERSION).tar.bz2
 	@echo "fetching mpfr"
-	@cd src; curl -O http://www.mpfr.org/mpfr-current/mpfr-3.1.3.tar.bz2
+	@cd src; curl -O http://www.mpfr.org/mpfr-current/mpfr-$(MPFRVERSION).tar.bz2
 	@echo "fetching polymake"
 	@cd src; curl -O http://www.polymake.org/lib/exe/fetch.php/download/polymake-2.14.tar.bz2
 	@echo "fetching ppl"
@@ -115,12 +117,12 @@ gmp : gmp_install gmp_name
 ### mpfr build
 mpfr_build : 
 	@echo "building mpfg"
-	@./build_scripts/build.sh mpfr-3.1.2 mpfr-3.1.2 "$(TMP)" build \
+	@./build_scripts/build.sh mpfr-$MPFRVERSION mpfr-$MPFRVERSION "$(TMP)" build \
 	--prefix=$(PREFIX) --with-gmp=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib"
 
 mpfr_install : 
 	@echo "installing mpfr"
-	@./build_scripts/install.sh mpfr-3.1.2 "$(TMP)" build
+	@./build_scripts/install.sh mpfr-$MPFRVERSION "$(TMP)" build
 
 mpfr_name :
 	@echo "fixing names in mpfr"
