@@ -4,7 +4,8 @@
 
 ANTVERSION  := "1.9.6"
 MPFRVERSION := "3.1.3"
-GMPVERSION  := "6.0.0a"
+GMPVERSION  := "6.0.0"
+GMPMINORVERSION := "a"
 POLYMAKEVERSION := "2.14"
 
 ### change into the base directory
@@ -58,7 +59,7 @@ fetch_sources :
 	@echo "fetching boost"
 	@cd src; curl -O -L http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2
 	@echo "fetching gmp"
-	@cd src; curl -O https://gmplib.org/download/gmp/gmp-$(GMPVERSION).tar.bz2
+	@cd src; curl -O https://gmplib.org/download/gmp/gmp-$(GMPVERSION)$(GMPMINORVERSION).tar.bz2
 	@echo "fetching mpfr"
 	@cd src; curl -O http://www.mpfr.org/mpfr-current/mpfr-$(MPFRVERSION).tar.bz2
 	@echo "fetching polymake"
