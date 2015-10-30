@@ -5,6 +5,7 @@
 ANTVERSION  := "1.9.6"
 MPFRVERSION := "3.1.3"
 GMPVERSION  := "6.0.0a"
+POLYMAKEVERSION := "2.14"
 
 ### change into the base directory
 ###BASEPATH := $( (cd -P $(dirname $0) && pwd) )
@@ -61,7 +62,7 @@ fetch_sources :
 	@echo "fetching mpfr"
 	@cd src; curl -O http://www.mpfr.org/mpfr-current/mpfr-$(MPFRVERSION).tar.bz2
 	@echo "fetching polymake"
-	@cd src; curl -O http://www.polymake.org/lib/exe/fetch.php/download/polymake-2.14.tar.bz2
+	@cd src; curl -O http://www.polymake.org/lib/exe/fetch.php/download/polymake-$(POLYMAKEVERSION).tar.bz2
 	@echo "fetching ppl"
 	@cd src; curl -O http://bugseng.com/products/ppl/download/ftp/releases/1.1/ppl-1.1.tar.bz2
 	@echo "fetching readline"
@@ -98,13 +99,13 @@ skeleton :
 gmp_build :
 	@echo "building gmp"
 ###@./build_scripts/build.sh gmp-6.0.0a gmp-6.0.0 "$(TMP)" build 	--prefix=$(PREFIX) --enable-fat --enable-cxx=yes 
-	@mkdir -p $(TMP)/gmp-6.0.0_build;
-	@tar xvfj src/gmp-6.0.0a.tar.bz2 -C $(TMP);
-	@cd $(TMP)gmp-6.0.0_build; CFLAGS="$(CFLAGS)" CPPFLAGS="$(CXXFLAGS)" ../gmp-6.0.0/configure --prefix=$(PREFIX) --enable-cxx=yes
+	@mkdir -p $(TMP)/gmp-$(GMPVERSION)_build;
+	@tar xvfj src/gmp-$(GMPVERSION).tar.bz2 -C $(TMP);
+	@cd $(TMP)gmp-$(GMPVERSION)_build; CFLAGS="$(CFLAGS)" CPPFLAGS="$(CXXFLAGS)" ../gmp-$(GMPVERSION)/configure --prefix=$(PREFIX) --enable-cxx=yes
 
 gmp_install :
 	@echo "installing gmp"
-	@./build_scripts/install.sh gmp-6.0.0 "$(TMP)" build
+	@./build_scripts/install.sh gmp-$(GMPVERSION) "$(TMP)" build
 	
 gmp_name :
 		@echo "fixing names in gmp"
@@ -117,12 +118,12 @@ gmp : gmp_install gmp_name
 ### mpfr build
 mpfr_build : 
 	@echo "building mpfg"
-	@./build_scripts/build.sh mpfr-$MPFRVERSION mpfr-$MPFRVERSION "$(TMP)" build \
+	@./build_scripts/build.sh mpfr-$(MPFRVERSION) mpfr-$(MPFRVERSION) "$(TMP)" build \
 	--prefix=$(PREFIX) --with-gmp=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib"
 
 mpfr_install : 
 	@echo "installing mpfr"
-	@./build_scripts/install.sh mpfr-$MPFRVERSION "$(TMP)" build
+	@./build_scripts/install.sh mpfr-$(MPFRVERSION) "$(TMP)" build
 
 mpfr_name :
 	@echo "fixing names in mpfr"
@@ -484,7 +485,7 @@ polymake_name :
 	@echo "fixing names in polymake"
 	@chmod u+w $(PREFIX)/polymake/lib/libpolymake.dylib
 	@chmod u+w $(PREFIX)/polymake/lib/libpolymake-apps.dylib
-	@chmod u+w $(PREFIX)/polymake/lib/libpolymake-apps.2.14.dylib
+	@chmod u+w $(PREFIX)/polymake/lib/libpolymake-apps.$(POLYMAKEVERSION).dylib
 	@install_name_tool -id "@rpath/../polymake/lib/libpolymake.dylib" $(PREFIX)/polymake/lib/libpolymake.dylib
 	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.dylib
 	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.2.14.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.2.14.dylib
