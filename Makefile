@@ -8,6 +8,7 @@ GMPVERSION      := "6.0.0"
 GMPMINORVERSION := "a"
 POLYMAKEVERSION := "2.14"
 NTLVERSION      := "9.5.0"
+LIBNTLVERSION   := "18"
 
 ### change into the base directory
 ###BASEPATH := $( (cd -P $(dirname $0) && pwd) )
@@ -282,8 +283,8 @@ ntl :
 ### cleanup: remove unwanted static lib		
 	@rm $(PREFIX)/lib/libntl.a
 ### fix name of lib
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libntl.9.dylib"	
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libntl.9.dylib
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libntl.$(LIBNTLVERSION).dylib"	
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libntl.$(LIBNTLVERSION).dylib
 
 
 ### singular
