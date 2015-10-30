@@ -2,7 +2,7 @@
 # this Makefile is for OS X Yosemite
 # prior installation of Xcode command line tools and java required
 
-ANTVERSION := "1.9.4"
+ANTVERSION := "1.9.6"
 
 ### change into the base directory
 ###BASEPATH := $( (cd -P $(dirname $0) && pwd) )
@@ -57,7 +57,7 @@ fetch_sources :
 	@echo "fetching gmp"
 	@cd src; curl -O https://gmplib.org/download/gmp/gmp-6.0.0a.tar.bz2
 	@echo "fetching mpfr"
-	@cd src; curl -O http://www.mpfr.org/mpfr-current/mpfr-3.1.2.tar.bz2
+	@cd src; curl -O http://www.mpfr.org/mpfr-current/mpfr-3.1.3.tar.bz2
 	@echo "fetching polymake"
 	@cd src; curl -O http://www.polymake.org/lib/exe/fetch.php/download/polymake-2.14.tar.bz2
 	@echo "fetching ppl"
