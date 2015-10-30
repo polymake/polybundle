@@ -311,6 +311,12 @@ singularfour :
 	
 singularfournames :
 ### binaries
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "Singular" "libSingular-4.0.2.dylib" 
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "Singular" "libpolys-4.0.2.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "Singular" "libfactory-4.0.2.dylib" 
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "Singular" "libresources-4.0.2.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "Singular" "libomalloc-0.9.6.dylib" 
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "Singular" "libresources-4.0.2.dylib"
 	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ESingular" "libomalloc-0.9.6.dylib" 
 	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ESingular" "libresources-4.0.2.dylib"
 	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "TSingular" "libomalloc-0.9.6.dylib"
