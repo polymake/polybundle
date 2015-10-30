@@ -2,11 +2,12 @@
 # this Makefile is for OS X Yosemite
 # prior installation of Xcode command line tools and java required
 
-ANTVERSION  := "1.9.6"
-MPFRVERSION := "3.1.3"
-GMPVERSION  := "6.0.0"
+ANTVERSION      := "1.9.6"
+MPFRVERSION     := "3.1.3"
+GMPVERSION      := "6.0.0"
 GMPMINORVERSION := "a"
 POLYMAKEVERSION := "2.14"
+NTLVERSION      := "9.5.0"
 
 ### change into the base directory
 ###BASEPATH := $( (cd -P $(dirname $0) && pwd) )
@@ -75,7 +76,7 @@ fetch_sources :
 	@echo "fetching libtool"
 	@cd src; curl --remote-name http://ftp.gnu.org/gnu/libtool/libtool-2.4.tar.gz
 	@echo "fetching ntl"
-	@cd src; curl --remote-name http://www.shoup.net/ntl/ntl-8.1.2.tar.gz
+	@cd src; curl --remote-name http://www.shoup.net/ntl/ntl-$(NTLVERSION).tar.gz
 	
 ### create the polymake package skeleton
 skeleton : 
@@ -271,10 +272,10 @@ libtool :
 		
 ntl :
 	@echo "building ntl"
-	@tar xvfz src/ntl-8.1.2.tar.gz -C $(TMP)
+	@tar xvfz src/ntl-$(NTLVERSION).tar.gz -C $(TMP)
 ### Caveat: The configure is not a configure but a shell script, we need to source it
 ###         as such it also does not care about extra CXXFLAGS, so we need to modify the makefile
-	@cd $(TMP)/ntl-8.1.2/src && \
+	@cd $(TMP)/ntl-$(NTLVERSION)/src && \
 		PATH=$(TMP)/local/bin:${PATH} . ./configure PREFIX=$(PREFIX) SHARED=on NTL_GMP_LIP=on GMP_PREFIX=$(PREFIX) && \
 		${SED} -i '' -e "s|CXXFLAGS=-g -O2|CXXFLAGS=-g -O2 -I\$(PREFIX)/include -Wl,-rpath,\$(PREFIX)/lib|g" $(TMP)/ntl-8.1.2/src/makefile && \
 		make && make install
