@@ -277,7 +277,7 @@ ntl :
 ###         as such it also does not care about extra CXXFLAGS, so we need to modify the makefile
 	@cd $(TMP)/ntl-$(NTLVERSION)/src && \
 		PATH=$(TMP)/local/bin:${PATH} . ./configure PREFIX=$(PREFIX) SHARED=on NTL_GMP_LIP=on GMP_PREFIX=$(PREFIX) && \
-		${SED} -i '' -e "s|CXXFLAGS=-g -O2|CXXFLAGS=-g -O2 -I\$(PREFIX)/include -Wl,-rpath,\$(PREFIX)/lib|g" $(TMP)/ntl-8.1.2/src/makefile && \
+		${SED} -i '' -e "s|CXXFLAGS=-g -O2|CXXFLAGS=-g -O2 -I\$(PREFIX)/include -Wl,-rpath,\$(PREFIX)/lib|g" $(TMP)/ntl-$(NTLVERSION)/src/makefile && \
 		make && make install
 ### cleanup: remove unwanted static lib		
 	@rm $(PREFIX)/lib/libntl.a
