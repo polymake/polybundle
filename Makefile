@@ -101,7 +101,7 @@ gmp_build :
 	@echo "building gmp"
 ###@./build_scripts/build.sh gmp-6.0.0a gmp-6.0.0 "$(TMP)" build 	--prefix=$(PREFIX) --enable-fat --enable-cxx=yes 
 	@mkdir -p $(TMP)/gmp-$(GMPVERSION)_build;
-	@tar xvfj src/gmp-$(GMPVERSION).tar.bz2 -C $(TMP);
+	@tar xvfj src/gmp-$(GMPVERSION)$(GMPMINORVERSION).tar.bz2 -C $(TMP);
 	@cd $(TMP)gmp-$(GMPVERSION)_build; CFLAGS="$(CFLAGS)" CPPFLAGS="$(CXXFLAGS)" ../gmp-$(GMPVERSION)/configure --prefix=$(PREFIX) --enable-cxx=yes
 
 gmp_install :
