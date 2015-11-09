@@ -64,8 +64,6 @@ fetch_sources :
 	@cd src; curl -O https://gmplib.org/download/gmp/gmp-$(GMPVERSION)$(GMPMINORVERSION).tar.bz2
 	@echo "fetching mpfr"
 	@cd src; curl -O http://www.mpfr.org/mpfr-current/mpfr-$(MPFRVERSION).tar.bz2
-	@echo "fetching polymake"
-	@cd src; curl -O http://www.polymake.org/lib/exe/fetch.php/download/polymake-$(POLYMAKEVERSION).tar.bz2
 	@echo "fetching ppl"
 	@cd src; curl -O http://bugseng.com/products/ppl/download/ftp/releases/1.1/ppl-1.1.tar.bz2
 	@echo "fetching readline"
@@ -360,8 +358,8 @@ singularfournames :
 polymake-prepare : 
 	@echo "preparing polymake build"
 	@cd $(TMP); mkdir -p polymake; 
-	@cd $(TMP)/polymake;  if [ ! -d .git ]; then git clone -b Snapshots https://github.com/polymake/polymake.git .; fi
-	@cd $(TMP)/polymake; git archive Releases | bzip2 > ../../src/polymake-snapshots-$(DATE).tar.bz2
+	@cd $(TMP)/polymake;  if [ ! -d .git ]; then git clone -b Releases https://github.com/polymake/polymake.git .; fi
+	@cd $(TMP)/polymake; git archive Releases | bzip2 > ../../src/polymake-releases-$(DATE).tar.bz2
 	cd $(TMP)/polymake; \
 	  LD_LIBRARY_PATH=$(PREFIX)/lib \
 	  PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ \
@@ -377,7 +375,7 @@ polymake-prepare :
 				   --with-ant=$(PREFIX)/apache-ant-$(ANTVERSION)/bin/ant PERL=$(PERL) \
 				   --with-java=/usr/bin/java \
 				   LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  \
-				   CXXFLAGS="$(CXXFLAGS) -I$(PREFIX)/include -Wl,-rpath,$(PREFIX)/lib -I/usr/include/c++/4.2.1" \
+				   CXXFLAGS="$(CXXFLAGS) -I$(PREFIX)/include -Wl,-rpath,$(PREFIX)/lib -I$(PREFIX)/include/boost_1_55_0/ -I/usr/include/c++/4.2.1" \
 				   CFLAGS="$(CFLAGS)" \
 				   CC=$(CC) CXX=$(CXX) \
 				   PERL=$(PERL)
