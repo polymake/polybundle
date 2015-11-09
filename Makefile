@@ -14,15 +14,17 @@ LIBNTLVERSION   := "18"
 ###BASEPATH := $( (cd -P $(dirname $0) && pwd) )
 SED := "/usr/bin/sed"
 TMP := $(CURDIR)/tmp/
-PERL := /usr/bin/perl
 DATE := `date +'%Y-%m-%d'`
 PATH := /usr/bin:$(PATH)
 JNIHEADERS = "/System/Library/Frameworks/JavaVM.framework/Headers/		"
 
-MACVERSION := $(shell sw_vers | grep -o "10[.][0-9]")
-PERLVERSION := $(shell $(PERL) --version | grep -o "5[.][0-9]*[.][0-9]")
 
 PREFIX := $(CURDIR)/polymake.app/Contents/Resources
+PERL := $(PREFIX)/bin/perl5.18
+
+MACVERSION := $(shell sw_vers | grep -o "10[.][0-9]")
+PERLVERSION := 5.18.2
+
 
 # fix the compiler
 CC  := /usr/bin/cc
@@ -34,16 +36,22 @@ CXX := /usr/bin/g++
 CFLAGS   =  -m64 -mcpu=generic -march=x86-64
 CXXFLAGS =  -m64 -mcpu=generic -march=x86-64
 
-.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs relative-paths doc polymake-executable flint ftit ntl singularfour singularfournames bundle compile gnu_auto_stuff autoconf automake libtool
+.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs doc polymake-executable flint ftit ntl singularfour_configure singularfour_compile singularfour_install bundle compile gnu_auto_stuff autoconf automake libtool 
 
 ### default target
-all : fetch_sources compile
-
-compile : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant ftit gnu_auto_stuff ntl singularfour singularfournames polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc
+all : compile
 
 bundle : compile dmg
 
-allold : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant singular polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg  
+gnu_auto_stuff : autoconf automake libtool
+
+compile : skeleton \
+	 		gnu_auto_stuff readline_build perl \
+			boost ant \
+			gmp_build gmp_install ntl mpfr_build mpfr_install ppl_build ppl_install \
+			ftit singularfour_configure singularfour_compile singularfour_install \
+			polymake-prepare polymake-compile polymake-install polymake_env_var  polymake-executable \
+			fix_names clean-install doc			
 
 
 # get all sources not obtained from github
@@ -59,13 +67,11 @@ fetch_sources :
 	@echo "fetching libxslt"
 	@cd src; curl -O -L http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/XML-LibXSLT-1.92.tar.gz
 	@echo "fetching boost"
-	@cd src; curl -O -L http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2
+	@cd src; curl -O -L http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.bz2
 	@echo "fetching gmp"
 	@cd src; curl -O https://gmplib.org/download/gmp/gmp-$(GMPVERSION)$(GMPMINORVERSION).tar.bz2
 	@echo "fetching mpfr"
 	@cd src; curl -O http://www.mpfr.org/mpfr-current/mpfr-$(MPFRVERSION).tar.bz2
-	@echo "fetching polymake"
-	@cd src; curl -O http://www.polymake.org/lib/exe/fetch.php/download/polymake-$(POLYMAKEVERSION).tar.bz2
 	@echo "fetching ppl"
 	@cd src; curl -O http://bugseng.com/products/ppl/download/ftp/releases/1.1/ppl-1.1.tar.bz2
 	@echo "fetching readline"
@@ -98,76 +104,35 @@ skeleton :
 	@cp bundle_scripts/*.icns polymake.app/Contents/Resources/
 	@install -m 550 bundle_scripts/Singular polymake.app/Contents/MacOS/
 
-### gmp build
-gmp_build :
-	@echo "building gmp"
-###@./build_scripts/build.sh gmp-6.0.0a gmp-6.0.0 "$(TMP)" build 	--prefix=$(PREFIX) --enable-fat --enable-cxx=yes 
-	@mkdir -p $(TMP)/gmp-$(GMPVERSION)_build;
-	@tar xvfj src/gmp-$(GMPVERSION)$(GMPMINORVERSION).tar.bz2 -C $(TMP);
-	@cd $(TMP)gmp-$(GMPVERSION)_build; CFLAGS="$(CFLAGS)" CPPFLAGS="$(CXXFLAGS)" ../gmp-$(GMPVERSION)/configure --prefix=$(PREFIX) --enable-cxx=yes
-
-gmp_install :
-	@echo "installing gmp"
-	@./build_scripts/install.sh gmp-$(GMPVERSION) "$(TMP)" build
-	
-gmp_name :
-		@echo "fixing names in gmp"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libgmpxx.4.dylib" "libgmp.10.dylib"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libgmpxx.4.dylib" 
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libgmp.10.dylib"
-	
-gmp : gmp_install gmp_name
- 
-### mpfr build
-mpfr_build : 
-	@echo "building mpfg"
-	@./build_scripts/build.sh mpfr-$(MPFRVERSION) mpfr-$(MPFRVERSION) "$(TMP)" build \
-	--prefix=$(PREFIX) --with-gmp=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib"
-
-mpfr_install : 
-	@echo "installing mpfr"
-	@./build_scripts/install.sh mpfr-$(MPFRVERSION) "$(TMP)" build
-
-mpfr_name :
-	@echo "fixing names in mpfr"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libmpfr.4.dylib" 
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libmpfr.4.dylib
-		
-mpfr : mpfr_install mpfr_name
-
-### ppl build
-ppl_build : 
-	@echo "building ppl"
-	@./build_scripts/build.sh ppl-1.1 ppl-1.1 "$(TMP)" build \
-	  --prefix=$(PREFIX) --with-gmp=$(PREFIX) --with-mpfr=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib"
-
-ppl_install : 
-	@echo "installing ppl"
-	@./build_scripts/install.sh ppl-1.1 "$(TMP)" build
-
-ppl_name :
-	@echo "fixing names in ppl"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libppl.13.dylib" "libppl_c.4.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libppl_c.4.dylib" "libppl.13.dylib"
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libppl_c.4.dylib
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libppl.13.dylib
-	##############
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libppl_c.4.dylib" 
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libppl.13.dylib" 
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl-config" "libppl.13.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl_pips" "libppl.13.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl_lcdd" "libppl.13.dylib"
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ppl-config
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ppl_pips
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ppl_lcdd
-
-ppl : ppl_install ppl_name
-
 
 ### ant
 ant : 
 	@echo "extracting ant"
 	@tar xvfj src/apache-ant-$(ANTVERSION)-bin.tar.bz2 -C $(PREFIX)
+
+	
+autoconf :
+	@echo "building autoconf"
+	@mkdir -p $(TMP)/local
+	@tar xvfz src/autoconf-2.69.tar.gz -C $(TMP)
+	@cd $(TMP)/autoconf-2.69 && \
+		./configure --prefix=$(TMP)/local && \
+		make && make install
+
+automake :
+	@echo "building automake"
+	@tar xvfz src/automake-1.14.tar.gz -C $(TMP)
+	@cd $(TMP)/automake-1.14 && \
+		PATH=$(TMP)/local/bin:${PATH} ./configure --prefix=$(TMP)/local && \
+		make && make install
+
+libtool :
+	@echo "building libtool"
+	@tar xvfz src/libtool-2.4.tar.gz -C $(TMP)
+	@cd $(TMP)/libtool-2.4 && \
+		PATH=$(TMP)/local/bin:${PATH} ./configure --prefix=$(TMP)/local && \
+		make && make install
+
 
 ### readline 
 readline_build :
@@ -184,18 +149,13 @@ readline_build :
 	@make -C $(TMP)/readline-6.3
 	@make -C $(TMP)/readline-6.3 install
 
-readline :
-	@echo "fixing names in readline"
-	@cd $(PREFIX)/lib; chmod u+w libreadline.6.3.dylib;  chmod u+w libhistory.6.3.dylib
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libreadline.6.3.dylib" "libgcc_s.1.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libhistory.6.3.dylib" "libgcc_s.1.dylib"	
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libreadline.6.3.dylib" 
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libhistory.6.3.dylib" 
-
 
 ### XML-LibXSLT
 ### Term-Gnu-Readline
 perl : 
+	@echo copying perl
+	@mkdir -p $(PREFIX)/bin
+	@cp /usr/bin/perl5.18 $(PREFIX)/bin
 	@echo "building perl modules"
 	@tar xvfz src/XML-LibXSLT-1.92.tar.gz -C $(TMP)
 	@cd $(TMP)/XML-LibXSLT-1.92; ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX)  
@@ -210,16 +170,68 @@ perl :
 	@make -C $(TMP)/Term-ReadLine-Gnu-1.24
 	@make -C $(TMP)/Term-ReadLine-Gnu-1.24 install 
 
+
+
+
+### gmp build
+gmp_build :
+	@echo "building gmp"
+###@./build_scripts/build.sh gmp-6.0.0a gmp-6.0.0 "$(TMP)" build 	--prefix=$(PREFIX) --enable-fat --enable-cxx=yes 
+	@mkdir -p $(TMP)/gmp-$(GMPVERSION)_build;
+	@tar xvfj src/gmp-$(GMPVERSION)$(GMPMINORVERSION).tar.bz2 -C $(TMP);
+	@cd $(TMP)gmp-$(GMPVERSION)_build; CFLAGS="$(CFLAGS)" CPPFLAGS="$(CXXFLAGS)" ../gmp-$(GMPVERSION)/configure --prefix=$(PREFIX) --enable-cxx=yes
+
+
+gmp_install :
+	@echo "installing gmp"
+	@./build_scripts/install.sh gmp-$(GMPVERSION) "$(TMP)" build
+	
+		
+ntl :
+	@echo "building ntl"
+	@tar xvfz src/ntl-$(NTLVERSION).tar.gz -C $(TMP)
+### Caveat: The configure is not a configure but a shell script, we need to source it
+###         as such it also does not care about extra CXXFLAGS, so we need to modify the makefile
+	@cd $(TMP)/ntl-$(NTLVERSION)/src && \
+		PATH=$(TMP)/local/bin:${PATH} . ./configure PREFIX=$(PREFIX) SHARED=on NTL_GMP_LIP=on GMP_PREFIX=$(PREFIX) && \
+		${SED} -i '' -e "s|CXXFLAGS=-g -O2|CXXFLAGS=-g -O2 -I\$(PREFIX)/include -Wl,-rpath,\$(PREFIX)/lib|g" $(TMP)/ntl-$(NTLVERSION)/src/makefile && \
+		make && make install
+### cleanup: remove unwanted static lib		
+	@rm $(PREFIX)/lib/libntl.a
+ 
+ 
+### mpfr build
+mpfr_build : 
+	@echo "building mpfg"
+	@./build_scripts/build.sh mpfr-$(MPFRVERSION) mpfr-$(MPFRVERSION) "$(TMP)" build \
+	--prefix=$(PREFIX) --with-gmp=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib"
+
+mpfr_install : 
+	@echo "installing mpfr"
+	@./build_scripts/install.sh mpfr-$(MPFRVERSION) "$(TMP)" build
+
+
+### ppl build
+ppl_build : 
+	@echo "building ppl"
+	@./build_scripts/build.sh ppl-1.1 ppl-1.1 "$(TMP)" build \
+	  --prefix=$(PREFIX) --with-gmp=$(PREFIX) --with-mpfr=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib"
+
+ppl_install : 
+	@echo "installing ppl"
+	@./build_scripts/install.sh ppl-1.1 "$(TMP)" build
+
+
 ### boost
 boost : 
 	@echo "extracting boost"
-	@tar xfj src/boost_1_55_0.tar.bz2 -C polymake.app/Contents/Resources/include
+	@tar xfj src/boost_1_59_0.tar.bz2 -C polymake.app/Contents/Resources/include
 ### remove junk
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/doc
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/tools
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/status
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/more
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/libs
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_59_0/doc
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_59_0/tools
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_59_0/status
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_59_0/more
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_59_0/libs
 	
 
 ### preparations for singular
@@ -247,48 +259,9 @@ ftit :
 	@cd $(TMP)/4ti2-1.6.2; make
 	@cd $(TMP)/4ti2-1.6.2; make install
 
-gnu_auto_stuff : autoconf automake libtool
-	
-autoconf :
-	@echo "building autoconf"
-	@mkdir -p $(TMP)/local
-	@tar xvfz src/autoconf-2.69.tar.gz -C $(TMP)
-	@cd $(TMP)/autoconf-2.69 && \
-		./configure --prefix=$(TMP)/local && \
-		make && make install
-
-automake :
-	@echo "building automake"
-	@tar xvfz src/automake-1.14.tar.gz -C $(TMP)
-	@cd $(TMP)/automake-1.14 && \
-		PATH=$(TMP)/local/bin:${PATH} ./configure --prefix=$(TMP)/local && \
-		make && make install
-
-libtool :
-	@echo "building libtool"
-	@tar xvfz src/libtool-2.4.tar.gz -C $(TMP)
-	@cd $(TMP)/libtool-2.4 && \
-		PATH=$(TMP)/local/bin:${PATH} ./configure --prefix=$(TMP)/local && \
-		make && make install
-		
-ntl :
-	@echo "building ntl"
-	@tar xvfz src/ntl-$(NTLVERSION).tar.gz -C $(TMP)
-### Caveat: The configure is not a configure but a shell script, we need to source it
-###         as such it also does not care about extra CXXFLAGS, so we need to modify the makefile
-	@cd $(TMP)/ntl-$(NTLVERSION)/src && \
-		PATH=$(TMP)/local/bin:${PATH} . ./configure PREFIX=$(PREFIX) SHARED=on NTL_GMP_LIP=on GMP_PREFIX=$(PREFIX) && \
-		${SED} -i '' -e "s|CXXFLAGS=-g -O2|CXXFLAGS=-g -O2 -I\$(PREFIX)/include -Wl,-rpath,\$(PREFIX)/lib|g" $(TMP)/ntl-$(NTLVERSION)/src/makefile && \
-		make && make install
-### cleanup: remove unwanted static lib		
-	@rm $(PREFIX)/lib/libntl.a
-### fix name of lib
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libntl.$(LIBNTLVERSION).dylib"	
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libntl.$(LIBNTLVERSION).dylib
-
 
 ### singular
-singularfour :
+singularfour_configure :
 	@echo "building singular 4"
 	@cd $(TMP); mkdir -p singular
 	@cd $(TMP)/singular; if [ ! -d Sources/.git ]; then git clone https://github.com/Singular/Sources Sources; fi
@@ -309,59 +282,25 @@ singularfour :
 					--prefix=$(PREFIX) \
 					--disable-gfanlib \
 					--without-flint \
-					--with-gmp=$(PREFIX) && \
-		  PATH=$(TMP)/local/bin:${PATH} \
-		make -j2 && make install
-		
+					--with-gmp=$(PREFIX) 
+
 		###		            --with-flint=$(PREFIX) \
+
+		  
+singularfour_compile :	
+	@cd $(TMP)/singular/Sources	&& PATH=$(TMP)/local/bin:${PATH} && make -j2 
+		  
 	
-singularfournames :
-### binaries
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "Singular" "libSingular-4.0.2.dylib" 
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "Singular" "libpolys-4.0.2.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "Singular" "libfactory-4.0.2.dylib" 
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "Singular" "libresources-4.0.2.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "Singular" "libomalloc-0.9.6.dylib" 
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "Singular" "libresources-4.0.2.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ESingular" "libomalloc-0.9.6.dylib" 
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ESingular" "libresources-4.0.2.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "TSingular" "libomalloc-0.9.6.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "TSingular" "libresources-4.0.2.dylib"
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/Singular
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ESingular
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/TSingular
-### libs
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libSingular-4.0.2.dylib"	
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libfactory-4.0.2.dylib"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libomalloc-0.9.6.dylib"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libpolys-4.0.2.dylib"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libresources-4.0.2.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.2.dylib" "libresources-4.0.2.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.2.dylib" "libomalloc-0.9.6.dylib" 
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.2.dylib" "libfactory-4.0.2.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.2.dylib" "libpolys-4.0.2.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.2.dylib" "libresources-4.0.2.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.2.dylib" "libomalloc-0.9.6.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.2.dylib" "libresources-4.0.2.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.2.dylib" "libomalloc-0.9.6.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.2.dylib" "libfactory-4.0.2.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libSingular-4.0.2.dylib" "libntl.9.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libpolys-4.0.2.dylib" "libntl.9.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libfactory-4.0.2.dylib" "libntl.9.dylib"	
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libSingular-4.0.2.dylib
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libfactory-4.0.2.dylib
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libomalloc-0.9.6.dylib
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libpolys-4.0.2.dylib
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libresources-4.0.2.dylib
-	
-	
+singularfour_install :
+	@cd $(TMP)/singular/Sources && make install
+		
 
 ### polymake 	
 polymake-prepare : 
 	@echo "preparing polymake build"
 	@cd $(TMP); mkdir -p polymake; 
-	@cd $(TMP)/polymake;  if [ ! -d .git ]; then git clone -b Snapshots https://github.com/polymake/polymake.git .; fi
-	@cd $(TMP)/polymake; git archive Releases | bzip2 > ../../src/polymake-snapshots-$(DATE).tar.bz2
+	@cd $(TMP)/polymake;  if [ ! -d .git ]; then git clone -b Releases https://github.com/polymake/polymake.git .; fi
+	@cd $(TMP)/polymake; git archive Releases | bzip2 > ../../src/polymake-releases-$(DATE).tar.bz2
 	cd $(TMP)/polymake; \
 	  LD_LIBRARY_PATH=$(PREFIX)/lib \
 	  PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ \
@@ -369,7 +308,7 @@ polymake-prepare :
 	               --with-readline=$(PREFIX)/lib \
 	               --prefix=$(PREFIX)/polymake \
 				   --with-jni-headers=$(JNIHEADERS) \
-				   --with-boost=$(PREFIX)/include/boost_1_55_0/ \
+				   --with-boost=$(PREFIX)/include/boost_1_59_0/ \
 				   --with-gmp=$(PREFIX)/ \
 				   --with-ppl=$(PREFIX)/  \
 				   --with-mpfr=$(PREFIX)/ \
@@ -377,7 +316,7 @@ polymake-prepare :
 				   --with-ant=$(PREFIX)/apache-ant-$(ANTVERSION)/bin/ant PERL=$(PERL) \
 				   --with-java=/usr/bin/java \
 				   LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  \
-				   CXXFLAGS="$(CXXFLAGS) -I$(PREFIX)/include -Wl,-rpath,$(PREFIX)/lib -I/usr/include/c++/4.2.1" \
+				   CXXFLAGS="$(CXXFLAGS) -I$(PREFIX)/include -I$(PREFIX)/include/boost_1_59_0/ -I/usr/include/c++/4.2.1" \
 				   CFLAGS="$(CFLAGS)" \
 				   CC=$(CC) CXX=$(CXX) \
 				   PERL=$(PERL)
@@ -397,8 +336,17 @@ polymake-install :
 polymake_env_var :
 	@echo "fixing variables in polymake"
 ### adjust the polymake script to the new paths
-	@cd $(PREFIX)/polymake/bin; chmod u+w polymake; $(SED) 's/.*InstallTop=.*/   $$InstallTop=\"$$ENV\{POLYMAKE_BASE_PATH\}\/share\/polymake\";/' polymake | $(SED) 's/.*InstallArch=.*/   $$InstallArch=\"$$ENV\{POLYMAKE_BASE_PATH\}\/lib\/polymake\";/' | $(SED) '/.*addlibs=.*/d' > polymake.tmp; mv polymake.tmp polymake
-	@cd $(PREFIX)/polymake/bin; chmod u+w polymake-config; $(SED) 's/.*InstallArch=.*/   $$InstallArch=\"$$ENV\{POLYMAKE_BASE_PATH\}\/lib\/polymake\";/' polymake-config > polymake-config.tmp; mv polymake-config.tmp polymake-config
+	@cd $(PREFIX)/polymake/bin; \
+		chmod u+w polymake; \
+		$(SED) 's/.*InstallTop=.*/   $$InstallTop=\"$$ENV\{POLYMAKE_BASE_PATH\}\/share\/polymake\";/' polymake \
+			| $(SED) 's/.*InstallArch=.*/   $$InstallArch=\"$$ENV\{POLYMAKE_BASE_PATH\}\/lib\/polymake\";/' \
+			| $(SED) '/.*addlibs=.*/d' \
+			| $(SED) 's/\#!\/usr\/bin\/perl//' \
+			> polymake.tmp; mv polymake.tmp polymake
+	@cd $(PREFIX)/polymake/bin; \
+		chmod u+w polymake-config; \
+		$(SED) 's/.*InstallArch=.*/   $$InstallArch=\"$$ENV\{POLYMAKE_BASE_PATH\}\/lib\/polymake\";/' polymake-config \
+		> polymake-config.tmp; mv polymake-config.tmp polymake-config
 ### and adjust conf.make for polymake and all bundled extensions
 # FIXME using \S etc. in a regexp apparently does not work for Mac's sed, so we assume that the path to the current directory is not too strange
 	@cd $(PREFIX)/polymake/lib/polymake; \
@@ -408,155 +356,47 @@ polymake_env_var :
 	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
 	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
 	> conf.make.tmp; mv conf.make.tmp conf.make
-	@cd $(PREFIX)/polymake/lib/polymake; \
-	chmod u+w conf.make; \
-	$(SED) 's/\# .*//g' conf.make | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
-	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
-	> conf.make.tmp; mv conf.make.tmp conf.make
-	@cd $(PREFIX)/polymake/lib/polymake/bundled/group; \
-	chmod u+w conf.make; \
-	$(SED) 's/\# .*//g' conf.make | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
-	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
-	> conf.make.tmp; mv conf.make.tmp conf.make
-	@cd $(PREFIX)/polymake/lib/polymake/bundled/java; \
-	chmod u+w conf.make; \
-	$(SED) 's/\# .*//g' conf.make | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
-	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
-	> conf.make.tmp; mv conf.make.tmp conf.make
-	@cd $(PREFIX)/polymake/lib/polymake/bundled/jreality; \
-	chmod u+w conf.make; \
-	$(SED) 's/\# .*//g' conf.make | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
-	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
-	> conf.make.tmp; mv conf.make.tmp conf.make
-	@cd $(PREFIX)/polymake/lib/polymake/bundled/libnormaliz; \
-	chmod u+w conf.make; \
-	$(SED) 's/\# .*//g' conf.make | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
-	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
-	> conf.make.tmp; mv conf.make.tmp conf.make
-	@cd $(PREFIX)/polymake/lib/polymake/bundled/nauty; \
-	chmod u+w conf.make; \
-	$(SED) 's/\# .*//g' conf.make | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
-	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
-	> conf.make.tmp; mv conf.make.tmp conf.make
-	@cd $(PREFIX)/polymake/lib/polymake/bundled/singular; \
-	chmod u+w conf.make; \
-	$(SED) 's/\# .*//g' conf.make | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
-	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
-	> conf.make.tmp; mv conf.make.tmp conf.make
-	@cd $(PREFIX)/polymake/lib/polymake/bundled/cdd; \
-	chmod u+w conf.make; \
-	$(SED) 's/\# .*//g' conf.make | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
-	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
-	> conf.make.tmp; mv conf.make.tmp conf.make
-	@cd $(PREFIX)/polymake/lib/polymake/bundled/lrs; \
-	chmod u+w conf.make; \
-	$(SED) 's/\# .*//g' conf.make | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
-	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
-	> conf.make.tmp; mv conf.make.tmp conf.make
-	@cd $(PREFIX)/polymake/lib/polymake/bundled/ppl; \
-	chmod u+w conf.make; \
-	$(SED) 's/\# .*//g' conf.make | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
-	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
-	> conf.make.tmp; mv conf.make.tmp conf.make
+	for ext in $(shell ls polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'); do \
+		cd $(PREFIX)/polymake/lib/polymake/bundled/$$ext; \
+		chmod u+w conf.make; \
+		$(SED) 's/\# .*//g' conf.make | \
+		$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
+		$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
+		$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
+		> conf.make.tmp; mv conf.make.tmp conf.make; \
+	done
 # fun thing: ppl puts its path into the header
 	@cd $(PREFIX)/include; \
 	chmod u+w ppl.hh; \
 	$(SED) 's/\# .*//g' ppl.hh | \
 	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/\./g' > ppl.hh.tmp; mv ppl.hh.tmp ppl.hh
 	
-polymake_name :
-	@echo "fixing names in polymake"
-	@chmod u+w $(PREFIX)/polymake/lib/libpolymake.dylib
-	@chmod u+w $(PREFIX)/polymake/lib/libpolymake-apps.dylib
-	@chmod u+w $(PREFIX)/polymake/lib/libpolymake-apps.$(POLYMAKEVERSION).dylib
-	@install_name_tool -id "@rpath/../polymake/lib/libpolymake.dylib" $(PREFIX)/polymake/lib/libpolymake.dylib
-	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.dylib
-	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.2.14.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.2.14.dylib
-#########	
-	@chmod u+w $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/Gnu.bundle; install_name_tool -change "$(PREFIX)/lib/libreadline.6.3.dylib" "@rpath/libreadline.6.3.dylib" $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/Gnu.bundle
-	@chmod u+w $(PREFIX)/polymake/lib/polymake/lib/*.bundle 
-	@chmod u+w $(PREFIX)/polymake/lib/polymake/perlx/$(PERLVERSION)/darwin-thread-multi-2level/auto/Polymake/Ext/Ext.bundle
-	@chmod u+w $(PREFIX)/polymake/lib/polymake/lib/jni/libpolymake_java.jnilib
-	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/libpolymake.dylib
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/libpolymake.dylib	
-	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/common.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/common.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/core.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/core.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/graph.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/graph.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/group.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/group.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/matroid.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/matroid.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/polytope.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/polytope.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/topaz.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/topaz.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/tropical.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/tropical.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/fan.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/fan.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/lib/libppl_c.4.dylib
-	@install_name_tool -change "$(PREFIX)/lib/libppl.13.dylib" "@rpath/libppl.13.dylib" $(PREFIX)/lib/libppl_c.4.dylib
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/lib/libppl.13.dylib
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/lib/libmpfr.4.dylib
-
-polymake_rpath :
-	@echo "fixing names in polymake"
-	@chmod u+w $(PREFIX)/polymake/lib/libpolymake.dylib
-	@chmod u+w $(PREFIX)/polymake/lib/polymake/lib/*.bundle 
-	@chmod u+w $(PREFIX)/polymake/lib/polymake/perlx/$(PERLVERSION)/darwin-thread-multi-2level/auto/Polymake/Ext/Ext.bundle
-	@chmod u+w $(PREFIX)/polymake/lib/polymake/bundled/*/lib/*.bundle 
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/libpolymake.dylib
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/common.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/core.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/fan.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/graph.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/group.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/matroid.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/polytope.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/topaz.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/tropical.bundle
-#	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/lib/ideal.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/perlx/$(PERLVERSION)/darwin-thread-multi-2level/auto/Polymake/Ext/Ext.bundle
-# bundled extensions
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/bundled/group/lib/common.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/bundled/group/lib/group.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/bundled/group/lib/polytope.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/bundled/group/lib/topaz.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/bundled/java/lib/common.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/bundled/java/lib/graph.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/bundled/java/lib/polytope.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/bundled/libnormaliz/lib/polytope.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/bundled/nauty/lib/graph.bundle
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/polymake/lib/polymake/bundled/ppl/lib/polytope.bundle
 	
 ### make polymake script executable
 ### shouldn't this already be the case?
 polymake-executable :
 	@echo "making polymake executable"
 	@chmod u+x $(PREFIX)/polymake/bin/polymake
+	
+fix_names :
+	@./build_scripts/fix_load_dylib.sh $(PREFIX)/lib $(PREFIX)/lib dylib
+	@./build_scripts/fix_load_dylib.sh $(PREFIX)/bin $(PREFIX)/lib ""
+	@./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib $(PREFIX)/lib dylib
+	@./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib/polymake/lib $(PREFIX)/lib bundle
+	@./build_scripts/fix_load_dylib.sh $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/ $(PREFIX)/lib bundle
+	for ext in $(shell ls polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'); do \
+		./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib/polymake/bundled/$$ext/lib $(PREFIX)/lib bundle ; \
+	done
+	@./build_scripts/fix_rpath.sh $(PREFIX)/lib $(PREFIX)/lib dylib 
+	@./build_scripts/fix_rpath.sh $(PREFIX)/bin $(PREFIX)/lib "" 
+	@./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib $(PREFIX)/lib dylib 
+	@./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib/polymake/lib $(PREFIX)/lib bundle 
+	@./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib/polymake/perlx/$(PERLVERSION)/darwin-thread-multi-2level/auto/Polymake/Ext $(PREFIX)/lib bundle
+	for ext in $(shell polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'); do \
+		./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib/polymake/bundled/$$ext/lib $(PREFIX)/lib bundle ; \
+	done
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" dylib ""
+	@./build_scripts/fix_libname.sh "$(PREFIX)/polymake/lib" dylib "../polymake/lib"
 
 
 ### remove junk
@@ -570,7 +410,6 @@ clean-install :
 	@cd polymake.app; rm -f Contents/Resources/bin/libpolys-config
 	@cd polymake.app; rm -f Contents/Resources/bin/libsingular-config
 	@cd polymake.app; rmdir Contents/Resources/lib/pkgconfig/
-
 
 
 dmg : 
