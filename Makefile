@@ -59,7 +59,7 @@ fetch_sources :
 	@echo "fetching libxslt"
 	@cd src; curl -O -L http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/XML-LibXSLT-1.92.tar.gz
 	@echo "fetching boost"
-	@cd src; curl -O -L http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2
+	@cd src; curl -O -L http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.bz2
 	@echo "fetching gmp"
 	@cd src; curl -O https://gmplib.org/download/gmp/gmp-$(GMPVERSION)$(GMPMINORVERSION).tar.bz2
 	@echo "fetching mpfr"
