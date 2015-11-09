@@ -211,13 +211,13 @@ perl :
 ### boost
 boost : 
 	@echo "extracting boost"
-	@tar xfj src/boost_1_55_0.tar.bz2 -C polymake.app/Contents/Resources/include
+	@tar xfj src/boost_1_59_0.tar.bz2 -C polymake.app/Contents/Resources/include
 ### remove junk
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/doc
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/tools
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/status
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/more
-	@rm -rf polymake.app/Contents/Resources/include/boost_1_55_0/libs
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_59_0/doc
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_59_0/tools
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_59_0/status
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_59_0/more
+	@rm -rf polymake.app/Contents/Resources/include/boost_1_59_0/libs
 	
 
 ### preparations for singular
@@ -367,7 +367,7 @@ polymake-prepare :
 	               --with-readline=$(PREFIX)/lib \
 	               --prefix=$(PREFIX)/polymake \
 				   --with-jni-headers=$(JNIHEADERS) \
-				   --with-boost=$(PREFIX)/include/boost_1_55_0/ \
+				   --with-boost=$(PREFIX)/include/boost_1_59_0/ \
 				   --with-gmp=$(PREFIX)/ \
 				   --with-ppl=$(PREFIX)/  \
 				   --with-mpfr=$(PREFIX)/ \
@@ -375,7 +375,7 @@ polymake-prepare :
 				   --with-ant=$(PREFIX)/apache-ant-$(ANTVERSION)/bin/ant PERL=$(PERL) \
 				   --with-java=/usr/bin/java \
 				   LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  \
-				   CXXFLAGS="$(CXXFLAGS) -I$(PREFIX)/include -Wl,-rpath,$(PREFIX)/lib -I$(PREFIX)/include/boost_1_55_0/ -I/usr/include/c++/4.2.1" \
+				   CXXFLAGS="$(CXXFLAGS) -I$(PREFIX)/include -Wl,-rpath,$(PREFIX)/lib -I$(PREFIX)/include/boost_1_59_0/ -I/usr/include/c++/4.2.1" \
 				   CFLAGS="$(CFLAGS)" \
 				   CC=$(CC) CXX=$(CXX) \
 				   PERL=$(PERL)
