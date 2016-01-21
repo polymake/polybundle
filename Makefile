@@ -148,7 +148,7 @@ boost :
 ### ant
 ant :
 	@echo "extracting ant"
-	@tar xvfj $(TAR_DIR)/apache-ant-$(ANTVERSION)-bin.tar.bz2 -C $(PREFIX)
+	@tar xfj $(TAR_DIR)/apache-ant-$(ANTVERSION)-bin.tar.bz2 -C $(PREFIX)
 
 
 ##################################
@@ -162,7 +162,7 @@ readline :
 	@if [ "$(MACVERSION)" = "10.8" ]; then \
 		${SED} -i '' -e 's|-arch_only `/usr/bin/arch`|-dynamiclib|g' $(TMP)/readline-$(READLINEVERSION)/support/shobj-conf; \
 	else \
-		${SED} -i '' -e "s|SHOBJ_ARCHFLAGS=|SHOBJ_ARCHFLAGS=\'-dynamiclib\'|g" \ $(TMP)/readline-$(READLINEVERSION)/support/shobj-conf; \
+		${SED} -i '' -e "s|SHOBJ_ARCHFLAGS=|SHOBJ_ARCHFLAGS=\'-dynamiclib\'|g" $(TMP)/readline-$(READLINEVERSION)/support/shobj-conf; \
 	fi
 	@cd $(TMP)/readline-$(READLINEVERSION); CFLAGS="$(CLFAGS)" CPPFLAGS="$(CXXFLAGS)"  ./configure --prefix=$(PREFIX)
 	@make -C $(TMP)/readline-$(READLINEVERSION)
@@ -192,7 +192,7 @@ gmp_install :
 ### mpfr build
 mpfr_build :
 	@echo "building mpfg"
-	@./build_scripts/build.sh mpfr-$(MPFRVERSION) mpfr-$(MPFRVERSION) "$(TMP)" build \
+	@./build_scripts/build.sh mpfr-$(MPFRVERSION) $(TAR_DIR) mpfr-$(MPFRVERSION) "$(TMP)" build \
 	--prefix=$(PREFIX) --with-gmp=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib"
 
 
