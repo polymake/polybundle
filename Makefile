@@ -230,10 +230,11 @@ flint :
 
 ftit :
 	@echo "building 4ti2"
-	@tar xvfz src/4ti2-1.6.2.tar.gz -C $(TMP)
-	@cd $(TMP)/4ti2-1.6.2; ./configure --prefix=$(PREFIX)
-	@cd $(TMP)/4ti2-1.6.2; make
-	@cd $(TMP)/4ti2-1.6.2; make install
+	@tar xvfz src/4ti2-$(4TI2VERSION).tar.gz -C $(TMP)
+	@cd $(TMP)/4ti2-$(4TI2VERSION); ./configure --prefix=$(PREFIX)
+	@cd $(TMP)/4ti2-$(4TI2VERSION); make
+	@cd $(TMP)/4ti2-$(4TI2VERSION); make install
+
 
 gnu_auto_stuff : autoconf automake libtool
 
