@@ -53,9 +53,6 @@ CXXFLAGS =  -m64 -mcpu=generic -march=x86-64
 
 .PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs doc polymake-executable flint ftit ntl singular_compile singular_configure singular_install bundle compile gnu_auto_stuff autoconf automake libtool glpk polymake_env_var polymake_run_script
 
-### default target
-all : fetch_sources compile
-
 compile : skeleton ant boost \
 						readline \
 						autoconf automake libtool \
@@ -136,7 +133,7 @@ skeleton :
 ### boost
 boost :
 	@echo "extracting boost"
-	@tar xfj $(TAR_DIR)/boost_$(BOOSTVERSION).tar.bz2 -C polymake.app/Contents/Resources/include
+	@tar xfj $(TAR_DIR)/boost_$(BOOSTVERSION).tar.bz2 -C $(PREFIX)/include
 ### remove junk
 	@rm -rf polymake.app/Contents/Resources/include/boost_$(BOOSTVERSIONDIR)/doc
 	@rm -rf polymake.app/Contents/Resources/include/boost_$(BOOSTVERSIONDIR)/tools
