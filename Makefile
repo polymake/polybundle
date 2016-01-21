@@ -59,7 +59,18 @@ CXXFLAGS =  -m64 -mcpu=generic -march=x86-64
 ### default target
 all : fetch_sources compile
 
-compile : skeleton gmp_build gmp mpfr_build mpfr readline_build readline perl boost ant glpk ftit gnu_auto_stuff ppl_build ppl ntl singular singularnames polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc
+compile : skeleton ant boost \
+						readline_build readline \
+						gnu_auto_stuff \
+						perl \
+					  gmp_build gmp \
+						mpfr_build mpfr
+						glpk ftit \
+						ppl_build ppl \
+						ntl \
+						singular singularnames \
+						polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable \
+						clean-install doc
 
 bundle : compile dmg
 
