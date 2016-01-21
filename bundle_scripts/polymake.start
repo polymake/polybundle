@@ -4,17 +4,18 @@ echo -ne "\033]0;polymake\007"
 dir=$(cd "$(dirname "$0")"; pwd)
 ResourcesDir="$dir/../Resources/"
 
-alias perl=/usr/bin/perl
+alias perl=$ResourcesDir/bin/perl5.18
 
-perlversion=`/usr/bin/perl --version | grep -o "5[.][0-9]*[.][0-9]"`
+perlversion=5.18.2
 
-if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then 
+if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then
    echo "=========================================================================="
-   echo "your perl version ($perlversion) does not match the perl version this" echo "app was built for (REPLACE_PERLVERSION)"
+   echo "your perl version ($perlversion) does not match the perl version this"
+   echo "app was built for (REPLACE_PERLVERSION)"
    echo "please download and install the version of polymake that corresponds"
    echo "to the version of your system perl"
    echo "You can find the version number by executing"
-   echo "/usr/bin/perl --version" 
+   echo "/usr/bin/perl --version"
    echo "in a terminal."
    echo "If there is no version of the polymake app matching your perl version"
    echo "please contact us at http://forum.polymake.org"
@@ -23,7 +24,7 @@ if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then
 fi;
 
 if [ -f ${HOME}/.polymake-macbundle/customize.pl ]; then
-  base=`grep -m 1 "polymake.app/Contents/MacOS" ${HOME}/.polymake-macbundle/customize.pl` 
+  base=`grep -m 1 "polymake.app/Contents/MacOS" ${HOME}/.polymake-macbundle/customize.pl`
   if [[ ! -z "$base" ]] && [[ ! $base =~ $ResourcesDir ]]; then
     echo "========================================================================="
     echo "Your polymake customization files in"
@@ -50,7 +51,7 @@ unset VERSIONER_PERL_PREFER_32_BIT
 export PATH=$PATH:${ResourcesDir}/bin
 export POLYMAKE_USER_DIR="${HOME}/.polymake-macbundle"
 export POLYMAKE_BASE_PATH=$ResourcesDir/polymake
-export LD_LIBRARY_PATH=$ResourcesDir/lib:$ResourcesDir/include/boost_1_59_0/:$LD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH=$ResourcesDir/lib:$ResourcesDir/include/boost_1_59_0/:$DYLD_LIBRARY_PATH
 export CPLUS_INCLUDE_PATH=$ResourcesDir/include/
 export CFLAGS=-I$ResourcesDir/include/
 export CPPFLAGS=-I$ResourcesDir/include/
@@ -60,4 +61,4 @@ export PERL5LIB=$ResourcesDir/lib/perl5/site_perl/REPLACE_PERLVERSION/darwin-thr
 dir=$(cd "$(dirname "$0")"; pwd)
 
 # start polymake
-$ResourcesDir/polymake/bin/polymake
+$ResourcesDir/bin/perl5.18 $ResourcesDir/polymake/bin/polymake
