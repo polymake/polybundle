@@ -55,12 +55,9 @@ CXXFLAGS =  -m64 -mcpu=generic -march=x86-64
 ### default target
 all : fetch_sources compile
 
-compile : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant ftit gnu_auto_stuff ntl singularfour singularfournames polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc
+compile : skeleton gmp_build gmp mpfr_build mpfr readline_build readline perl boost ant ftit gnu_auto_stuff ppl_build ppl ntl singularfour singularfournames polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc
 
 bundle : compile dmg
-
-allold : skeleton gmp_build gmp mpfr_build mpfr ppl_build ppl readline_build readline perl boost ant singular polymake-prepare polymake-compile polymake-install polymake_env_var polymake_name polymake_rpath polymake-executable clean-install doc dmg
-
 
 # get all sources not obtained from github
 # rebuilds the src-directory, except for flint and singular, which are obtained from github in their specific targets below
@@ -193,33 +190,7 @@ mpfr_name :
 
 mpfr : mpfr_install mpfr_name
 
-### ppl build
-ppl_build :
-	@echo "building ppl"
-	@./build_scripts/build.sh ppl-1.1 ppl-1.1 "$(TMP)" build \
-	  --prefix=$(PREFIX) --with-gmp=$(PREFIX) --with-mpfr=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib"
 
-ppl_install :
-	@echo "installing ppl"
-	@./build_scripts/install.sh ppl-1.1 "$(TMP)" build
-
-ppl_name :
-	@echo "fixing names in ppl"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libppl.13.dylib" "libppl_c.4.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libppl_c.4.dylib" "libppl.13.dylib"
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libppl_c.4.dylib
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libppl.13.dylib
-	##############
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libppl_c.4.dylib"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libppl.13.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl-config" "libppl.13.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl_pips" "libppl.13.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl_lcdd" "libppl.13.dylib"
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ppl-config
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ppl_pips
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ppl_lcdd
-
-ppl : ppl_install ppl_name
 
 
 
@@ -292,6 +263,39 @@ libtool :
 	@cd $(TMP)/libtool-2.4 && \
 		PATH=$(TMP)/local/bin:${PATH} ./configure --prefix=$(TMP)/local && \
 		make && make install
+
+
+### ppl build
+ppl_build :
+	@echo "building ppl"
+	@cd $(TMP); mkdir -p ppl
+	@cd $(TMP)/ppl; if [ ! -d .git ]; then git clone git://git.cs.unipr.it/ppl/ppl.git .; else git pull; fi
+	@cd $(TMP)/ppl; git archive trunk | bzip2 > ../../src/ppl-github-$(DATE).tar.bz2
+	@cd $(TMP)/ppl; PATH=$(TMP)/local/bin:${PATH} libtoolize --force && \
+		PATH=$(TMP)/local/bin:${PATH} autoreconf -fi && \
+		./configure --prefix=$(PREFIX) --with-gmp=$(PREFIX) --with-mpfr=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib" && make
+
+ppl_install :
+	@echo "installing ppl"
+	@./build_scripts/install.sh ppl "$(TMP)" build
+
+ppl_name :
+	@echo "fixing names in ppl"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libppl.13.dylib" "libppl_c.4.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libppl_c.4.dylib" "libppl.13.dylib"
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libppl_c.4.dylib
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libppl.13.dylib
+	##############
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libppl_c.4.dylib"
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libppl.13.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl-config" "libppl.13.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl_pips" "libppl.13.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl_lcdd" "libppl.13.dylib"
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ppl-config
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ppl_pips
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ppl_lcdd
+
+ppl : ppl_install ppl_name
 
 ntl :
 	@echo "building ntl"
