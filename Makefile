@@ -58,7 +58,7 @@ compile : skeleton ant boost \
 						autoconf automake libtool \
 						perl \
 					  gmp_build gmp_install \
-						mpfr_build mpfr_install
+						mpfr_build mpfr_install \
 						glpk ftit \
 						ppl_build ppl_install \
 						ntl \
@@ -158,7 +158,7 @@ ant :
 readline :
 	@echo building readline in $(TMP)
 	@mkdir -p $(TMP)
-	@tar xvfz $(TAR_DIR)/readline-$(READLINEVERSION).tar.gz -C $(TMP)
+	@tar xfz $(TAR_DIR)/readline-$(READLINEVERSION).tar.gz -C $(TMP)
 	@if [ "$(MACVERSION)" = "10.8" ]; then \
 		${SED} -i '' -e 's|-arch_only `/usr/bin/arch`|-dynamiclib|g' $(TMP)/readline-$(READLINEVERSION)/support/shobj-conf; \
 	else \
@@ -174,10 +174,8 @@ readline :
 ### gmp build
 gmp_build :
 	@echo "building gmp"
-	@mkdir -p $(TMP)/gmp-$(GMPVERSION)_build;
-	@tar xvfj $(TAR_DIR)/gmp-$(GMPVERSION)$(GMPMINORVERSION).tar.bz2 -C $(TMP);
-	@cd $(TMP)gmp-$(GMPVERSION)_build; CFLAGS="$(CFLAGS)" CPPFLAGS="$(CXXFLAGS)" \
-			../gmp-$(GMPVERSION)/configure --prefix=$(PREFIX) --enable-cxx=yes
+	@./build_scripts/build.sh gmp-$(GMPVERSION) $(TAR_DIR) gmp-$(GMPVERSION) "(TMP)" build \
+														--prefix=$(PREFIX) --enable-cxx=yes CFLAGS="$(CFLAGS)" CPPFLAGS="$(CXXFLAGS)"
 
 
 ##################################
@@ -193,7 +191,7 @@ gmp_install :
 mpfr_build :
 	@echo "building mpfg"
 	@./build_scripts/build.sh mpfr-$(MPFRVERSION) $(TAR_DIR) mpfr-$(MPFRVERSION) "$(TMP)" build \
-	--prefix=$(PREFIX) --with-gmp=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib"
+														--prefix=$(PREFIX) --with-gmp=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib"
 
 
 ##################################
@@ -212,7 +210,7 @@ mpfr_install :
 ### it seems we have to pass ARCHFLAG again in the call to Makefile.PL, global setting ignored
 perl :
 	@echo "building perl modules"
-	@tar xvfz $(TAR_DIR)/XML-LibXSLT-$(LIBXSLTVERSION).tar.gz -C $(TMP)
+	@tar xfz $(TAR_DIR)/XML-LibXSLT-$(LIBXSLTVERSION).tar.gz -C $(TMP)
 	@cd $(TMP)/XML-LibXSLT-$(LIBXSLTVERSION); ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX)
 	@make -C $(TMP)/XML-LibXSLT-$(LIBXSLTVERSION)
 	@make -C $(TMP)/XML-LibXSLT-$(LIBXSLTVERSION) install
@@ -248,7 +246,11 @@ flint :
 ##################################
 ### glpk
 glpk:
-	@tar xvfz $(TAR_DIR)/glpk-$(GLPKVERSION).tar.gz -C $(TMP)
+	@echo "building glpk"
+	@./build_scripts/build.sh glpk-$(GLPKVERSION) $(TAR_DIR) mpfr-$(MPFRVERSION) "$(TMP)" build \
+														--prefix=$(PREFIX) --with-gmp=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib"
+
+	@tar xfz $(TAR_DIR)/glpk-$(GLPKVERSION).tar.gz -C $(TMP)
 	@cd $(TMP)/glpk-$(GLPKVERSION); ./configure --prefix=$(PREFIX) && make && make install
 
 
@@ -257,7 +259,7 @@ glpk:
 ### 4ti2
 ftit :
 	@echo "building 4ti2"
-	@tar xvfz $(TAR_DIR)/4ti2-$(4TI2VERSION).tar.gz -C $(TMP)
+	@tar xfz $(TAR_DIR)/4ti2-$(4TI2VERSION).tar.gz -C $(TMP)
 	@cd $(TMP)/4ti2-$(4TI2VERSION); ./configure --prefix=$(PREFIX) --with-glpk=$(PREFIX) --with-gmp=$(PREFIX)
 	@make -C $(TMP)/4ti2-$(4TI2VERSION)
 	@make -C $(TMP)/4ti2-$(4TI2VERSION) install
@@ -269,7 +271,7 @@ ftit :
 autoconf :
 	@echo "building autoconf"
 	@mkdir -p $(TMP)/local
-	@tar xvfz $(TAR_DIR)/autoconf-$(AUTOCONFVERSION).tar.gz -C $(TMP)
+	@tar xfz $(TAR_DIR)/autoconf-$(AUTOCONFVERSION).tar.gz -C $(TMP)
 	@cd $(TMP)/autoconf-$(AUTOCONFVERSION) && \
 		./configure --prefix=$(TMP)/local && \
 		make && make install
@@ -279,7 +281,7 @@ autoconf :
 ##################################
 automake :
 	@echo "building automake"
-	@tar xvfz $(TAR_DIR)/automake-$(AUTOMAKEVERSION).tar.gz -C $(TMP)
+	@tar xfz $(TAR_DIR)/automake-$(AUTOMAKEVERSION).tar.gz -C $(TMP)
 	@cd $(TMP)/automake-$(AUTOMAKEVERSION) && \
 		PATH=$(TMP)/local/bin:${PATH} ./configure --prefix=$(TMP)/local && \
 		make && make install
@@ -289,7 +291,7 @@ automake :
 ##################################
 libtool :
 	@echo "building libtool"
-	@tar xvfz $(TAR_DIR)/libtool-$(LIBTOOLVERSION).tar.gz -C $(TMP)
+	@tar xfz $(TAR_DIR)/libtool-$(LIBTOOLVERSION).tar.gz -C $(TMP)
 	@cd $(TMP)/libtool-$(LIBTOOLVERSION) && \
 		PATH=$(TMP)/local/bin:${PATH} ./configure --prefix=$(TMP)/local && \
 		make && make install
@@ -328,7 +330,7 @@ ppl_install :
 ### we remove unwanted static lib in the end
 ntl :
 	@echo "building ntl"
-	@tar xvfz $(TAR_DIR)/ntl-$(NTLVERSION).tar.gz -C $(TMP)
+	@tar xfz $(TAR_DIR)/ntl-$(NTLVERSION).tar.gz -C $(TMP)
 	@cd $(TMP)/ntl-$(NTLVERSION)/src && \
 		PATH=$(TMP)/local/bin:${PATH} . ./configure PREFIX=$(PREFIX) SHARED=on NTL_GMP_LIP=on GMP_PREFIX=$(PREFIX) && \
 		${SED} -i '' -e "s|CXXFLAGS=-g -O2|CXXFLAGS=-g -O2 -I\$(PREFIX)/include -Wl,-rpath,\$(PREFIX)/lib|g" $(TMP)/ntl-$(NTLVERSION)/src/makefile && \

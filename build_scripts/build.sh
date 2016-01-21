@@ -12,9 +12,16 @@ NAME=$1; shift
 DIR=$1; shift
 DEST=$1; shift
 
+suffix=`ls $TAR_DIR/$TARNAME.* | grep -o "tar.*"`
+
+
 echo building $NAME in $DIR
 mkdir -p $DIR/${NAME}_$DEST
-tar xvfj $TAR_DIR/$TARNAME.tar.bz2 -C $DIR
+if [[ $suffix =~ .*gz.* ]]; then
+  tar xfz $TAR_DIR/$TARNAME.$suffix -C $DIR
+else
+  tar xfj $TAR_DIR/$TARNAME.$suffix -C $DIR
+fi
 cd $DIR/${NAME}_$DEST
 ../$NAME/configure $*
 
