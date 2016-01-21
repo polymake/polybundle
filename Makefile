@@ -113,6 +113,7 @@ fetch_sources :
 skeleton :
 	@echo "creating skeleton"
 	@mkdir -p polymake.app/Contents/Resources
+	@mkdir -p polymake.app/Contents/Resources/include
 	@mkdir -p polymake.app/Contents/MacOS
 
 	@cd bundle_scripts; $(SED) 's/REPLACE_PERLVERSION/${PERLVERSION}/g' polymake.start > polymake.start.tmp;
