@@ -241,22 +241,22 @@ gnu_auto_stuff : autoconf automake libtool
 autoconf :
 	@echo "building autoconf"
 	@mkdir -p $(TMP)/local
-	@tar xvfz src/autoconf-2.69.tar.gz -C $(TMP)
-	@cd $(TMP)/autoconf-2.69 && \
+	@tar xvfz src/autoconf-$(AUTOCONFVERSION).tar.gz -C $(TMP)
+	@cd $(TMP)/autoconf-$(AUTOCONFVERSION) && \
 		./configure --prefix=$(TMP)/local && \
 		make && make install
 
 automake :
 	@echo "building automake"
-	@tar xvfz src/automake-1.14.tar.gz -C $(TMP)
-	@cd $(TMP)/automake-1.14 && \
+	@tar xvfz src/automake-$(AUTOMAKEVERSION).tar.gz -C $(TMP)
+	@cd $(TMP)/automake-$(AUTOMAKEVERSION) && \
 		PATH=$(TMP)/local/bin:${PATH} ./configure --prefix=$(TMP)/local && \
 		make && make install
 
 libtool :
 	@echo "building libtool"
-	@tar xvfz src/libtool-2.4.tar.gz -C $(TMP)
-	@cd $(TMP)/libtool-2.4 && \
+	@tar xvfz src/libtool-$(LIBTOOLVERSION).tar.gz -C $(TMP)
+	@cd $(TMP)/libtool-$(LIBTOOLVERSION) && \
 		PATH=$(TMP)/local/bin:${PATH} ./configure --prefix=$(TMP)/local && \
 		make && make install
 
