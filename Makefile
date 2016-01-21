@@ -7,7 +7,9 @@
 # this Makefile is for OS X Yosemite
 # prior installation of Xcode command line tools and java required
 
-POLYMAKEVERSION := "2.14"
+TAR_DIR           := $(CURDIR)/src
+
+POLYMAKEVERSION  := "3.0"
 ANTVERSION       := "1.9.6"
 MPFRVERSION      := "3.1.3"
 GMPVERSION       := "6.1.0"
@@ -27,15 +29,6 @@ TERMRLGNUVERSION := "1.24"
 LIBXSLTVERSION   := "1.92"
 SINGULARVERSION  := "4.0.2"
 
-LIBNTLVERSION     := "18"
-LIBGMPVERSION     := "10"
-LIBGMPXXVERSION   := "4"
-LIBMPFRVERSION    := "4"
-LIBPPLVERSION     := "13"
-LIBPPLCVERSION    := "4"
-LIBOMALLOCVERSION := "0.9.6"
-
-TAR_DIR           := $(CURDIR)/src
 
 ### change into the base directory
 ###BASEPATH := $( (cd -P $(dirname $0) && pwd) )
