@@ -25,6 +25,8 @@ LIBNTLVERSION    := "18"
 LIBGMPVERSION    := "10"
 LIBGMPXXVERSION  := "4"
 LIBMPFRVERSION   := "4"
+LIBPPLVERSION    := "13"
+LIBPPLCVERSION   := "4"
 
 ### change into the base directory
 ###BASEPATH := $( (cd -P $(dirname $0) && pwd) )
@@ -281,16 +283,16 @@ ppl_install :
 
 ppl_name :
 	@echo "fixing names in ppl"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libppl.13.dylib" "libppl_c.4.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libppl_c.4.dylib" "libppl.13.dylib"
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libppl_c.4.dylib
-	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libppl.13.dylib
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libppl.$(LIBPPLVERSION).dylib" "libppl_c.$(LIBPPLCVERSION).dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libppl_c.$(LIBPPLCVERSION).dylib" "libppl.$(LIBPPLVERSION).dylib"
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libppl_c.$(LIBPPLCVERSION).dylib
+	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/lib/libppl.$(LIBPPLVERSION).dylib
 	##############
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libppl_c.4.dylib"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libppl.13.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl-config" "libppl.13.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl_pips" "libppl.13.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl_lcdd" "libppl.13.dylib"
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libppl_c.$(LIBPPLCVERSION).dylib"
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libppl.$(LIBPPLVERSION).dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl-config" "libppl.$(LIBPPLVERSION).dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl_pips" "libppl.$(LIBPPLVERSION).dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/bin" "$(PREFIX)/lib" "ppl_lcdd" "libppl.$(LIBPPLVERSION).dylib"
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ppl-config
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ppl_pips
 	@install_name_tool -rpath "$(PREFIX)/lib" "../Resources/lib" $(PREFIX)/bin/ppl_lcdd
@@ -543,9 +545,9 @@ polymake_name :
 	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/polymake/lib/polymake/lib/tropical.bundle
 	@install_name_tool -change "$(PREFIX)/lib/libmpfr.$(LIBMPFRVERSION).dylib" "@rpath/libmpfr.$(LIBMPFRVERSION).dylib" $(PREFIX)/polymake/lib/polymake/lib/fan.bundle
 	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/polymake/lib/polymake/lib/fan.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/lib/libppl_c.4.dylib
-	@install_name_tool -change "$(PREFIX)/lib/libppl.13.dylib" "@rpath/libppl.13.dylib" $(PREFIX)/lib/libppl_c.4.dylib
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/lib/libppl.13.dylib
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/lib/libppl_c.$(LIBPPLCVERSION).dylib
+	@install_name_tool -change "$(PREFIX)/lib/libppl.$(LIBPPLVERSION).dylib" "@rpath/libppl.$(LIBPPLVERSION).dylib" $(PREFIX)/lib/libppl_c.$(LIBPPLCVERSION).dylib
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/lib/libppl.$(LIBPPLVERSION).dylib
 	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/lib/libmpfr.$(LIBMPFRVERSION).dylib
 
 polymake_rpath :
