@@ -9,7 +9,6 @@ GMPVERSION       := "6.1.0"
 GMPMINORVERSION  := ""
 POLYMAKEVERSION  := "2.14"
 NTLVERSION       := "9.6.2"
-LIBNTLVERSION    := "18"
 BOOSTVERSION     := "1_59_0"
 BOOSTVERSIONDIR  := "1.59.0"
 READLINEVERSION  := "6.3"
@@ -21,6 +20,10 @@ AUTOCONFVERSION  := "2.69"
 AUTOMAKEVERSION  := "1.14"
 TERMRLGNUVERSION := "1.24"
 LIBXSLTVERSION   := "1.92"
+
+LIBNTLVERSION    := "18"
+LIBGMPVERSION    := "10"
+LIBGMPXXVERSION  := "4"
 
 ### change into the base directory
 ###BASEPATH := $( (cd -P $(dirname $0) && pwd) )
@@ -154,10 +157,10 @@ readline :
 ### gmp build
 gmp_build :
 	@echo "building gmp"
-###@./build_scripts/build.sh gmp-6.0.0a gmp-6.0.0 "$(TMP)" build 	--prefix=$(PREFIX) --enable-fat --enable-cxx=yes
 	@mkdir -p $(TMP)/gmp-$(GMPVERSION)_build;
 	@tar xvfj src/gmp-$(GMPVERSION)$(GMPMINORVERSION).tar.bz2 -C $(TMP);
-	@cd $(TMP)gmp-$(GMPVERSION)_build; CFLAGS="$(CFLAGS)" CPPFLAGS="$(CXXFLAGS)" ../gmp-$(GMPVERSION)/configure --prefix=$(PREFIX) --enable-cxx=yes
+	@cd $(TMP)gmp-$(GMPVERSION)_build; CFLAGS="$(CFLAGS)" CPPFLAGS="$(CXXFLAGS)" \
+	../gmp-$(GMPVERSION)/configure --prefix=$(PREFIX) --enable-cxx=yes
 
 gmp_install :
 	@echo "installing gmp"
@@ -165,9 +168,10 @@ gmp_install :
 
 gmp_name :
 		@echo "fixing names in gmp"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libgmpxx.4.dylib" "libgmp.10.dylib"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libgmpxx.4.dylib"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libgmp.10.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh \
+		"$(PREFIX)/lib" "$(PREFIX)/lib" "libgmpxx.$(LIBGMPXXVERSION).dylib" "libgmp.$(LIBGMPVERSION).dylib"
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libgmpxx.$(LIBGMPXXVERSION).dylib"
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libgmp.$(LIBGMPVERSION).dylib"
 
 gmp : gmp_install gmp_name
 
@@ -515,29 +519,29 @@ polymake_name :
 	@chmod u+w $(PREFIX)/polymake/lib/polymake/perlx/$(PERLVERSION)/darwin-thread-multi-2level/auto/Polymake/Ext/Ext.bundle
 	@chmod u+w $(PREFIX)/polymake/lib/polymake/lib/jni/libpolymake_java.jnilib
 	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/libpolymake.dylib
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/libpolymake.dylib
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/polymake/lib/libpolymake.dylib
 	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/common.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/common.bundle
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/polymake/lib/polymake/lib/common.bundle
 	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/core.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/core.bundle
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/polymake/lib/polymake/lib/core.bundle
 	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/graph.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/graph.bundle
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/polymake/lib/polymake/lib/graph.bundle
 	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/group.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/group.bundle
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/polymake/lib/polymake/lib/group.bundle
 	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/matroid.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/matroid.bundle
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/polymake/lib/polymake/lib/matroid.bundle
 	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/polytope.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/polytope.bundle
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/polymake/lib/polymake/lib/polytope.bundle
 	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/topaz.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/topaz.bundle
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/polymake/lib/polymake/lib/topaz.bundle
 	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/tropical.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/tropical.bundle
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/polymake/lib/polymake/lib/tropical.bundle
 	@install_name_tool -change "$(PREFIX)/lib/libmpfr.4.dylib" "@rpath/libmpfr.4.dylib" $(PREFIX)/polymake/lib/polymake/lib/fan.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/polymake/lib/polymake/lib/fan.bundle
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/lib/libppl_c.4.dylib
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/polymake/lib/polymake/lib/fan.bundle
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/lib/libppl_c.4.dylib
 	@install_name_tool -change "$(PREFIX)/lib/libppl.13.dylib" "@rpath/libppl.13.dylib" $(PREFIX)/lib/libppl_c.4.dylib
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/lib/libppl.13.dylib
-	@install_name_tool -change "$(PREFIX)/lib/libgmp.10.dylib" "@rpath/libgmp.10.dylib" $(PREFIX)/lib/libmpfr.4.dylib
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/lib/libppl.13.dylib
+	@install_name_tool -change "$(PREFIX)/lib/libgmp.$(LIBGMPVERSION).dylib" "@rpath/libgmp.$(LIBGMPVERSION).dylib" $(PREFIX)/lib/libmpfr.4.dylib
 
 polymake_rpath :
 	@echo "fixing names in polymake"
