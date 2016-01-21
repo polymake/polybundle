@@ -147,11 +147,11 @@ readline_build :
 
 readline :
 	@echo "fixing names in readline"
-	@cd $(PREFIX)/lib; chmod u+w libreadline.6.3.dylib;  chmod u+w libhistory.6.3.dylib
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libreadline.6.3.dylib" "libgcc_s.1.dylib"
-	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libhistory.6.3.dylib" "libgcc_s.1.dylib"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libreadline.6.3.dylib"
-	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libhistory.6.3.dylib"
+	@cd $(PREFIX)/lib; chmod u+w libreadline.$(READLINEVERSION).dylib;  chmod u+w libhistory.$(READLINEVERSION).dylib
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libreadline.$(READLINEVERSION).dylib" "libgcc_s.1.dylib"
+	@./build_scripts/fix_lc_load_dylib.sh "$(PREFIX)/lib" "$(PREFIX)/lib" "libhistory.$(READLINEVERSION).dylib" "libgcc_s.1.dylib"
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libreadline.$(READLINEVERSION).dylib"
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" "libhistory.$(READLINEVERSION).dylib"
 
 
 ### gmp build
@@ -192,29 +192,22 @@ mpfr_name :
 
 mpfr : mpfr_install mpfr_name
 
-
-
-
-
-
-
-
 ### XML-LibXSLT
 ### Term-Gnu-Readline
 perl :
 	@echo "building perl modules"
-	@tar xvfz src/XML-LibXSLT-1.92.tar.gz -C $(TMP)
-	@cd $(TMP)/XML-LibXSLT-1.92; ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX)
-	@make -C $(TMP)/XML-LibXSLT-1.92
-	@make -C $(TMP)/XML-LibXSLT-1.92 install
+	@tar xvfz src/XML-LibXSLT-$(LIBXSLTVERSION).tar.gz -C $(TMP)
+	@cd $(TMP)/XML-LibXSLT-$(LIBXSLTVERSION); ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX)
+	@make -C $(TMP)/XML-LibXSLT-$(LIBXSLTVERSION)
+	@make -C $(TMP)/XML-LibXSLT-$(LIBXSLTVERSION) install
 ### term-readline-gnu
-	@tar xvfz src/Term-ReadLine-Gnu-1.24.tar.gz -C $(TMP)
+	@tar xvfz src/Term-ReadLine-Gnu-$(TERMRLGNUVERSION).tar.gz -C $(TMP)
 ### FIXME this is a rather crude hack to add an rpath to rlver, as I don't know how to add an env variable to the call to Makefile.PL in the following line
-	@${SED} -i '' -e "s|Config{cc}|Config{cc} -Wl,-rpath,\$(PREFIX)/lib|g" $(TMP)/Term-ReadLine-Gnu-1.24/Makefile.PL
+	@${SED} -i '' -e "s|Config{cc}|Config{cc} -Wl,-rpath,\$(PREFIX)/lib|g" $(TMP)/Term-ReadLine-Gnu-$(TERMRLGNUVERSION)/Makefile.PL
 ### have to pass ARCHFLAG again?
-	@cd $(TMP)/Term-ReadLine-Gnu-1.24;  ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX) --includedir=$(PREFIX)/include --libdir=$(PREFIX)/lib
-	@make -C $(TMP)/Term-ReadLine-Gnu-1.24
-	@make -C $(TMP)/Term-ReadLine-Gnu-1.24 install
+	@cd $(TMP)/Term-ReadLine-Gnu-$(TERMRLGNUVERSION);  ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX) --includedir=$(PREFIX)/include --libdir=$(PREFIX)/lib
+	@make -C $(TMP)/Term-ReadLine-Gnu-$(TERMRLGNUVERSION)
+	@make -C $(TMP)/Term-ReadLine-Gnu-$(TERMRLGNUVERSION) install
 
 
 ### preparations for singular
@@ -397,7 +390,7 @@ polymake-prepare :
 	               --with-readline=$(PREFIX)/lib \
 	               --prefix=$(PREFIX)/polymake \
 				   --with-jni-headers=$(JNIHEADERS) \
-				   --with-boost=$(PREFIX)/include/boost_1_59_0/ \
+				   --with-boost=$(PREFIX)/include/boost_$(BOOSTVERSIONDIR)/ \
 				   --with-gmp=$(PREFIX)/ \
 				   --with-ppl=$(PREFIX)/  \
 				   --with-mpfr=$(PREFIX)/ \
@@ -521,7 +514,7 @@ polymake_name :
 	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.dylib
 	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.2.14.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.2.14.dylib
 #########
-	@chmod u+w $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/Gnu.bundle; install_name_tool -change "$(PREFIX)/lib/libreadline.6.3.dylib" "@rpath/libreadline.6.3.dylib" $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/Gnu.bundle
+	@chmod u+w $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/Gnu.bundle; install_name_tool -change "$(PREFIX)/lib/libreadline.$(READLINEVERSION).dylib" "@rpath/libreadline.$(READLINEVERSION).dylib" $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/Gnu.bundle
 	@chmod u+w $(PREFIX)/polymake/lib/polymake/lib/*.bundle
 	@chmod u+w $(PREFIX)/polymake/lib/polymake/perlx/$(PERLVERSION)/darwin-thread-multi-2level/auto/Polymake/Ext/Ext.bundle
 	@chmod u+w $(PREFIX)/polymake/lib/polymake/lib/jni/libpolymake_java.jnilib
