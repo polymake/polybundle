@@ -519,7 +519,7 @@ polymake_name :
 	@chmod u+w $(PREFIX)/polymake/lib/libpolymake-apps.$(POLYMAKEVERSION).dylib
 	@install_name_tool -id "@rpath/../polymake/lib/libpolymake.dylib" $(PREFIX)/polymake/lib/libpolymake.dylib
 	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.dylib
-	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.2.14.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.2.14.dylib
+	@install_name_tool -id "@rpath/../polymake/lib/libpolymake-apps.2.14.dylib" $(PREFIX)/polymake/lib/libpolymake-apps.$(POLYMAKEVERSION).dylib
 #########
 	@chmod u+w $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/Gnu.bundle; install_name_tool -change "$(PREFIX)/lib/libreadline.$(READLINEVERSION).dylib" "@rpath/libreadline.$(READLINEVERSION).dylib" $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/Gnu.bundle
 	@chmod u+w $(PREFIX)/polymake/lib/polymake/lib/*.bundle
