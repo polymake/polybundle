@@ -397,8 +397,8 @@ polymake-prepare :
 				   --with-singular=$(PREFIX)/ \
 				   --with-ant=$(PREFIX)/apache-ant-$(ANTVERSION)/bin/ant PERL=$(PERL) \
 				   --with-java=/usr/bin/java \
-				   LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libstdc++"  \
-				   CXXFLAGS="$(CXXFLAGS) -I$(PREFIX)/include -Wl,-rpath,$(PREFIX)/lib -I$(PREFIX)/include/boost_1_59_0/ -I/usr/include/c++/4.2.1" \
+				   LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libc++"  \
+				   CXXFLAGS="$(CXXFLAGS) -I$(PREFIX)/include -Wl,-rpath,$(PREFIX)/lib -I$(PREFIX)/include/boost_$(BOOSTVERSIONDIR)/ -stdlib=libc++" \
 				   CFLAGS="$(CFLAGS)" \
 				   CC=$(CC) CXX=$(CXX) \
 				   PERL=$(PERL)
