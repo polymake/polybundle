@@ -176,7 +176,7 @@ readline :
 ### gmp build
 gmp_build :
 	@echo "building gmp"
-	@./build_scripts/build.sh gmp-$(GMPVERSION) $(TAR_DIR) gmp-$(GMPVERSION) "(TMP)" build \
+	@./build_scripts/build.sh gmp-$(GMPVERSION) $(TAR_DIR) gmp-$(GMPVERSION) "$(TMP)" build \
 							  --prefix=$(PREFIX) --enable-cxx=yes CFLAGS=$(CFLAGS) CPPFLAGS=$(CXXFLAGS)
 
 
