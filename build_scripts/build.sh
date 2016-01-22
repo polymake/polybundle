@@ -12,8 +12,7 @@ NAME=$1; shift
 DIR=$1; shift
 DEST=$1; shift
 
-suffix=`ls $TAR_DIR/$TARNAME.* | grep -o "tar.*"`
-
+suffix=`ls $TAR_DIR/$TARNAME.* | egrep -o -e "tar.(bz2|gz)"
 
 echo building $NAME in $DIR
 mkdir -p $DIR/${NAME}_$DEST
@@ -23,6 +22,6 @@ else
   tar xfj $TAR_DIR/$TARNAME.$suffix -C $DIR
 fi
 cd $DIR/${NAME}_$DEST
-../$NAME/configure $*
+../$NAME/configure "$@"
 
 make
