@@ -51,7 +51,7 @@ CXX := /usr/bin/g++
 CFLAGS   =  "-m64 -mcpu=generic -march=x86-64"
 CXXFLAGS =  "-m64 -mcpu=generic -march=x86-64"
 
-.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs doc polymake-executable flint ftit ntl singular_compile singular_configure singular_install bundle compile gnu_auto_stuff autoconf automake libtool glpk polymake_env_var polymake_run_script
+.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs doc polymake-executable flint ftit ntl singular_compile singular_configure singular_install bundle compile gnu_auto_stuff autoconf automake libtool glpk polymake_env_var polymake_run_script polymake-cleanup
 
 compile : skeleton ant boost \
 		readline \
@@ -59,16 +59,18 @@ compile : skeleton ant boost \
 		perl \
 		gmp_build gmp_install \
 		mpfr_build mpfr_install \
-		glpk ftit \
+		glpk\
+		ftit \
 		ppl_build ppl_install \
 		ntl \
 		singular_configure singular_compile singular_install \
-		polymake-prepare polymake-compile polymake-install polymake_run_script polymake_env_var polymake-executable \
+		polymake-prepare polymake-compile polymake-install polymake-cleanup \
 		fix_names \
 		clean-install doc
 
 bundle : compile dmg
 
+polymake-cleanup : polymake_run_script polymake_env_var polymake-executable
 
 
 ##################################
@@ -341,7 +343,7 @@ ntl :
 ##################################
 ### singular
 singular_configure :
-	@echo "building singular 4"
+	@echo "building singular"
 	@cd $(TMP); mkdir -p singular
 	@cd $(TMP)/singular; if [ ! -d .git ]; then git clone https://github.com/Singular/Sources .; else git pull; fi
 		cd $(TMP)/singular && \
@@ -367,12 +369,14 @@ singular_configure :
 ##################################
 ##################################
 singular_compile :
+	@echo "compiling singular"
 	@PATH=$(TMP)/local/bin:${PATH} make -j2 -C $(TMP)/singular
 
 
 ##################################
 ##################################
 singular_install :
+	@echo "installing singular"
 	@PATH=$(TMP)/local/bin:${PATH} make -C $(TMP)/singular install
 	@cd $(PREFIX)/include/resources; \
 	chmod u+w resourcesconfig.h; \
@@ -438,6 +442,7 @@ polymake-install :
 ##################################
 ### adjust the polymake script to the new paths
 polymake_run_script :
+	@echo "fixing the polymake executable"
 	@cd $(PREFIX)/polymake/bin; chmod u+w polymake; $(SED) 's/.*InstallTop=.*/   $$InstallTop=\"$$ENV\{POLYMAKE_BASE_PATH\}\/share\/polymake\";/' polymake | $(SED) 's/.*InstallArch=.*/   $$InstallArch=\"$$ENV\{POLYMAKE_BASE_PATH\}\/lib\/polymake\";/' | $(SED) '/.*addlibs=.*/d' > polymake.tmp; mv polymake.tmp polymake
 	@cd $(PREFIX)/polymake/bin; chmod u+w polymake-config; $(SED) 's/.*InstallArch=.*/   $$InstallArch=\"$$ENV\{POLYMAKE_BASE_PATH\}\/lib\/polymake\";/' polymake-config > polymake-config.tmp; mv polymake-config.tmp polymake-config
 
@@ -477,25 +482,26 @@ polymake-executable :
 
 
 fix_names :
-#	@./build_scripts/fix_load_dylib.sh $(PREFIX)/lib $(PREFIX)/lib dylib
-#	@./build_scripts/fix_load_dylib.sh $(PREFIX)/bin $(PREFIX)/lib ""
-#	@./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib $(PREFIX)/lib dylib
-#	@./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib/polymake/lib $(PREFIX)/lib bundle
-#	@./build_scripts/fix_load_dylib.sh $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/ $(PREFIX)/lib bundle
-#	@./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib/polymake/perlx/$(PERLVERSION)/darwin-thread-multi-2level/auto/Polymake/Ext $(PREFIX)/lib bundle
-#	for ext in $(shell ls polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'); do \
-#			./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib/polymake/bundled/$$ext/lib $(PREFIX)/lib bundle ; \
-#	done
-#	@./build_scripts/fix_rpath.sh $(PREFIX)/lib $(PREFIX)/lib dylib
-#	@./build_scripts/fix_rpath.sh $(PREFIX)/bin $(PREFIX)/lib ""
-#	@./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib $(PREFIX)/lib dylib
-#	@./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib/polymake/lib $(PREFIX)/lib bundle
-#	@./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib/polymake/perlx/$(PERLVERSION)/darwin-thread-multi-2level/auto/Polymake/Ext $(PREFIX)/lib bundle
+	@echo "fixing paths in libraries"
+	@./build_scripts/fix_load_dylib.sh $(PREFIX)/lib $(PREFIX)/lib dylib
+	@./build_scripts/fix_load_dylib.sh $(PREFIX)/bin $(PREFIX)/lib ""
+	@./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib $(PREFIX)/lib dylib
+	@./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib/polymake/lib $(PREFIX)/lib bundle
+	@./build_scripts/fix_load_dylib.sh $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu/ $(PREFIX)/lib bundle
+	@./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib/polymake/perlx/$(PERLVERSION)/darwin-thread-multi-2level/auto/Polymake/Ext $(PREFIX)/lib bundle
+	for ext in $(shell ls polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'); do \
+			./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib/polymake/bundled/$$ext/lib $(PREFIX)/lib bundle ; \
+	done
+	@./build_scripts/fix_rpath.sh $(PREFIX)/lib $(PREFIX)/lib dylib
+	@./build_scripts/fix_rpath.sh $(PREFIX)/bin $(PREFIX)/lib ""
+	@./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib $(PREFIX)/lib dylib
+	@./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib/polymake/lib $(PREFIX)/lib bundle
+	@./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib/polymake/perlx/$(PERLVERSION)/darwin-thread-multi-2level/auto/Polymake/Ext $(PREFIX)/lib bundle
 	for ext in $(shell ls polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'); do \
 			./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib/polymake/bundled/$$ext/lib $(PREFIX)/lib bundle ; \
 	done
-#	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" dylib ""
-#	@./build_scripts/fix_libname.sh "$(PREFIX)/polymake/lib" dylib "../polymake/lib"
+	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" dylib ""
+	@./build_scripts/fix_libname.sh "$(PREFIX)/polymake/lib" dylib "../polymake/lib"
 
 
 ##################################
