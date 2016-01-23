@@ -64,7 +64,7 @@ compile : skeleton ant boost \
 		ppl_build ppl_install \
 		ntl \
 		singular_configure singular_compile singular_install \
-		polymake-prepare polymake-compile polymake-install polymake-cleanup \
+		polymake-prepare polymake-compile polymake-docs polymake-install polymake-cleanup \
 		fix_names \
 		clean-install doc
 
