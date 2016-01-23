@@ -484,7 +484,7 @@ polymake-executable :
 fix_names :
 	@echo "fixing paths in libraries"
 	@./build_scripts/fix_load_dylib.sh $(PREFIX)/lib $(PREFIX) "" dylib
-	@./build_scripts/fix_load_dylib.sh $(PREFIX)/bin $(PREFIX) ".." ""
+	@./build_scripts/fix_load_dylib.sh $(PREFIX)/bin $(PREFIX) "../lib" ""
 	@./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib $(PREFIX) "../../lib" dylib
 	@./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib/polymake/lib $(PREFIX) "../../../../lib" bundle
 	@./build_scripts/fix_load_dylib.sh $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu $(PREFIX) "../../../../../../../.." bundle
