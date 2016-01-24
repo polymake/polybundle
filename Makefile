@@ -9,25 +9,26 @@
 
 TAR_DIR           := $(CURDIR)/src
 
-POLYMAKEVERSION  := "3.0"
-ANTVERSION       := "1.9.6"
-MPFRVERSION      := "3.1.3"
-GMPVERSION       := "6.1.0"
-GMPMINORVERSION  := ""
-POLYMAKEVERSION  := "2.14"
-NTLVERSION       := "9.6.2"
-BOOSTVERSION     := "1_59_0"
-BOOSTVERSIONDIR  := "1.59.0"
-READLINEVERSION  := "6.3"
-CDDLIBVERSION    := "094h"
-GLPKVERSION      := "4.57"
-4TI2VERSION      := "1.6.7"
-LIBTOOLVERSION   := "2.4"
-AUTOCONFVERSION  := "2.69"
-AUTOMAKEVERSION  := "1.14"
-TERMRLGNUVERSION := "1.24"
-LIBXSLTVERSION   := "1.92"
-SINGULARVERSION  := "4.0.2"
+POLYMAKEVERSION     := "3.0"
+POLYMAKELONGVERSION := Release 3.0 of January 19, 2016
+ANTVERSION          := "1.9.6"
+MPFRVERSION         := "3.1.3"
+GMPVERSION          := "6.1.0"
+GMPMINORVERSION     := ""
+POLYMAKEVERSION     := "2.14"
+NTLVERSION          := "9.6.2"
+BOOSTVERSION        := "1_59_0"
+BOOSTVERSIONDIR     := "1.59.0"
+READLINEVERSION     := "6.3"
+CDDLIBVERSION       := "094h"
+GLPKVERSION         := "4.57"
+4TI2VERSION         := "1.6.7"
+LIBTOOLVERSION      := "2.4"
+AUTOCONFVERSION     := "2.69"
+AUTOMAKEVERSION     := "1.14"
+TERMRLGNUVERSION    := "1.24"
+LIBXSLTVERSION      := "1.92"
+SINGULARVERSION     := "4.0.2"
 
 
 ### change into the base directory
@@ -39,7 +40,7 @@ DATE := `date +'%Y-%m-%d'`
 PATH := /usr/bin:$(PATH)
 JNIHEADERS = "/System/Library/Frameworks/JavaVM.framework/Headers/		"
 
-MACVERSION := $(shell sw_vers | grep -o "10[.][0-9]")
+MACVERSION := $(shell sw_vers | grep -o "10[.][0-9]\+")
 PERLVERSION := $(shell $(PERL) --version | grep -o "5[.][0-9]*[.][0-9]")
 
 PREFIX := $(CURDIR)/polymake.app/Contents/Resources
@@ -51,7 +52,7 @@ CXX := /usr/bin/g++
 CFLAGS   =  "-m64 -mcpu=generic -march=x86-64"
 CXXFLAGS =  "-m64 -mcpu=generic -march=x86-64"
 
-.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs doc polymake-executable flint ftit ntl singular_compile singular_configure singular_install bundle compile gnu_auto_stuff autoconf automake libtool glpk polymake_env_var polymake_run_script polymake-cleanup
+.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs doc polymake-executable flint ftit ntl singular_compile singular_configure singular_install bundle compile gnu_auto_stuff autoconf automake libtool glpk polymake_env_var polymake_run_script polymake-cleanup prepare_doc doc
 
 compile : skeleton ant boost \
 		readline \
@@ -66,7 +67,7 @@ compile : skeleton ant boost \
 		singular_configure singular_compile singular_install \
 		polymake-prepare polymake-compile polymake-docs polymake-install polymake-cleanup \
 		fix_names \
-		clean-install doc
+		clean-install prepare_doc doc
 
 bundle : compile dmg
 
@@ -539,8 +540,16 @@ clean :
 
 ##################################
 ##################################
+prepare_doc :
+	@echo "create readme source"
+	@cd build_scripts; \
+		if [[ README.tex -nt ../README.pdf ]]; then \
+			${SED} -i '' -E "s/MACVERSION/$(MACVERSION)/g" README.tex; \
+			${SED} -i '' -E 's/POLYMAKEVERSION/$(POLYMAKELONGVERSION)/g' README.tex;  \
+		fi;
+
 doc :
-	@echo "create readme"
+	@echo "compile readme"
 	@cd build_scripts; \
 		if [[ README.tex -nt ../README.pdf ]]; then \
 			pdflatex README &&  pdflatex README &&  mv README.pdf ../ && rm -f README.aux README.log README.out; \
