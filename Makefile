@@ -9,27 +9,51 @@
 
 TAR_DIR           := $(CURDIR)/src
 
-POLYMAKEVERSION     := "3.0"
+POLYMAKEVERSION     := 3.0
 POLYMAKELONGVERSION := Release 3.0 of January 19, 2016
-ANTVERSION          := "1.9.6"
-MPFRVERSION         := "3.1.3"
-GMPVERSION          := "6.1.0"
-GMPMINORVERSION     := ""
-POLYMAKEVERSION     := "2.14"
-NTLVERSION          := "9.6.2"
-BOOSTVERSION        := "1_59_0"
-BOOSTVERSIONDIR     := "1.59.0"
-READLINEVERSION     := "6.3"
-CDDLIBVERSION       := "094h"
-GLPKVERSION         := "4.57"
-4TI2VERSION         := "1.6.7"
-LIBTOOLVERSION      := "2.4"
-AUTOCONFVERSION     := "2.69"
-AUTOMAKEVERSION     := "1.14"
-TERMRLGNUVERSION    := "1.24"
-LIBXSLTVERSION      := "1.92"
-SINGULARVERSION     := "4.0.2"
+ANTVERSION          := 1.9.6
+MPFRVERSION         := 3.1.3
+GMPVERSION          := 6.1.0
+GMPMINORVERSION     :=
+NTLVERSION          := 9.6.2
+BOOSTVERSION        := 1_59_0
+BOOSTVERSIONDIR     := 1.59.0
+READLINEVERSION     := 6.3
+CDDLIBVERSION       := 094h
+GLPKVERSION         := 4.57
+4TI2VERSION         := 1.6.7
+LIBTOOLVERSION      := 2.4
+AUTOCONFVERSION     := 2.69
+AUTOMAKEVERSION     := 1.14
+TERMRLGNUVERSION    := 1.24
+LIBXSLTVERSION      := 1.92
+SINGULARVERSION     := 4.0.2
+PPLVERSION          := 1.1
+NORMALIZVERSION     := 3.0
+LRSVERSION          := 4.2
+NAUTYVERSION        :=
+JREALITYVERSION     :=
+PERMLIBVERSION      :=
 
+POLYMAKEHOME  := https://github.com/polymake/polymake
+ANTHOME       := http://ant.apache.org/
+MPFRHOME      := http://mpfr.org/
+GMPHOME       := http://gmplib.org/
+BOOSTHOME     := http://www.boost.org/
+READLINEHOME  := http://tiswww.case.edu/php/chet/readline/rltop.html
+CDDHOME       := http://www.inf.ethz.ch/personal/fukudak/cdd_home/
+GLPKHOME      := https://www.gnu.org/software/glpk/
+4TI2HOME      := http://www.4ti2.de/
+TERMRLGNUHOME := http://search.cpan.org/dist/Term-ReadLine-Gnu/
+LIBXSLTHOME   := http://search.cpan.org/~shlomif/XML-LibXSLT-1.87/
+SINGULARHOME  := https://github.com/Singular/
+PPLHOME       := http://bugseng.com/products/ppl/
+NORMALIZHOME  := http://www.home.uni-osnabrueck.de/wbruns/normaliz/
+LRSHOME       := http://cgm.cs.mcgill.ca/~avis/C/lrs.html
+NAUTYHOME     := http://cs.anu.edu.au/~bdm/nauty/
+JREALITYHOME  := http://www3.math.tu-berlin.de/jreality
+PERMLIBHOME   := http://www.math.uni-rostock.de/~rehn/software/permlib.html
+NTLHOME       := http://www.shoup.net/ntl/
 
 ### change into the base directory
 ###BASEPATH := $( (cd -P $(dirname $0) && pwd) )
@@ -545,8 +569,48 @@ prepare_doc :
 	@cd build_scripts; \
 		if [[ README.tex -nt ../README.pdf ]]; then \
 			${SED} -i '' -E "s/MACVERSION/$(MACVERSION)/g" README.tex; \
-			${SED} -i '' -E 's/POLYMAKEVERSION/$(POLYMAKELONGVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/POLYMAKELONGVERSION/$(POLYMAKELONGVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/POLYMAKEVERSION/$(POLYMAKEVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/ANTVERSION/$(ANTVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/MPFRVERSION/$(MPFRVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/GMPVERSION/$(GMPVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/BOOSTVERSION/$(BOOSTVERSIONDIR)/g' README.tex;  \
+			${SED} -i '' -E 's/READLINEVERSION/$(READLINEVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/CDDVERSION/$(CDDVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/GLPKVERSION/$(GLPKVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/4TI2VERSION/$(4TI2VERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/TERMRLGNUVERSION/$(TERMRLGNUVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/LIBXSLTVERSION/$(LIBXSLTVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/SINGULARVERSION/$(SINGULARVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/PPLVERSION/$(PPLVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/NORMALIZVERSION/$(NORMALIZVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/LRSVERSION/$(LRSVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/NAUTYVERSION/$(NAUTYVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/JREALITYVERSION/$(JREALITYVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/PERMLIBVERSION/$(PERMLIBVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's/NTLVERSION/$(NTLVERSION)/g' README.tex;  \
+			${SED} -i '' -E 's|POLYMAKEHOME|$(POLYMAKEHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|ANTHOME|$(ANTHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|MPFRHOME|$(MPFRHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|GMPHOME|$(GMPHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|BOOSTHOME|$(BOOSTHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|READLINEHOME|$(READLINEHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|CDDHOME|$(CDDHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|GLPKHOME|$(GLPKHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|4TI2HOME|$(4TI2HOME)|g' README.tex;  \
+			${SED} -i '' -E 's|TERMRLGNUHOME|$(TERMRLGNUHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|LIBXSLTHOME|$(LIBXSLTHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|SINGULARHOME|$(SINGULARHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|PPLHOME|$(PPLHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|NORMALIZHOME|$(NORMALIZHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|LRSHOME|$(LRSHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|NAUTYHOME|$(NAUTYHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|JREALITYHOME|$(JREALITYHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|PERMLIBHOME|$(PERMLIBHOME)|g' README.tex;  \
+			${SED} -i '' -E 's|NTLHOME|$(NTLHOME)|g' README.tex;  \
 		fi;
+
+
 
 doc :
 	@echo "compile readme"
