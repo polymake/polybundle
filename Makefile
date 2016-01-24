@@ -4,7 +4,7 @@
 #
 # Published under GPL v3
 #
-# this Makefile is for OS X Yosemite
+# this Makefile is for OS X Mountain Lion, Yosemite, El Capitan
 # prior installation of Xcode command line tools and java required
 
 TAR_DIR           := $(CURDIR)/src
