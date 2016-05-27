@@ -11,8 +11,8 @@ TAR_DIR           := $(CURDIR)/src
 
 POLYMAKEVERSION     := 3.0
 POLYMAKELONGVERSION := Release 3.0 of January 19, 2016
-ANTVERSION          := 1.9.6
-MPFRVERSION         := 3.1.3
+ANTVERSION          := 1.9.7
+MPFRVERSION         := 3.1.4
 GMPVERSION          := 6.1.0
 GMPMINORVERSION     :=
 NTLVERSION          := 9.6.2
