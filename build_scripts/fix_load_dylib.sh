@@ -7,7 +7,7 @@ get_relpath () {
 	pathb=${pathb%/}
     initial=$(printf "%s\n%s" "$patha" "$pathb" | sed -e 'N;s/^\(.*\)\/.*\n\1.*$/\1/')
     patha=${patha#$initial}
-    pathb=${pathb#$initial/}
+    pathb=${pathb#$initial}
     ndirs=$(grep -o "/" <<< "$patha" | wc -l)
 
     for (( i=0; i<$ndirs; ++i ))
@@ -31,7 +31,7 @@ if [ -d $DIR ]; then
 	for f in *$SUFFIX; do
 		if [ -f $f  -a ! -h $f ]; then
 			if file $f | grep -m1 Mach; then
-				# there is only one bundle where we nee to replace an @rpath: Gnu.bundle
+				# there is only one bundle where we need to replace an @rpath: Gnu.bundle
 				# this is because we had to set an rpath during compilation
 				if otool -L $f | egrep -o -e "(/Users|@rpath).*dylib" ; then
 					dl=`otool -L $f | egrep -o -e "(/Users|@rpath).*dylib"`;
