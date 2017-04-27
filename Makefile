@@ -1,5 +1,5 @@
 #
-# (c) Silke Horn, Andreas Paffenholz, 2016
+# (c) Silke Horn, Andreas Paffenholz, 2016, 2017
 #     polymake.org
 #
 # Published under GPL v3
