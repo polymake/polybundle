@@ -3,6 +3,8 @@ polybundle
 
 polymake bundle for Mac OS
 
+2017-04-05 changes for new polymake version 3.1
+
 2014-05-01: local installations of autoconf, automake and libtool
 
 2014-05-01: Singular is now cloned from a fork of the Singular repository

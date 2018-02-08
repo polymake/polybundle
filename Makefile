@@ -1,15 +1,15 @@
 #
-# (c) Silke Horn, Andreas Paffenholz, 2016
+# (c) Silke Horn, Andreas Paffenholz, 2016, 2017
 #     polymake.org
 #
 # Published under GPL v3
 #
-# this Makefile is for OS X Mountain Lion, Yosemite, El Capitan
+# this Makefile is for OS X Yosemite, El Capitan, sierra
 # prior installation of Xcode command line tools and java required
 
 TAR_DIR           := $(CURDIR)/src
 
-POLYMAKEVERSION     := 3.0
+POLYMAKEVERSION     := 3.1
 POLYMAKELONGVERSION := Release 3.1 of March 27, 2017
 ANTVERSION          := 1.10.1
 MPFRVERSION         := 3.1.5
@@ -70,8 +70,8 @@ PERLVERSION := $(shell $(PERL) --version | grep -o "5[.][0-9]*[.][0-9]")
 PREFIX := $(CURDIR)/polymake.app/Contents/Resources
 
 # fix the compiler
-CC  := /usr/bin/cc
-CXX := /usr/bin/g++
+CC  := /usr/bin/clang
+CXX := /usr/bin/clang++
 
 CFLAGS   =  "-m64 -mcpu=generic -march=x86-64"
 CXXFLAGS =  "-m64 -mcpu=generic -march=x86-64"
@@ -86,6 +86,7 @@ compile : skeleton ant boost \
 		mpfr_build mpfr_install \
 		glpk\
 		ftit \
+		flint \
 		ppl_build ppl_install \
 		ntl \
 		singular_configure singular_compile singular_install \
@@ -129,7 +130,7 @@ fetch_sources :
 	@echo "fetching ntl"
 	@cd $(TAR_DIR); curl --remote-name http://www.shoup.net/ntl/ntl-$(NTLVERSION).tar.gz
 	@echo "fetching cddlib"
-	@cd $(TAR_DIR); curl -O ftp://ftp.ifor.math.ethz.ch/pub/fukuda/cdd/cddlib-$(CDDLIBVERSION).tar.gz
+	@cd $(TAR_DIR); curl -O ftp://ftp.math.ethz.ch/users/fukudak/cdd/cddlib-$(CDDLIBVERSION).tar.gz
 	@echo "fetching glpk"
 	@cd $(TAR_DIR); curl -O http://ftp.gnu.org/gnu/glpk/glpk-$(GLPKVERSION).tar.gz
 
@@ -140,14 +141,17 @@ fetch_sources :
 skeleton :
 	@echo "creating skeleton"
 	@mkdir -p polymake.app/Contents/Resources
+	@mkdir -p polymake.app/Contents/Resources/config
 	@mkdir -p polymake.app/Contents/Resources/include
 	@mkdir -p polymake.app/Contents/MacOS
 
 	@cd bundle_scripts; $(SED) 's/REPLACE_PERLVERSION/${PERLVERSION}/g' polymake.start > polymake.start.tmp;
 	@cd bundle_scripts; $(SED) 's/REPLACE_PERLVERSION/${PERLVERSION}/g' polymake.debug > polymake.debug.tmp;
+	@cd bundle_scripts; $(SED) 's/REPLACE_POLYMAKE_VERSION/${POLYMAKEVERSION}/g' prefer.pl > prefer.pl.tmp;
 	@install -m 550 bundle_scripts/polymake polymake.app/Contents/MacOS/
 	@install -m 550 bundle_scripts/polymake.start.tmp polymake.app/Contents/MacOS/polymake.start
 	@install -m 550 bundle_scripts/polymake.debug.tmp polymake.app/Contents/MacOS/polymake.debug
+	@install -m 550 bundle_scripts/prefer.pl.tmp polymake.app/Contents/Resources/config/prefer.pl
 	@install -m 550 bundle_scripts/debug.commands polymake.app/Contents/Resources/
 	@cd bundle_scripts; rm polymake.start.tmp;
 	@cd bundle_scripts; rm polymake.debug.tmp;
@@ -255,7 +259,7 @@ flint :
 	@echo "building flint"
 	@cd $(TMP); mkdir -p flint
 	@cd $(TMP)/flint; if [ ! -d .git ]; then git clone https://github.com/wbhart/flint2.git .; fi
-	@cd $(TMP)/flint; git archive trunk | bzip2 > ../../$(TAR_DIR)/flint-github-$(DATE).tar.bz2
+	@cd $(TMP)/flint; git archive trunk | bzip2 > $(TAR_DIR)/flint-github-$(DATE).tar.bz2
 	@cd $(TMP)/flint; \
 	PERL5LIB=$(PERL5LIB) \
 	   CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" \
@@ -404,8 +408,14 @@ singular_install :
 	@echo "installing singular"
 	@PATH=$(TMP)/local/bin:${PATH} make -C $(TMP)/singular install
 	@cd $(PREFIX)/include/resources; \
-	chmod u+w resourcesconfig.h; \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents/\.\./g' resourcesconfig.h > resourcesconfig.h.tmp; mv resourcesconfig.h.tmp resourcesconfig.h
+	chmod u+w singular_resourcesconfig.h; \
+	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents/\.\./g' singular_resourcesconfig.h > singular_resourcesconfig.h.tmp; mv singular_resourcesconfig.h.tmp singular_resourcesconfig.h
+	@cd $(PREFIX)/share/applications/; \
+	chmod u+w Singular-manual.desktop; \
+	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents/\.\./g' Singular-manual.desktop > Singular-manual.desktop.tmp; mv Singular-manual.desktop.tmp Singular-manual.desktop
+	@cd $(PREFIX)/share/applications/; \
+	chmod u+w Singular.desktop; \
+	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents/\.\./g' Singular.desktop > Singular.desktop.tmp; mv Singular.desktop.tmp Singular.desktop
 	@cd $(PREFIX)/include/singular; \
 	chmod u+w libpolysconfig.h && chmod u+w singularconfig.h; \
 	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents/\.\./g' libpolysconfig.h > libpolysconfig.h.tmp; mv libpolysconfig.h.tmp libpolysconfig.h && \
@@ -424,6 +434,7 @@ polymake-prepare :
 	@cd $(TMP)/polymake; git archive Releases | bzip2 > $(TAR_DIR)/polymake-releases-$(DATE).tar.bz2
 	cd $(TMP)/polymake; \
 	  LD_LIBRARY_PATH=$(PREFIX)/lib \
+	  PATH=$(TMP)/local/bin:$(PREFIX)/bin:${PATH} \
 	  PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ \
 	  ./configure  --without-fink \
 	               --with-readline=$(PREFIX)/lib \
@@ -436,9 +447,9 @@ polymake-prepare :
 				   --with-singular=$(PREFIX)/ \
 				   --with-ant=$(PREFIX)/apache-ant-$(ANTVERSION)/bin/ant  \
 				   --with-java=/usr/bin/java \
-				   LDFLAGS="-L$(PREFIX)/lib/ -stdlib=libc++"  \
-				   CXXFLAGS="-m64 -mcpu=generic -march=x86-64 -I$(PREFIX)/include -Wl,-rpath,$(PREFIX)/lib -stdlib=libc++" \
-				   CFLAGS=$(CFLAGS) \
+				   LDFLAGS="-L$(PREFIX)/lib/ "  \
+				   CXXFLAGS="-fpic -DPIC -DLIBSINGULAR -m64 -mcpu=generic -march=x86-64 -I$(PREFIX)/include -Wl,-rpath,$(PREFIX)/lib" \
+				   CFLAGS="-m64 -mcpu=generic -march=x86-64 -fpic -DPIC -DLIBSINGULAR"\
 				   CC=$(CC) CXX=$(CXX) \
 				   PERL=$(PERL)
 
@@ -484,7 +495,7 @@ polymake_env_var :
 	$(SED) 's/\# .*//g' conf.make | \
 	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
 	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
-	$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
+	$(SED) 's/I[A-Z,a-z,0-9\/]*boost/I$$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
 	> conf.make.tmp; mv conf.make.tmp conf.make
 	for ext in $(shell ls polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'); do \
 				cd $(PREFIX)/polymake/lib/polymake/bundled/$$ext; \
@@ -527,8 +538,13 @@ fix_names :
 	done
 	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" dylib ""
 	@./build_scripts/fix_libname.sh "$(PREFIX)/polymake/lib" dylib "../polymake/lib"
-
-
+	
+fix_viewer :
+	@echo "changing default viewer to threejs"
+	@cd $(PREFIX)/polymake/share/polymake/apps/common/rules/; chmod u+w threejs.rules; $(SED) -i "" $$'/label threejs/a\\\n\\\nprefer threejs\\\n' threejs.rules; chmod u-w threejs.rules;
+	@cd $(PREFIX)/polymake/share/polymake/bundled/jreality/apps/common/rules/; chmod u+w main.rules; $(SED) -i "" 's/prefer jreality.geometry//' main.rules; chmod u-w main.rules;
+	@cd $(PREFIX)/polymake/share/polymake/bundled/jreality/apps/graph/rules/; chmod u+w main.rules; $(SED) -i "" 's/prefer jreality.graph//' main.rules; chmod u-w main.rules;
+	
 ##################################
 ##################################
 ### remove junk
@@ -616,5 +632,7 @@ doc :
 	@echo "compile readme"
 	@cd build_scripts; \
 		if [[ README.tex -nt ../README.pdf ]]; then \
-			pdflatex README &&  pdflatex README &&  mv README.pdf ../ && rm -f README.aux README.log README.out; \
+			PATH='/usr/local/texlive/2016basic/bin/x86_64-darwin/':$PATH pdflatex README && \
+			PATH='/usr/local/texlive/2016basic/bin/x86_64-darwin/':$PATH pdflatex README &&  \
+			mv README.pdf ../ && rm -f README.aux README.log README.out; \
 		fi;
