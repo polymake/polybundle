@@ -34,6 +34,7 @@ LRSVERSION          := 4.2
 NAUTYVERSION        :=
 JREALITYVERSION     :=
 PERMLIBVERSION      :=
+NINJAVERSION        := "v1.8.2"
 
 
 POLYMAKEHOME  := https://github.com/polymake/polymake
@@ -55,6 +56,7 @@ NAUTYHOME     := http://cs.anu.edu.au/~bdm/nauty/
 JREALITYHOME  := http://www3.math.tu-berlin.de/jreality
 PERMLIBHOME   := http://www.math.uni-rostock.de/~rehn/software/permlib.html
 NTLHOME       := http://www.shoup.net/ntl/
+NINJAHOME     := https://ninja-build.org/
 
 ### change into the base directory
 ###BASEPATH := $( (cd -P $(dirname $0) && pwd) )
@@ -77,7 +79,7 @@ CXX := /usr/bin/clang++
 CFLAGS   =  "-m64 -mcpu=generic -march=x86-64"
 CXXFLAGS =  "-m64 -mcpu=generic -march=x86-64"
 
-.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs doc polymake-executable flint ftit ntl singular_compile singular_configure singular_install bundle compile gnu_auto_stuff autoconf automake libtool glpk polymake_env_var polymake_run_script polymake-cleanup prepare_doc doc
+.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs doc polymake-executable flint ftit ntl singular_compile singular_configure singular_install ninja bundle compile gnu_auto_stuff autoconf automake libtool glpk polymake_env_var polymake_run_script polymake-cleanup prepare_doc doc
 
 compile : skeleton ant boost \
 		readline \
@@ -91,6 +93,7 @@ compile : skeleton ant boost \
 		ppl_build ppl_install \
 		ntl \
 		singular_configure singular_compile singular_install \
+		ninja \
 		polymake-prepare polymake-compile polymake-docs polymake-install polymake-cleanup \
 		fix_names \
 		clean-install prepare_doc doc
@@ -134,6 +137,8 @@ fetch_sources :
 	@cd $(TAR_DIR); curl -O ftp://ftp.math.ethz.ch/users/fukudak/cdd/cddlib-$(CDDLIBVERSION).tar.gz
 	@echo "fetching glpk"
 	@cd $(TAR_DIR); curl -O http://ftp.gnu.org/gnu/glpk/glpk-$(GLPKVERSION).tar.gz
+	@echo "fetching ninja"
+	@cd $(TAR_DIR); curl -O -L https://github.com/ninja-build/ninja/releases/download/$(NINJAVERSION)/ninja-mac.zip
 
 
 ##################################
@@ -422,6 +427,9 @@ singular_install :
 	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents/\.\./g' libpolysconfig.h > libpolysconfig.h.tmp; mv libpolysconfig.h.tmp libpolysconfig.h && \
 	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents/\.\./g' singularconfig.h > singularconfig.h.tmp; mv singularconfig.h.tmp singularconfig.h
 
+ninja:
+	@echo "installing ninja"
+	@cd $(PREFIX)/bin; if [[ ! -f ninja ]]; then unzip $(TAR_DIR)/ninja-mac.zip; fi
 
 ##################################
 ##################################
@@ -459,13 +467,15 @@ polymake-prepare :
 ##################################
 polymake-compile :
 	@echo "building polymake"
-	@make -j2 -C $(TMP)/polymake
+	PATH=$(TMP)/local/bin:$(PREFIX)/bin:${PATH} \
+		cd $(TMP)/polymake/ && ninja -C build/Opt -l2
 
 ##################################
 ##################################
 polymake-docs :
 	@echo "creating polymake docs"
-	@make -j2 -C $(TMP)/polymake docs
+	PATH=$(TMP)/local/bin:$(PREFIX)/bin:${PATH} \
+		make -j2 -C $(TMP)/polymake docs
 
 
 ##################################
