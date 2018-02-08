@@ -9,10 +9,10 @@
 
 TAR_DIR           := $(CURDIR)/src
 
-POLYMAKEVERSION     := 3.1
-POLYMAKELONGVERSION := Release 3.1 of March 27, 2017
+POLYMAKEVERSION     := 3.2
+POLYMAKELONGVERSION := Release 3.2 of January 29, 2018
 ANTVERSION          := 1.10.1
-MPFRVERSION         := 3.1.5
+MPFRVERSION      := "4.0.0"
 GMPVERSION          := 6.1.2
 GMPMINORVERSION     :=
 NTLVERSION          := 10.3.0
@@ -29,11 +29,12 @@ TERMRLGNUVERSION    := 1.35
 LIBXSLTVERSION      := 1.95
 SINGULARVERSION     := 4.0.3
 PPLVERSION          := 1.2
-NORMALIZVERSION     := 3.2.1
+NORMALIZVERSION     := 3.5.0
 LRSVERSION          := 4.2
 NAUTYVERSION        :=
 JREALITYVERSION     :=
 PERMLIBVERSION      :=
+
 
 POLYMAKEHOME  := https://github.com/polymake/polymake
 ANTHOME       := http://ant.apache.org/
