@@ -11,8 +11,8 @@ TAR_DIR           := $(CURDIR)/src
 
 POLYMAKEVERSION     := 3.2
 POLYMAKELONGVERSION := Release 3.2 of January 29, 2018
-ANTVERSION          := 1.10.1
-MPFRVERSION      := "4.0.0"
+ANTVERSION          := 1.10.2
+MPFRVERSION         := "4.0.1"
 GMPVERSION          := 6.1.2
 GMPMINORVERSION     :=
 NTLVERSION          := 10.3.0
@@ -446,7 +446,6 @@ polymake-prepare :
 	  PATH=$(TMP)/local/bin:$(PREFIX)/bin:${PATH} \
 	  PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ \
 	  ./configure  --without-fink \
-	               --with-readline=$(PREFIX)/lib \
 	               --prefix=$(PREFIX)/polymake \
 				   --with-jni-headers=$(JNIHEADERS) \
 				   --with-boost=$(PREFIX)/include/boost_$(BOOSTVERSION)/ \
@@ -475,7 +474,7 @@ polymake-compile :
 polymake-docs :
 	@echo "creating polymake docs"
 	PATH=$(TMP)/local/bin:$(PREFIX)/bin:${PATH} \
-		make -j2 -C $(TMP)/polymake docs
+		polymake --script generate_docs $(PREFIX)/polymake_docs
 
 
 ##################################
@@ -502,21 +501,13 @@ polymake_run_script :
 polymake_env_var :
 	@echo "fixing variables in polymake"
 	@cd $(PREFIX)/polymake/lib/polymake; \
-	chmod u+w conf.make; \
-	$(SED) 's/\# .*//g' conf.make | \
+	chmod u+w config.ninja; \
+	$(SED) 's/\# .*//g' config.ninja | \
+	$(SED) 's/configure.command.*//' | \
 	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
 	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
 	$(SED) 's/I[A-Z,a-z,0-9\/]*boost/I$$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
-	> conf.make.tmp; mv conf.make.tmp conf.make
-	for ext in $(shell ls polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'); do \
-				cd $(PREFIX)/polymake/lib/polymake/bundled/$$ext; \
-				chmod u+w conf.make; \
-				$(SED) 's/\# .*//g' conf.make | \
-				$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
-				$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
-				$(SED) 's/I.*boost/I$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
-				> conf.make.tmp; mv conf.make.tmp conf.make; \
-	done
+	> config.ninja.tmp; mv config.ninja.tmp config.ninja; \
 
 
 ##################################
@@ -643,7 +634,7 @@ doc :
 	@echo "compile readme"
 	@cd build_scripts; \
 		if [[ README.tex -nt ../README.pdf ]]; then \
-			PATH='/usr/local/texlive/2016basic/bin/x86_64-darwin/':$PATH pdflatex README && \
-			PATH='/usr/local/texlive/2016basic/bin/x86_64-darwin/':$PATH pdflatex README &&  \
+			PATH='/usr/local/texlive/2017basic/bin/x86_64-darwin/':$PATH pdflatex README && \
+			PATH='/usr/local/texlive/2017basic/bin/x86_64-darwin/':$PATH pdflatex README &&  \
 			mv README.pdf ../ && rm -f README.aux README.log README.out; \
 		fi;
