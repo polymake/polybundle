@@ -122,7 +122,7 @@ fetch_sources :
 	@echo "fetching gmp"
 	@cd $(TAR_DIR); curl -O https://gmplib.org/download/gmp/gmp-$(GMPVERSION)$(GMPMINORVERSION).tar.bz2
 	@echo "fetching mpfr"
-	@cd $(TAR_DIR); curl -O http://www.mpfr.org/mpfr-current/mpfr-$(MPFRVERSION).tar.bz2
+	@cd $(TAR_DIR); curl -O http://www.mpfr.org/mpfr-$(MPFRVERSION)/mpfr-$(MPFRVERSION).tar.bz2
 	@echo "fetching readline"
 	@cd $(TAR_DIR); curl -O ftp://ftp.cwru.edu/pub/bash/readline-$(READLINEVERSION).tar.gz
 	@echo "fetching autoconf"
@@ -560,6 +560,7 @@ clean-install :
 	@cd polymake.app; rm -f Contents/Resources/bin/libpolys-config
 	@cd polymake.app; rm -f Contents/Resources/bin/libsingular-config
 	@cd polymake.app; rmdir Contents/Resources/lib/pkgconfig/
+	@cd polymake.app; rmdir Contents/Resources/polymake/bin/polymake-config/
 
 
 
