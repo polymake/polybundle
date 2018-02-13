@@ -79,7 +79,7 @@ CXX := /usr/bin/clang++
 CFLAGS   =  "-m64 -mcpu=generic -march=x86-64"
 CXXFLAGS =  "-m64 -mcpu=generic -march=x86-64"
 
-.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs doc polymake-executable flint ftit ntl singular_compile singular_configure singular_install ninja bundle compile gnu_auto_stuff autoconf automake libtool glpk polymake_env_var polymake_run_script polymake-cleanup prepare_doc doc
+.PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs doc polymake-executable flint ftit ntl singular_compile singular_configure singular_install ninja bundle compile gnu_auto_stuff autoconf automake libtool glpk polymake_run_script prepare_doc doc
 
 compile : skeleton ant boost \
 		readline \
@@ -94,13 +94,11 @@ compile : skeleton ant boost \
 		ntl \
 		singular_configure singular_compile singular_install \
 		ninja \
-		polymake-prepare polymake-compile polymake-docs polymake-install polymake-cleanup \
+		polymake-prepare polymake-compile polymake-docs polymake-install polymake_run_script polymake-executable \
 		fix_names \
 		clean-install prepare_doc doc
 
 bundle : compile dmg
-
-polymake-cleanup : polymake_run_script polymake_env_var polymake-executable
 
 
 ##################################
@@ -495,23 +493,6 @@ polymake_run_script :
 
 ##################################
 ##################################
-### adjust conf.make for polymake and all bundled extensions
-### FIXME using \S etc. in a regexp apparently does not work for Mac's sed,
-###       so we assume that the path to the current directory is not too strange
-polymake_env_var :
-	@echo "fixing variables in polymake"
-	@cd $(PREFIX)/polymake/lib/polymake; \
-	chmod u+w config.ninja; \
-	$(SED) 's/\# .*//g' config.ninja | \
-	$(SED) 's/configure.command.*//' | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources\/polymake/$$\{POLYMAKE_BASE_PATH\}/g'  | \
-	$(SED) -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/$$\{POLYMAKE_BASE_PATH\}\/..\//g' | \
-	$(SED) 's/I[A-Z,a-z,0-9\/]*boost/I$$\{POLYMAKE_BASE_PATH\}\/..\/include\/boost/' \
-	> config.ninja.tmp; mv config.ninja.tmp config.ninja; \
-
-
-##################################
-##################################
 ### make polymake script executable
 ### shouldn't this already be the case?
 polymake-executable :
@@ -560,7 +541,8 @@ clean-install :
 	@cd polymake.app; rm -f Contents/Resources/bin/libpolys-config
 	@cd polymake.app; rm -f Contents/Resources/bin/libsingular-config
 	@cd polymake.app; rmdir Contents/Resources/lib/pkgconfig/
-	@cd polymake.app; rmdir Contents/Resources/polymake/bin/polymake-config/
+
+#	@cd polymake.app; rm Contents/Resources/polymake/bin/polymake-config
 
 
 

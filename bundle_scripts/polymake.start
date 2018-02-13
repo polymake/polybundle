@@ -2,7 +2,8 @@
 
 echo -ne "\033]0;polymake\007"
 dir=$(cd "$(dirname "$0")"; pwd)
-ResourcesDir="$dir/../Resources/"
+ResourcesDir="${dir%MacOS}Resources"
+BundleBase=${ResourcesDir%/polymake.app/Contents/Resources}
 
 alias perl=$ResourcesDir/bin/perl5.18
 
@@ -24,7 +25,7 @@ if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then
 fi;
 
 if [ -f ${HOME}/.polymake-macbundle/customize.pl ]; then
-  base=`grep -m 1 "polymake.app/Contents/MacOS" ${HOME}/.polymake-macbundle/customize.pl`
+  base=`grep -m 1 "polymake.app/Contents/Resources" ${HOME}/.polymake-macbundle/customize.pl`
   if [[ ! -z "$base" ]] && [[ ! $base =~ $ResourcesDir ]]; then
     echo "========================================================================="
     echo "Your polymake customization files in"
@@ -43,6 +44,20 @@ if [ -f ${HOME}/.polymake-macbundle/customize.pl ]; then
    [ "$REPLY" == "c" ] || exit
    rm -rf "${HOME}/.polymake-macbundle"
   fi
+fi
+
+root=`grep -m 1 "root=.*" $ResourcesDir/polymake/lib/polymake/config.ninja | sed -Ee "s|root=(.*)/polymake.app/Contents/Resources/polymake/share/polymake|\1|"`
+if [[ -z "$root" ]]; then
+   echo "polymake build configure file is missing"
+   echo "This should not happen. Your bundle seems to be corrupt. Please reinstall."
+   exit
+fi
+
+if [[ ! $root =~ ${BundleBase} ]]; then
+   echo "========================================================================="
+   echo "The bundle is started for the first time or has been relocated. Updating the configuration file..."
+   sed -i "" "s|$root|$BundleBase|g" $ResourcesDir/polymake/lib/polymake/config.ninja
+   echo "...done"
 fi
 
 # the user might have a 32bit version of fink which conflicts with 64bit polymake, so
