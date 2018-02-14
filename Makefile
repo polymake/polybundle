@@ -16,8 +16,8 @@ MPFRVERSION         := "4.0.1"
 GMPVERSION          := 6.1.2
 GMPMINORVERSION     :=
 NTLVERSION          := 10.3.0
-BOOSTVERSION        := 1_63_0
-BOOSTVERSIONDIR     := 1.63.0
+BOOSTVERSION        := 1_66_0
+BOOSTVERSIONDIR     := 1.66.0
 READLINEVERSION     := 6.3
 CDDLIBVERSION       := 094h
 GLPKVERSION         := 4.61
@@ -116,7 +116,7 @@ fetch_sources :
 	@echo "fetching libxslt"
 	@cd $(TAR_DIR); curl -O -L http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/XML-LibXSLT-$(LIBXSLTVERSION).tar.gz
 	@echo "fetching boost"
-	@cd $(TAR_DIR); curl -O -L http://sourceforge.net/projects/boost/files/boost/$(BOOSTVERSIONDIR)/boost_$(BOOSTVERSION).tar.bz2
+	@cd $(TAR_DIR); curl -O -L https://dl.bintray.com/boostorg/release/$(BOOSTVERSIONDIR)/source/boost_$(BOOSTVERSION).tar.bz2
 	@echo "fetching gmp"
 	@cd $(TAR_DIR); curl -O https://gmplib.org/download/gmp/gmp-$(GMPVERSION)$(GMPMINORVERSION).tar.bz2
 	@echo "fetching mpfr"
@@ -569,46 +569,49 @@ prepare_doc :
 	@echo "create readme source"
 	@cd build_scripts; \
 		if [[ README.tex -nt ../README.pdf ]]; then \
-			${SED} -i '' -E "s/MACVERSION/$(MACVERSION)/g" README.tex; \
-			${SED} -i '' -E 's/POLYMAKELONGVERSION/$(POLYMAKELONGVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/POLYMAKEVERSION/$(POLYMAKEVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/ANTVERSION/$(ANTVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/MPFRVERSION/$(MPFRVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/GMPVERSION/$(GMPVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/BOOSTVERSION/$(BOOSTVERSIONDIR)/g' README.tex;  \
-			${SED} -i '' -E 's/READLINEVERSION/$(READLINEVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/CDDVERSION/$(CDDVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/GLPKVERSION/$(GLPKVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/4TI2VERSION/$(4TI2VERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/TERMRLGNUVERSION/$(TERMRLGNUVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/LIBXSLTVERSION/$(LIBXSLTVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/SINGULARVERSION/$(SINGULARVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/PPLVERSION/$(PPLVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/NORMALIZVERSION/$(NORMALIZVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/LRSVERSION/$(LRSVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/NAUTYVERSION/$(NAUTYVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/JREALITYVERSION/$(JREALITYVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/PERMLIBVERSION/$(PERMLIBVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's/NTLVERSION/$(NTLVERSION)/g' README.tex;  \
-			${SED} -i '' -E 's|POLYMAKEHOME|$(POLYMAKEHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|ANTHOME|$(ANTHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|MPFRHOME|$(MPFRHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|GMPHOME|$(GMPHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|BOOSTHOME|$(BOOSTHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|READLINEHOME|$(READLINEHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|CDDHOME|$(CDDHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|GLPKHOME|$(GLPKHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|4TI2HOME|$(4TI2HOME)|g' README.tex;  \
-			${SED} -i '' -E 's|TERMRLGNUHOME|$(TERMRLGNUHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|LIBXSLTHOME|$(LIBXSLTHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|SINGULARHOME|$(SINGULARHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|PPLHOME|$(PPLHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|NORMALIZHOME|$(NORMALIZHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|LRSHOME|$(LRSHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|NAUTYHOME|$(NAUTYHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|JREALITYHOME|$(JREALITYHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|PERMLIBHOME|$(PERMLIBHOME)|g' README.tex;  \
-			${SED} -i '' -E 's|NTLHOME|$(NTLHOME)|g' README.tex;  \
+			cp README.tex README_tmp.tex; \
+			${SED} -i '' -E "s/MACVERSION/$(MACVERSION)/g" README_tmp.tex; \
+			${SED} -i '' -E 's/POLYMAKELONGVERSION/$(POLYMAKELONGVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/POLYMAKEVERSION/$(POLYMAKEVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/ANTVERSION/$(ANTVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/MPFRVERSION/$(MPFRVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/GMPVERSION/$(GMPVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/BOOSTVERSION/$(BOOSTVERSIONDIR)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/READLINEVERSION/$(READLINEVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/CDDVERSION/$(CDDVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/GLPKVERSION/$(GLPKVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/4TI2VERSION/$(4TI2VERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/TERMRLGNUVERSION/$(TERMRLGNUVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/LIBXSLTVERSION/$(LIBXSLTVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/SINGULARVERSION/$(SINGULARVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/PPLVERSION/$(PPLVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/NORMALIZVERSION/$(NORMALIZVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/LRSVERSION/$(LRSVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/NAUTYVERSION/$(NAUTYVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/JREALITYVERSION/$(JREALITYVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/PERMLIBVERSION/$(PERMLIBVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/NTLVERSION/$(NTLVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's/NINJAVERSION/$(NINJAVERSION)/g' README_tmp.tex;  \
+			${SED} -i '' -E 's|POLYMAKEHOME|$(POLYMAKEHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|ANTHOME|$(ANTHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|MPFRHOME|$(MPFRHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|GMPHOME|$(GMPHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|BOOSTHOME|$(BOOSTHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|READLINEHOME|$(READLINEHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|CDDHOME|$(CDDHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|GLPKHOME|$(GLPKHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|4TI2HOME|$(4TI2HOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|TERMRLGNUHOME|$(TERMRLGNUHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|LIBXSLTHOME|$(LIBXSLTHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|SINGULARHOME|$(SINGULARHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|PPLHOME|$(PPLHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|NORMALIZHOME|$(NORMALIZHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|LRSHOME|$(LRSHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|NAUTYHOME|$(NAUTYHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|JREALITYHOME|$(JREALITYHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|PERMLIBHOME|$(PERMLIBHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|NTLHOME|$(NTLHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|NINJAHOME|$(NINJAHOME)|g' README_tmp.tex;  \
 		fi;
 
 
@@ -617,7 +620,7 @@ doc :
 	@echo "compile readme"
 	@cd build_scripts; \
 		if [[ README.tex -nt ../README.pdf ]]; then \
-			PATH='/usr/local/texlive/2017basic/bin/x86_64-darwin/':$PATH pdflatex README && \
-			PATH='/usr/local/texlive/2017basic/bin/x86_64-darwin/':$PATH pdflatex README &&  \
-			mv README.pdf ../ && rm -f README.aux README.log README.out; \
+			PATH='/usr/local/texlive/2017basic/bin/x86_64-darwin/':$PATH pdflatex README_tmp && \
+			PATH='/usr/local/texlive/2017basic/bin/x86_64-darwin/':$PATH pdflatex README_tmp &&  \
+			mv README_tmp.pdf ../README.pdf && rm -f README_tmp.aux README_tmp.log README_tmp.out; \
 		fi;
