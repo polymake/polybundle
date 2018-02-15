@@ -11,7 +11,7 @@ for f in *$SUFFIX; do
 	if [ -f $f  -a ! -h $f ]; then
 		if file $f | grep -m1 Mach; then
 			chmod u+w $f
-			if [ -s $RELPATH ]; then
+			if [ -n $RELPATH ]; then
 				install_name_tool -id "@rpath/$RELPATH/$f" $f;
 			else
 				install_name_tool -id "@rpath/$f" $f;

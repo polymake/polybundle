@@ -521,6 +521,7 @@ fix_names :
 	@./build_scripts/fix_load_dylib.sh $(PREFIX)/bin $(PREFIX) ""
 	@./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib $(PREFIX) dylib
 	@./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib/polymake/lib $(PREFIX) bundle
+	@./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib/polymake/lib $(PREFIX) dylib
 	@./build_scripts/fix_load_dylib.sh $(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu $(PREFIX) bundle
 	@./build_scripts/fix_load_dylib.sh $(PREFIX)/polymake/lib/polymake/perlx/$(PERLVERSION)/darwin-thread-multi-2level/auto/Polymake/Ext $(PREFIX) bundle
 	for ext in $(shell ls polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'); do \
@@ -530,12 +531,14 @@ fix_names :
 	@./build_scripts/fix_rpath.sh $(PREFIX)/bin $(PREFIX)/lib ""
 	@./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib $(PREFIX)/lib dylib
 	@./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib/polymake/lib $(PREFIX)/lib bundle
+	@./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib/polymake/lib $(PREFIX)/lib dylib
 	@./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib/polymake/perlx/$(PERLVERSION)/darwin-thread-multi-2level/auto/Polymake/Ext $(PREFIX)/lib bundle
 	for ext in $(shell ls polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'); do \
 			./build_scripts/fix_rpath.sh $(PREFIX)/polymake/lib/polymake/bundled/$$ext/lib $(PREFIX)/lib bundle ; \
 	done
 	@./build_scripts/fix_libname.sh "$(PREFIX)/lib" dylib ""
 	@./build_scripts/fix_libname.sh "$(PREFIX)/polymake/lib" dylib "../polymake/lib"
+	@./build_scripts/fix_libname.sh "$(PREFIX)/polymake/lib/polymake/lib" dylib "../polymake/lib/polymake/lib"
 	
 fix_viewer :
 	@echo "changing default viewer to threejs"
