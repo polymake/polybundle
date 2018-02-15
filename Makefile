@@ -58,6 +58,16 @@ PERMLIBHOME   := http://www.math.uni-rostock.de/~rehn/software/permlib.html
 NTLHOME       := http://www.shoup.net/ntl/
 NINJAHOME     := https://ninja-build.org/
 
+#POLYMAKE_GIT_SERVER := "https://github.com/polymake/polymake.git"
+#POLYMAKE_GIT_BRANCH := 'Releases'
+POLYMAKE_GIT_BRANCH := 'release/3.2'
+#POLYMAKE_GIT_BRANCH := 'master'
+POLYMAKE_GIT_SERVER := "git@git.polymake.org:polymake"
+
+POLYMAKE_GIT_BRANCH_NAME := $(POLYMAKE_GIT_BRANCH)
+POLYMAKE_GIT_BRANCH_NAME := 'release_3.2'
+
+
 ### change into the base directory
 ###BASEPATH := $( (cd -P $(dirname $0) && pwd) )
 SED := "/usr/bin/sed"
@@ -73,11 +83,11 @@ PERLVERSION := $(shell $(PERL) --version | grep -o "5[.][0-9]*[.][0-9]")
 PREFIX := $(CURDIR)/polymake.app/Contents/Resources
 
 # fix the compiler
-CC  := /usr/bin/clang
-CXX := /usr/bin/clang++
+CC  := "clang"
+CXX := "clang++"
 
-CFLAGS   =  "-m64 -mcpu=generic -march=x86-64"
-CXXFLAGS =  "-m64 -mcpu=generic -march=x86-64"
+CFLAGS   =  "-m64 -march=x86-64"
+CXXFLAGS =  "-m64 -march=x86-64"
 
 .PHONY: all fetch_sources skeleton boost ppl gcc rpath perl gmp readline mpfr ant polymake-prepare polymake-compile dmg clean clean-install polymake-install polymake-docs doc polymake-executable flint ftit ntl singular_compile singular_configure singular_install ninja bundle compile gnu_auto_stuff autoconf automake libtool glpk polymake_run_script prepare_doc doc
 
@@ -435,16 +445,17 @@ ninja:
 polymake-prepare :
 	@echo "preparing polymake build"
 	@cd $(TMP); mkdir -p polymake;
-	@cd $(TMP)/polymake;  if [ ! -d .git ]; then git clone -b Releases https://github.com/polymake/polymake.git .; \
+	@cd $(TMP)/polymake;  if [ ! -d .git ]; then\
+												git clone --branch=$(POLYMAKE_GIT_BRANCH) $(POLYMAKE_GIT_SERVER) .; \
 												else git pull; \
 												fi
-	@cd $(TMP)/polymake; git archive Releases | bzip2 > $(TAR_DIR)/polymake-releases-$(DATE).tar.bz2
+	@cd $(TMP)/polymake; git archive "$(POLYMAKE_GIT_BRANCH)" | bzip2 > $(TAR_DIR)/polymake-$(POLYMAKE_GIT_BRANCH_NAME)-$(DATE).tar.bz2
 	cd $(TMP)/polymake; \
 	  LD_LIBRARY_PATH=$(PREFIX)/lib \
 	  PATH=$(TMP)/local/bin:$(PREFIX)/bin:${PATH} \
 	  PERL5LIB=$(PREFIX)/lib/perl5/site_perl/$(PERLVERSION)/darwin-thread-multi-2level/:$(PREFIX)/lib/perl5/ \
 	  ./configure  --without-fink \
-	               --prefix=$(PREFIX)/polymake \
+				   --prefix=$(PREFIX)/polymake \
 				   --with-jni-headers=$(JNIHEADERS) \
 				   --with-boost=$(PREFIX)/include/boost_$(BOOSTVERSION)/ \
 				   --with-gmp=$(PREFIX)/ \
@@ -454,8 +465,8 @@ polymake-prepare :
 				   --with-ant=$(PREFIX)/apache-ant-$(ANTVERSION)/bin/ant  \
 				   --with-java=/usr/bin/java \
 				   LDFLAGS="-L$(PREFIX)/lib/ "  \
-				   CXXFLAGS="-fpic -DPIC -DLIBSINGULAR -m64 -mcpu=generic -march=x86-64 -I$(PREFIX)/include -Wl,-rpath,$(PREFIX)/lib" \
-				   CFLAGS="-m64 -mcpu=generic -march=x86-64 -fpic -DPIC -DLIBSINGULAR"\
+				   CXXFLAGS="-fpic -DPIC -DLIBSINGULAR -m64 -march=x86-64 -I$(PREFIX)/include" \
+				   CFLAGS="-m64 -march=x86-64 -fpic -DPIC -DLIBSINGULAR"\
 				   CC=$(CC) CXX=$(CXX) \
 				   PERL=$(PERL)
 
@@ -488,7 +499,10 @@ polymake-install :
 polymake_run_script :
 	@echo "fixing the polymake executable"
 	@cd $(PREFIX)/polymake/bin; chmod u+w polymake; $(SED) 's/.*InstallTop=.*/   $$InstallTop=\"$$ENV\{POLYMAKE_BASE_PATH\}\/share\/polymake\";/' polymake | $(SED) 's/.*InstallArch=.*/   $$InstallArch=\"$$ENV\{POLYMAKE_BASE_PATH\}\/lib\/polymake\";/' | $(SED) '/.*addlibs=.*/d' > polymake.tmp; mv polymake.tmp polymake
-	@cd $(PREFIX)/polymake/bin; chmod u+w polymake-config; $(SED) 's/.*InstallArch=.*/   $$InstallArch=\"$$ENV\{POLYMAKE_BASE_PATH\}\/lib\/polymake\";/' polymake-config > polymake-config.tmp; mv polymake-config.tmp polymake-config
+	@cd $(PREFIX)/polymake/bin; chmod u+w polymake-config; $(SED) -e $$'s|my $$InstallArch=.*|my $$pconf_path = Cwd::abs_path($$0) =~ s\|/bin/polymake-config$$\|\|r;\\\nmy $$InstallArch="$$pconf_path\/lib\/polymake";|' polymake-config \
+		| $(SED) -e $$'s/use strict;/use strict;\\\nuse Cwd;/' \
+		| $(SED) 's/my $$root=.*/my $$root="$$pconf_path\/share\/polymake";/' \
+				> polymake-config.tmp; mv polymake-config.tmp polymake-config
 
 
 ##################################
@@ -498,6 +512,7 @@ polymake_run_script :
 polymake-executable :
 	@echo "making polymake executable"
 	@chmod u+x $(PREFIX)/polymake/bin/polymake
+	@chmod u+x $(PREFIX)/polymake/bin/polymake-config
 
 
 fix_names :
