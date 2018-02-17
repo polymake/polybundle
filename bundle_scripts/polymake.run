@@ -1,0 +1,60 @@
+#!/bin/bash
+
+dirtmp=$(cd "$(dirname "$0")"; pwd)
+dir=`echo $dirtmp | awk '{ print $1 }'`
+
+if [[ -f $HOME/.polymake-macbundle/bundle.config ]]; then
+. $HOME/.polymake-macbundle/bundle.config
+else
+   echo "It seems that you are either starting polymake"
+   echo "for the first time or have deleted the configuration file."
+   echo "Please choose whether polymake should be"
+   echo "started in a terminal or a jupyter notebook."
+   echo
+   echo "Note that the jupyter and python binaries are not part of the bundle."
+   echo "If you want to start polymake in a jupyter notebook, "
+   echo "then you have to install them first on your system and make them"
+   echo 'accesible via the $PATH variable.'
+   echo
+   echo "Your choice is stored in the file"
+   echo "$HOME/.polymake-macbundle/bundle.config ."
+   echo
+   echo "You can later change your choice by editing"
+   echo 'the value of the variable POLYMAKE_START_IN_JUPYTER in that file.'
+   echo
+   echo "You can change further settings in the file bundle.config, "
+   echo "e.g. your preferred terminal, after this run of polymake."
+   echo
+   read -p "choose [t]erminal, [j]upyter or [c]ancel: "
+   while [[ "$REPLY" != "t" && "$REPLY" != "j" && "$REPLY" != "c" ]]; do
+      read -p "choose [t]erminal, [j]upyter or [c]ancel: "
+   done
+   if [[ "$REPLY" == "c" ]]; then
+      exit;
+   fi
+   mkdir -p $HOME/.polymake-macbundle
+   if [[ "$REPLY" == "t" ]]; then
+      echo "POLYMAKE_START_IN_JUPYTER=0" > $HOME/.polymake-macbundle/bundle.config
+      POLYMAKE_START_IN_JUPYTER=0
+   else
+      echo "POLYMAKE_START_IN_JUPYTER=1" > $HOME/.polymake-macbundle/bundle.config
+      POLYMAKE_START_IN_JUPYTER=1
+   fi
+   echo "POLYMAKE_TERM=Terminal" >> $HOME/.polymake-macbundle/bundle.config
+   echo "POLYMAKE_JUPYTER_IP=" >> $HOME/.polymake-macbundle/bundle.config
+   echo "POLYMAKE_JUPYTER_PORT=" >> $HOME/.polymake-macbundle/bundle.config
+   echo "POLYMAKE_JUPYTER_START_BROWSER=" >> $HOME/.polymake-macbundle/bundle.config
+fi
+
+if [[ $POLYMAKE_START_IN_JUPYTER == 0 ]]; then
+  $dir/polymake.start
+else
+   echo "starting jupyter"
+   options="--script jupyter"
+   if [[ -n $POLYMAKE_JUPYTER_IP ]]; then
+      options+=" --ip=$POLYMAKE_JUPYTER_IP"
+   fi
+   echo "options: $options"
+   $dir/polymake.start $options
+fi
+exit 0

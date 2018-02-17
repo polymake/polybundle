@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if [[ -f $HOME/.polymake-macbundle/bundle.config ]]; then
+. $HOME/.polymake-macbundle/bundle.config
+fi
+
 term="Terminal"
 if [[ -n "${POLYMAKE_TERM}" ]]; then
   term=${POLYMAKE_TERM}

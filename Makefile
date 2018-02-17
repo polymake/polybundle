@@ -164,6 +164,7 @@ skeleton :
 	@cd bundle_scripts; $(SED) 's/REPLACE_POLYMAKE_VERSION/${POLYMAKEVERSION}/g' prefer.pl > prefer.pl.tmp;
 	@install -m 550 bundle_scripts/polymake polymake.app/Contents/MacOS/
 	@install -m 550 bundle_scripts/polymake.start.tmp polymake.app/Contents/MacOS/polymake.start
+	@install -m 550 bundle_scripts/polymake.run polymake.app/Contents/MacOS/
 	@install -m 550 bundle_scripts/polymake.debug.tmp polymake.app/Contents/MacOS/polymake.debug
 	@install -m 550 bundle_scripts/prefer.pl.tmp polymake.app/Contents/Resources/config/prefer.pl
 	@install -m 550 bundle_scripts/debug.commands polymake.app/Contents/Resources/

@@ -5,9 +5,9 @@ dir=$(cd "$(dirname "$0")"; pwd)
 ResourcesDir="${dir%MacOS}Resources"
 BundleBase=${ResourcesDir%/polymake.app/Contents/Resources}
 
-alias perl=$ResourcesDir/bin/perl5.18
+#alias perl=$ResourcesDir/bin/perl5.18
 
-perlversion=5.18.2
+perlversion=REPLACE_PERLVERSION
 
 if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then
    echo "=========================================================================="
@@ -64,7 +64,7 @@ fi
 unset VERSIONER_PERL_PREFER_32_BIT
 
 
-export PATH=$PATH:${ResourcesDir}/bin
+export PATH=${ResourcesDir}/polymake/bin:${ResourcesDir}/bin:$PATH
 export POLYMAKE_CONFIG_PATH="$ResourcesDir/config;user"
 export POLYMAKE_USER_DIR="${HOME}/.polymake-macbundle"
 export POLYMAKE_BASE_PATH=$ResourcesDir/polymake
@@ -78,4 +78,4 @@ export PERL5LIB=$ResourcesDir/lib/perl5/site_perl/REPLACE_PERLVERSION/darwin-thr
 dir=$(cd "$(dirname "$0")"; pwd)
 
 # start polymake
-$ResourcesDir/polymake/bin/polymake
+$ResourcesDir/polymake/bin/polymake $@
