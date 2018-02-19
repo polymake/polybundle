@@ -5,9 +5,9 @@ dir=$(cd "$(dirname "$0")"; pwd)
 ResourcesDir="${dir%MacOS}Resources"
 BundleBase=${ResourcesDir%/polymake.app/Contents/Resources}
 
-#alias perl=$ResourcesDir/bin/perl5.18
+alias perl=/usr/bin/perl
 
-perlversion=REPLACE_PERLVERSION
+perlversion=`/usr/bin/perl --version | grep -o "5[.][0-9]*[.][0-9]"`
 
 if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then
    echo "=========================================================================="
