@@ -13,7 +13,7 @@ COMMAND=""
 # the user might have a 32bit version of fink which conflicts with 64bit polymake, so
 unset VERSIONER_PERL_PREFER_32_BIT
 
-export PATH=$PATH:${ResourcesDir}/bin
+export PATH=${ResourcesDir}/polymake/bin:${ResourcesDir}/bin:$PATH
 export POLYMAKE_USER_DIR="${HOME}/.polymake-macbundle-debug"
 export POLYMAKE_BASE_PATH=$ResourcesDir/polymake
 export LD_LIBRARY_PATH=$ResourcesDir/lib:$ResourcesDir/include/boost_1_47_0/:$LD_LIBRARY_PATH
