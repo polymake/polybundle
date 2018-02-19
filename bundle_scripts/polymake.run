@@ -21,6 +21,14 @@ else
    # after you finished the polymake notebook by typing Ctrl^c twice.
    POLYMAKE_START_IN_JUPYTER=0
 
+   # Set the initial directory for your jupyter notebooks
+   # the default value is your home directory
+   # it is recommended to change this to something else, otherwise this will clutter your home with 
+   # notebook files for each run of polymake
+   # the path can either be absolute or relative to your home directory (e.g. "~/Documents")
+   # the directory must exist, it will not be created
+   # POLYMAKE_JUPYTER_NOTEBOOK_DIR=
+
    # The ip the jupyter server connects to
    # by default this is localhost
    # you have to set this variable if you start polymake remotely and want to connect to it from another machine
@@ -53,6 +61,9 @@ if [[ $POLYMAKE_START_IN_JUPYTER == 0 ]]; then
   $dir/polymake.start
 else
    options="--script jupyter"
+   if [[ -n $POLYMAKE_JUPYTER_NOTEBOOK_DIR ]]; then
+      options+=" --notebook-dir=$POLYMAKE_JUPYTER_NOTEBOOK_DIR"
+   fi
    if [[ -n $POLYMAKE_JUPYTER_IP ]]; then
       options+=" --ip=$POLYMAKE_JUPYTER_IP"
    fi
