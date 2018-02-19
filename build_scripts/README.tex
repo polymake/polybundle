@@ -45,7 +45,26 @@ Double click the \polymake program icon to start \polymake. This will open a ter
 
 To exit \polymake type \texttt{exit;} at the \polymake prompt (observe the ``;'' that is necessary for each \polymake command). Depending on your \texttt{Terminal} settings the \texttt{Terminal} window might not close but just tell you that the process is completed. In that case close the window manually (but wait until \polymake has finished, which might take a moment). You can change the behavior of \texttt{Terminal} in the \textit{Preferences} menu.  You cannot close \polymake by right clicking the Dock icon or via Expos\`e. \polymake saves open files and customization settings when you exit, so you \textbf{should not} terminate \polymake by closing the terminal.
 
+\section*{Using \polymake with a jupyter notebook}
+
+You can use polymake in a jupyter notebook. After you have started the bundle once, there is a configuration file \texttt{bundle.config} in the folder \texttt{\$HOME/.polymake-macbundle/} (observe the dot!). In this file you can set the variable \texttt{POLYMAKE_START_IN_JUPYTER} to 1. Note that this requires an installation of \texttt{\bf python3} and \texttt{\bf jupyter} that can be found via your path variable. These two programs are \textbf{not} part of the polymake bundle, you have to install them yourself, e.g. via \texttt{brew} or \texttt{fink}.
+
+With the next start of the bundle polymake will start a jupyter notebook server in a terminal and open a notebook in your default web browser. You can now choose polymake in the menu \texttt{new} at the top right corner of the screen. At the first start this will ask your permission to install the polymake jupyter kernel in \texttt{\$HOME\.local} in your home directory and to launch a server. Subsequent calls will directly start the server. 
+
+\textbf{Note}: You have to shut down the jupyter server yourself with \texttt{Ctrl-c} (twice) in the terminal started by polymake after you have exited the polymake notebook. 
+
+There are several more variables set in this file to control the run of jupyter
+\begin{itemize}
+\item \textt{POLYMAKE_JUPYTER_NOTEBOOK_DIR}: This sets the default directory for your jupyter notebook files. By default, this is your home directory. It is highly recommended to set this to some other directory. The given path can either be absolute or relative to your home directory (e.g. \texttt{\tilde/Documents}). Note that the given directory must already exist, it will not be created for you.
+\item \texttt{POLYMAKE_JUPYTER_IP}: The ip the server connects to. Usually this is \texttt{localhost}, but you can set this to something else if you start the server remotely. If you start it in a virtual maschine on your computer and want to connect to it from the host, then \texttt{0.0.0.0} is usually the right choice (note that in this case you must forward the jupyter port from the machine to the host).
+\item \texttt{POLYMAKE_JUPYTER_PORT}: The port jupyter connects to. Usually \texttt{8888}
+\item \texttt{POLYMAKE_JUPYTER_START_BROWSER}: Set this to 0 if jupyter should not start a session in a browser. You should choos this option if you start the server remotely or in a virtual machine. 
+\item \texttt{POLYMAKE_JUPYTER_BRWOSER}: Sets the default browser. You need to provide the full path to the binary, followed by \%s. See the configuration file for an example.
+\end{itemize}
+
 \section*{Customization Files}
+
+\subsection*{\polymake customization files}
 
 \polymake puts its customization files into the directory 
 
@@ -59,9 +78,20 @@ If you have to move the \polymake app bundle, then you have to delete the folder
 
 \polymake has a basic check to detect whether you have moved the \polymake app and offers to delete \texttt{.polymake-macbundle}. You can accept this as long as you don't have imported any extensions. If you have, then please choose ``cancel'' here and do \texttt{make clean} in the extension base directories before you start \polymake\ from its new location.
 
+\subsection*{Bundle specific customization}
+
+At the first start the bundle adds its own customization file \texttt{bundle.config} to the directory {\$HOME/.polymake-macbundle}. This is mostly used to control the configuration of the jupyter server for using polymake in a jupyter notebook. 
+
+There is one general option that lets you define the terminal app that should be used. By default, polymake starts inside the default \texttt{Terminal.app} that comes with MacOS. If you prefer to use \texttt{iTerm}, then you can set \texttt{POLYMAKE_TERM='iTerm'} in that file. 
+
+
 \section*{Uninstalling polymake}
 
 To uninstall \polymake just drag the \polymake icon to the trash and remove the directory \texttt{\${HOME}/.polymake-macbundle} (This is only created after you have started \polymake at least once). Note that this directory is a hidden directory, so you cannot delete it in the Finder. Instead, open a \texttt{Terminal}, \texttt{cd} into your home directory, and type \texttt{rm -rf .polymake-macbundle} (observe the ``.'').
+
+If you have installed the jupyter kernel for \polymake and want to remove this as well, then just delete the directory of the kernel. You can find this via
+\[\textt{jupyter kernelspec list}\]
+in a terminal. The kernel is installed into a directory \texttt{Jupyter/kernels/polymake} below the jupyter kernel default directory.
 
 \section*{Trouble-shooting}
 
