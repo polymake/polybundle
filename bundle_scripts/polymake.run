@@ -46,6 +46,9 @@ else
    # want to access the jupyter server from another machine or the vm host
    POLYMAKE_JUPYTER_START_BROWSER=1
 
+   # Should polymake ask whether you want to start a new jupyter server if it detects an already running one?
+   POLYMAKE_JUPYTER_ASK_IF_RUNNING_SERVER=1
+   
    # Set the browser jupyter uses to start the notebook
    # To use e.g.Chrome you shoud set this to
    # POLYMAKE_JUPYTER_BROWSER='/Applications/Vivaldi.app/Contents/MacOS/Vivaldi %s'
@@ -66,6 +69,18 @@ fi
 if [[ $POLYMAKE_START_IN_JUPYTER == 0 ]]; then
   $dir/polymake.start
 else
+   if [[ $POLYMAKE_JUPYTER_ASK_IF_RUNNING_SERVER == 1 ]]; then
+     if [[ `jupyter notebook list | grep http` ]]; then
+       echo "Running jupyter server on your machine detected."
+       read -p "Do you want to start a new one (y/n)?"
+       while [[ "$REPLY" != "y" && "$REPLY" != "n" ]]; do
+         read -p "Please type y or n" 
+       done
+       if [[ "$REPLY" == n ]]; then
+         exit 0
+       fi
+     fi
+   fi
    options=()
    if [[ -n $POLYMAKE_JUPYTER_NOTEBOOK_DIR ]]; then
       options+=("--notebook-dir=$POLYMAKE_JUPYTER_NOTEBOOK_DIR")
