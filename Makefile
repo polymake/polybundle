@@ -476,17 +476,15 @@ polymake-prepare :
 ##################################
 polymake-compile :
 	@echo "building polymake"
-	PATH=$(TMP)/local/bin:$(PREFIX)/bin:${PATH} \
-		cd $(TMP)/polymake/ && ninja -C build/Opt -l2
-
+	cd $(TMP)/polymake/ && PATH=$(TMP)/local/bin:$(PREFIX)/bin:${PATH} ninja -C build/Opt -l2
 
 
 ##################################
 ##################################
 polymake-install :
-	@echo "installing polymake"
-	@make -C $(TMP)/polymake install
-	
+	@echo "building polymake"
+	cd $(TMP)/polymake/ && PATH=$(TMP)/local/bin:$(PREFIX)/bin:${PATH} ninja -C build/Opt -l2 install
+
 
 ##################################
 ##################################
