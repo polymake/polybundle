@@ -490,7 +490,7 @@ polymake-install :
 ##################################
 polymake-docs :
 	@echo "creating polymake docs"
-	PATH=$(TMP)/local/bin:$(PREFIX)/bin:${PATH} \
+	PATH=$(TMP)/local/bin:$(PREFIX)/bin:$(PREFIX)/polymake/bin:${PATH} \
 		polymake --script generate_docs $(PREFIX)/polymake_docs
 
 
