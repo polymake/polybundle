@@ -104,7 +104,7 @@ compile : skeleton ant boost \
 		ntl \
 		singular_configure singular_compile singular_install \
 		ninja \
-		polymake-prepare polymake-compile polymake-docs polymake-install polymake_run_script polymake-executable \
+		polymake-prepare polymake-compile polymake-install polymake-docs polymake_run_script polymake-executable \
 		fix_names \
 		clean-install prepare_doc doc
 
@@ -479,12 +479,6 @@ polymake-compile :
 	PATH=$(TMP)/local/bin:$(PREFIX)/bin:${PATH} \
 		cd $(TMP)/polymake/ && ninja -C build/Opt -l2
 
-##################################
-##################################
-polymake-docs :
-	@echo "creating polymake docs"
-	PATH=$(TMP)/local/bin:$(PREFIX)/bin:${PATH} \
-		polymake --script generate_docs $(PREFIX)/polymake_docs
 
 
 ##################################
@@ -492,6 +486,15 @@ polymake-docs :
 polymake-install :
 	@echo "installing polymake"
 	@make -C $(TMP)/polymake install
+	
+
+##################################
+##################################
+polymake-docs :
+	@echo "creating polymake docs"
+	PATH=$(TMP)/local/bin:$(PREFIX)/bin:${PATH} \
+		polymake --script generate_docs $(PREFIX)/polymake_docs
+
 
 
 ##################################
@@ -631,6 +634,7 @@ prepare_doc :
 			${SED} -i '' -E 's|PERMLIBHOME|$(PERMLIBHOME)|g' README_tmp.tex;  \
 			${SED} -i '' -E 's|NTLHOME|$(NTLHOME)|g' README_tmp.tex;  \
 			${SED} -i '' -E 's|NINJAHOME|$(NINJAHOME)|g' README_tmp.tex;  \
+			${SED} -i '' -E 's|MACVERSION|$(MACVERSION)|g' README_tmp.tex;  \
 		fi;
 
 
