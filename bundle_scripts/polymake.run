@@ -50,32 +50,38 @@ else
    # To use e.g.Chrome you shoud set this to
    # POLYMAKE_JUPYTER_BROWSER='/Applications/Vivaldi.app/Contents/MacOS/Vivaldi %s'
    # POLYMAKE_JUPYTER_BROWSER=
+   
+   # additional path variables
+   # POLYMAKE_ADD_PATH=
 EOT
    
    POLYMAKE_JUPYTER_START_BROWSER=1
    POLYMAKE_START_IN_JUPYTER=0
 fi
 
+if [[ -n $POLYMAKE_ADD_PATH ]]; then
+   export PATH=$PATH:$POLYMAKE_ADD_PATH
+fi
 
 if [[ $POLYMAKE_START_IN_JUPYTER == 0 ]]; then
   $dir/polymake.start
 else
-   options="--script jupyter"
+   options=()
    if [[ -n $POLYMAKE_JUPYTER_NOTEBOOK_DIR ]]; then
-      options+=" --notebook-dir=$POLYMAKE_JUPYTER_NOTEBOOK_DIR"
+      options+=("--notebook-dir=$POLYMAKE_JUPYTER_NOTEBOOK_DIR")
    fi
    if [[ -n $POLYMAKE_JUPYTER_IP ]]; then
-      options+=" --ip=$POLYMAKE_JUPYTER_IP"
+      options+=("--ip=$POLYMAKE_JUPYTER_IP")
    fi
    if [[ -n $POLYMAKE_JUPYTER_PORT ]]; then
-      options+=" --port=$POLYMAKE_JUPYTER_PORT"
+      options+=("--port=$POLYMAKE_JUPYTER_PORT")
    fi
    if [[ $POLYMAKE_JUPYTER_START_BROWSER == 0 ]]; then
-      options+=" --nobrowser"
+      options+=("--nobrowser")
    fi
    if [[ -n $POLYMAKE_JUPYTER_BROWSER ]]; then
-      options+=" --browser=$POLYMAKE_JUPYTER_BROWSER"
+      options+=("--browser='$POLYMAKE_JUPYTER_BROWSER'")
    fi
-   $dir/polymake.start $options
+   $dir/polymake.start --script jupyter "${options[@]}"
 fi
 exit 0

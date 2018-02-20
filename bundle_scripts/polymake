@@ -11,5 +11,5 @@ fi
 
 dirtmp=$(cd "$(dirname "$0")"; pwd)
 dir=`echo $dirtmp | awk '{ print $1 }'`
-open -a $term $dir/polymake.start
+open -a $term $dir/polymake.run
 exit 0
