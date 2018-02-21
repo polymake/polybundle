@@ -92,7 +92,7 @@ else
       options+=("--port=$POLYMAKE_JUPYTER_PORT")
    fi
    if [[ $POLYMAKE_JUPYTER_START_BROWSER == 0 ]]; then
-      options+=("--nobrowser")
+      options+=("--no-browser")
    fi
    if [[ -n $POLYMAKE_JUPYTER_BROWSER ]]; then
       options+=("--browser='$POLYMAKE_JUPYTER_BROWSER'")
