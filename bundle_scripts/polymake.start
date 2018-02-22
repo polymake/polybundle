@@ -56,7 +56,8 @@ fi
 if [[ ! $root =~ ${BundleBase} ]]; then
    echo "========================================================================="
    echo "The bundle is started for the first time or has been relocated. Updating the configuration file..."
-   sed -i -e "s|$root|$BundleBase|g" $ResourcesDir/polymake/lib/polymake/config.ninja
+   tfile=$(mktemp /tmp/polybundle.XXXXXXXXX)
+   sed "s|$root|$BundleBase|g" $ResourcesDir/polymake/lib/polymake/config.ninja > $tfile && cp $tfile $ResourcesDir/polymake/lib/polymake/config.ninja && rm $tfile
    echo "...done"
 fi
 

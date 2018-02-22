@@ -10,6 +10,21 @@ perlversion=`/usr/bin/perl --version | grep -o "5[.][0-9]*[.][0-9]"`
 COMMAND=""
 [[ "$1" == "-c" ]] && COMMAND="--script $ResourcesDir/debug.commands"
 
+root=`grep -m 1 "root=.*" $ResourcesDir/polymake/lib/polymake/config.ninja | sed -Ee "s|root=(.*)/polymake.app/Contents/Resources/polymake/share/polymake|\1|"`
+if [[ -z "$root" ]]; then
+   echo "polymake build configure file is missing"
+   echo "This should not happen. Your bundle seems to be corrupt. Please reinstall."
+   exit
+fi
+
+if [[ ! $root =~ ${BundleBase} ]]; then
+   echo "========================================================================="
+   echo "The bundle is started for the first time or has been relocated. Updating the configuration file..."
+   tfile=$(mktemp /tmp/polybundle.XXXXXXXXX)
+   sed "s|$root|$BundleBase|g" $ResourcesDir/polymake/lib/polymake/config.ninja > $tfile && cp $tfile $ResourcesDir/polymake/lib/polymake/config.ninja && rm $tfile
+   echo "...done"
+fi
+
 # the user might have a 32bit version of fink which conflicts with 64bit polymake, so
 unset VERSIONER_PERL_PREFER_32_BIT
 

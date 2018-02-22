@@ -162,17 +162,20 @@ skeleton :
 	@cd bundle_scripts; $(SED) 's/REPLACE_PERLVERSION/${PERLVERSION}/g' polymake.start > polymake.start.tmp;
 	@cd bundle_scripts; $(SED) 's/REPLACE_PERLVERSION/${PERLVERSION}/g' polymake.debug > polymake.debug.tmp;
 	@cd bundle_scripts; $(SED) 's/REPLACE_POLYMAKE_VERSION/${POLYMAKEVERSION}/g' prefer.pl > prefer.pl.tmp;
-	@install -m 550 bundle_scripts/polymake polymake.app/Contents/MacOS/
-	@install -m 550 bundle_scripts/polymake.start.tmp polymake.app/Contents/MacOS/polymake.start
-	@install -m 550 bundle_scripts/polymake.run polymake.app/Contents/MacOS/
-	@install -m 550 bundle_scripts/polymake.debug.tmp polymake.app/Contents/MacOS/polymake.debug
-	@install -m 550 bundle_scripts/prefer.pl.tmp polymake.app/Contents/Resources/config/prefer.pl
-	@install -m 550 bundle_scripts/debug.commands polymake.app/Contents/Resources/
+	@install -m 555 bundle_scripts/polymake polymake.app/Contents/MacOS/
+	@install -m 555 bundle_scripts/polymake.start.tmp polymake.app/Contents/MacOS/polymake.start
+	@install -m 555 bundle_scripts/polymake.run polymake.app/Contents/MacOS/
+	@install -m 555 bundle_scripts/polymake.debug.tmp polymake.app/Contents/MacOS/polymake.debug
+	@install -m 644 bundle_scripts/prefer.pl.tmp polymake.app/Contents/Resources/config/prefer.pl
+	@install -m 644 bundle_scripts/debug.commands polymake.app/Contents/Resources/
 	@cd bundle_scripts; rm polymake.start.tmp;
 	@cd bundle_scripts; rm polymake.debug.tmp;
-	@cp bundle_scripts/Info.plist polymake.app/Contents/
-	@cp bundle_scripts/*.icns polymake.app/Contents/Resources/
-	@install -m 550 bundle_scripts/Singular polymake.app/Contents/MacOS/
+	@install -m 644 bundle_scripts/Info.plist polymake.app/Contents/
+	@install -m 644 bundle_scripts/poly.icns polymake.app/Contents/Resources/
+	@install -m 644 bundle_scripts/polymake.icns polymake.app/Contents/Resources/
+	@install -m 644 bundle_scripts/trop.icns polymake.app/Contents/Resources/
+	@install -m 644 bundle_scripts/graph.icns polymake.app/Contents/Resources/
+	@install -m 555 bundle_scripts/Singular polymake.app/Contents/MacOS/
 
 
 ##################################
@@ -513,8 +516,9 @@ polymake_run_script :
 ### shouldn't this already be the case?
 polymake-executable :
 	@echo "making polymake executable"
-	@chmod u+x $(PREFIX)/polymake/bin/polymake
-	@chmod u+x $(PREFIX)/polymake/bin/polymake-config
+	@chmod a+rx $(PREFIX)/polymake/bin/polymake
+	@chmod a+rx $(PREFIX)/polymake/bin/polymake-config
+	@chmod a+rw $(PREFIX)/polymake/lib/polymake/config.ninja
 
 
 fix_names :
