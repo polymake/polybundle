@@ -471,7 +471,7 @@ polymake-prepare :
 				   LDFLAGS="-L$(PREFIX)/lib/ "  \
 				   CXXFLAGS="-fpic -DPIC -DLIBSINGULAR -m64 -march=x86-64 -I$(PREFIX)/include" \
 				   CFLAGS="-m64 -march=x86-64 -fpic -DPIC -DLIBSINGULAR"\
-				   CC=$(CC) CXX=$(CXX) \
+				   CC="$(CC)" CXX="$(CXX)" \
 				   PERL=$(PERL)
 
 
