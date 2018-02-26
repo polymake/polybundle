@@ -36,10 +36,15 @@ if [ -f ${HOME}/.polymake-macbundle/customize.pl ]; then
     echo "(or you have moved your installation to a different location on your Mac)"
     echo "if you continue then all files in this directory will be reset to default values".
     echo "If you have imported extensions into polymake then you have to reset those"
-    echo " prior to starting polymake, "
-    echo "similarly, if you want to save some of your previous settings you should abort now"
+    echo "prior to starting polymake."
+    echo "If you have activated the jupyter version of polymake "
+    echo "you will have to edit the bundle.config again, "
+    echo "it will be reset to the default values with this run of polymake."
+    echo "If you have saved bundle.config and copy this back to ~/.polymake-macbundle"
+    echo "make sure the POLYMAKE_JUPYTER_FORCE_REINSTALL is set to 1."
+    echo "If you want to save some of your previous settings you should abort now"
     echo "(see the README.pdf that came with the bundle if you need help)"
-    echo "otherwise you can continue now"
+    echo "otherwise you can continue"
     read -p "[a]bort or [c]ontinue? "
    [ "$REPLY" == "c" ] || exit
    rm -rf "${HOME}/.polymake-macbundle"

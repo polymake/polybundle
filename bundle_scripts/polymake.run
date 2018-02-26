@@ -54,11 +54,15 @@ else
    # POLYMAKE_JUPYTER_BROWSER='/Applications/Vivaldi.app/Contents/MacOS/Vivaldi %s'
    # POLYMAKE_JUPYTER_BROWSER=
    
+   # set this to 1 if you want to force a recompilation of the jupyter kernel
+   # the variable should be set to 1 if you have not yet started polymake in jupyter
+   # or have relocated the bundle to a different directory
+   POLYMAKE_JUPYTER_FORCE_REINSTALL=1
+   
    # additional path variables
    # POLYMAKE_ADD_PATH=
 EOT
    
-   POLYMAKE_JUPYTER_START_BROWSER=1
    POLYMAKE_START_IN_JUPYTER=0
 fi
 
@@ -69,7 +73,8 @@ fi
 if [[ $POLYMAKE_START_IN_JUPYTER == 0 ]]; then
   $dir/polymake.start
 else
-   if [[ $POLYMAKE_JUPYTER_ASK_IF_RUNNING_SERVER == 1 ]]; then
+   options=()
+   if [[ $POLYMAKE_JUPYTER_ASK_IF_RUNNING_SERVER == 1 && $POLYMAKE_JUPYTER_FORCE_REINSTALL == 0 ]]; then
      if [[ `jupyter notebook list | grep http` ]]; then
        echo "Running jupyter server on your machine detected."
        read -p "Do you want to start a new one (y/n)?"
@@ -81,7 +86,11 @@ else
        fi
      fi
    fi
-   options=()
+   if [[ $POLYMAKE_JUPYTER_FORCE_REINSTALL == 1 ]]; then
+     options+=("--force")
+     tfile=$(mktemp /tmp/polybundle.XXXXXXXXX)
+     sed "s/POLYMAKE_JUPYTER_FORCE_REINSTALL=1/POLYMAKE_JUPYTER_FORCE_REINSTALL=0/" $HOME/.polymake-macbundle/bundle.config > $tfile && cp $tfile $HOME/.polymake-macbundle/bundle.config && rm $tfile
+   fi
    if [[ -n $POLYMAKE_JUPYTER_NOTEBOOK_DIR ]]; then
       options+=("--notebook-dir=$POLYMAKE_JUPYTER_NOTEBOOK_DIR")
    fi
