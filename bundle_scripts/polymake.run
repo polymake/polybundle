@@ -2,10 +2,49 @@
 
 dirtmp=$(cd "$(dirname "$0")"; pwd)
 dir=`echo $dirtmp | awk '{ print $1 }'`
+write_default_config=0
 
 if [[ -f $HOME/.polymake-macbundle/bundle.config ]]; then
 . $HOME/.polymake-macbundle/bundle.config
+   if [[ "$POLYMAKE_BASE_DIR" != "$dir" ]]; then
+      echo "========================================================================="
+      echo "Your polymake customization files in"
+      echo
+      echo "${HOME}/.polymake-macbundle"
+      echo
+      echo "correspond to a different installation of polymake"
+      echo "(or you have moved your installation to a different location on your Mac)"
+      echo "if you continue then all files in this directory will be reset "
+      echo "to default values".
+      echo
+      echo "If you have imported extensions into polymake then you have to should call"
+      echo "make clean"
+      echo "in all extension base directories befor you continue "
+      echo "and reimport them into polymake afterwards."
+      echo
+      echo "If you have activated the jupyter version of polymake "
+      echo "you will have to redo your changes to the file"
+      echo "bundle.config and at least reactivate the jupyter version."
+      echo "The file will be rewritten with its default values "
+      echo "if you continue."
+      echo 
+      echo "If you have a saved copy of bundle.config and want to put "
+      echo "this back to ~/.polymake-macbundle, then"
+      echo "make sure that POLYMAKE_JUPYTER_FORCE_REINSTALL is set to 1."
+      echo
+      echo "If you want to save some of your previous settings you should abort now"
+      echo "(see the README.pdf that came with the bundle if you need help)"
+      echo "otherwise you can continue"
+      read -p "[a]bort or [c]ontinue? "
+      [ "$REPLY" == "c" ] || exit
+      rm -rf "${HOME}/.polymake-macbundle"
+      write_default_config=1
+   fi
 else
+   write_default_config=1
+fi
+  
+if [[ $write_default_config == 1 ]]; then
    mkdir -p $HOME/.polymake-macbundle
    cat <<EOT >> $HOME/.polymake-macbundle/bundle.config
    # The terminal app used to start polymake, either Terminal or iTerm
@@ -61,9 +100,11 @@ else
    
    # additional path variables
    # POLYMAKE_ADD_PATH=
-EOT
    
-   POLYMAKE_START_IN_JUPYTER=0
+   # Pleas do not edit the following line
+EOT
+echo "   POLYMAKE_BASE_DIR=$dir" >> $HOME/.polymake-macbundle/bundle.config
+. $HOME/.polymake-macbundle/bundle.config
 fi
 
 if [[ -n $POLYMAKE_ADD_PATH ]]; then

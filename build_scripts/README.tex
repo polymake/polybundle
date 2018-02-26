@@ -61,6 +61,7 @@ There are several more variables set in this file to control how jupyter is star
 \item \texttt{POLYMAKE\_JUPYTER\_START\_BROWSER}: Set this to 0 if jupyter should not start a session in a browser. You should choose this option if you start the server remotely or in a virtual machine. 
 \item \texttt{POLYMAKE\_JUPYTER\_BROWSER}: Sets the default browser. You need to provide the full path to the binary, followed by \%s. See the configuration file for an example.
 \item \texttt{POLYMAKE\_JUPYTER\_ASK\_IF\_RUNNING\_SERVER}: If set to 1 (the default) polymake checks whether a jupyter server is already running on your machine and lets you choose whether you want to start a new one.
+\item \texttt{POLYMAKE\_JUPYTER\_FORCE\_REINSTALL}: Defaults to 1 on the first run, and to 0 otherwise. If set to 1, then \polymake reinstalls the jupyter kernel. This is necessary if the bundle has been moved to a different location. Usually the bundle manages to detect this and sets the variable accordingly, so there is no need to touch this.
 \end{itemize}
 
 \section*{Customization Files}
@@ -83,8 +84,11 @@ If you have to move the \polymake app bundle, then you have to delete the folder
 
 At the first start the bundle adds its own customization file \texttt{bundle.config} to the directory {\$HOME/.polymake-macbundle}. This is mostly used to control the configuration of the jupyter server for using polymake in a jupyter notebook. 
 
-There is one general option that lets you define the terminal app that should be used. By default, polymake starts inside the default \texttt{Terminal.app} that comes with MacOS. If you prefer to use \texttt{iTerm}, then you can set \texttt{POLYMAKE\_TERM='iTerm'} in that file. 
-
+There are two general options
+\begin{itemize}
+\item \texttt{POLYMAKE\_TERM}: lets you define the terminal app that should be used. By default, \polymake starts inside the default \texttt{Terminal.app} that comes with MacOS. If you prefer to use \texttt{iTerm}, then you can set \texttt{POLYMAKE\_TERM='iTerm'} in that file. 
+\item \texttt{POLYMAKE\_ADD\_PATH}: adds directories to the path variable used during a \polymake session. Here you can in particular add the path to jupyter, if this is not installed to a default location.
+\end{itemize}
 
 \section*{Uninstalling polymake}
 

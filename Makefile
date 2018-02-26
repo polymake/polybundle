@@ -83,8 +83,8 @@ PERLVERSION := $(shell $(PERL) --version | grep -o "5[.][0-9]*[.][0-9]")
 PREFIX := $(CURDIR)/polymake.app/Contents/Resources
 
 # fix the compiler
-CC  := "clang"
-CXX := "clang++"
+CC  = "clang"
+CXX = "clang++"
 
 CFLAGS   =  "-m64 -march=x86-64"
 CXXFLAGS =  "-m64 -march=x86-64"
