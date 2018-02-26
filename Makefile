@@ -519,7 +519,7 @@ polymake-executable :
 	@chmod a+rx $(PREFIX)/polymake/bin/polymake
 	@chmod a+rx $(PREFIX)/polymake/bin/polymake-config
 	@chmod a+rw $(PREFIX)/polymake/lib/polymake/config.ninja
-	@sed "s|$(PREFIX)|/Volumes/polybundle/polymake.app/Contents/Resources/|g" $(PREFIX)/polymake/lib/polymake/config.ninja > $(PREFIX)/polymake/lib/polymake/config.ninja.tmp \
+	@sed "s|$(PREFIX)|/Volumes/polybundle/polymake.app/Contents/Resources|g" $(PREFIX)/polymake/lib/polymake/config.ninja > $(PREFIX)/polymake/lib/polymake/config.ninja.tmp \
 		&& cp $(PREFIX)/polymake/lib/polymake/config.ninja.tmp $(PREFIX)/polymake/lib/polymake/config.ninja && rm $(PREFIX)/polymake/lib/polymake/config.ninja.tmp
 	@chmod a+rw $(PREFIX)/polymake/lib/polymake/config.ninja
 
