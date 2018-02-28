@@ -453,6 +453,7 @@ polymake-prepare :
 												git clone --branch=$(POLYMAKE_GIT_BRANCH) $(POLYMAKE_GIT_SERVER) .; \
 												else git pull; \
 												fi
+	@cd $(TMP)/polymake/resources/JuPyMake; patch setup.py $(CURDIR)/build_scripts/setup.py.diff
 	@cd $(TMP)/polymake; git archive "$(POLYMAKE_GIT_BRANCH)" | bzip2 > $(TAR_DIR)/polymake-$(POLYMAKE_GIT_BRANCH_NAME)-$(DATE).tar.bz2
 	cd $(TMP)/polymake; \
 	  LD_LIBRARY_PATH=$(PREFIX)/lib \
