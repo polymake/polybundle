@@ -353,7 +353,7 @@ ppl_build :
 	@echo "building ppl"
 	@cd $(TMP); mkdir -p ppl
 	@cd $(TMP)/ppl; if [ ! -d .git ]; then git clone git://git.cs.unipr.it/ppl/ppl.git .; else git pull; fi
-	@cd $(TMP)/ppl; git archive trunk | bzip2 > $(TAR_DIR)/ppl-git-$(DATE).tar.bz2
+	@cd $(TMP)/ppl; git archive master | bzip2 > $(TAR_DIR)/ppl-git-$(DATE).tar.bz2
 	@cd $(TMP)/ppl; PATH=$(TMP)/local/bin:${PATH} libtoolize --force && \
 		PATH=$(TMP)/local/bin:${PATH} autoreconf -fi
 	@cd $(TMP)/ppl; ./configure --prefix=$(PREFIX) --with-gmp=$(PREFIX) --with-mpfr=$(PREFIX) LDFLAGS="-Wl,-rpath,$(PREFIX)/lib" CXXFLAGS="-m64 -mcpu=generic -march=x86-64 -stdlib=libc++" CFLAGS="-m64 -mcpu=generic -march=x86-64 -stdlib=libc++" && make
@@ -451,10 +451,10 @@ polymake-prepare :
 	@cd $(TMP); mkdir -p polymake;
 	@cd $(TMP)/polymake;  if [ ! -d .git ]; then\
 												git clone --branch=$(POLYMAKE_GIT_BRANCH) $(POLYMAKE_GIT_SERVER) .; \
-												else git pull; \
+												else git checkout -- . && git pull; \
 												fi
 	@cd $(TMP)/polymake/resources/JuPyMake; patch setup.py $(CURDIR)/build_scripts/setup.py.diff
-	@cd $(TMP)/polymake; git archive "$(POLYMAKE_GIT_BRANCH)" | bzip2 > $(TAR_DIR)/polymake-$(POLYMAKE_GIT_BRANCH_NAME)-$(DATE).tar.bz2
+	@cd $(TMP)/polymake; git archive $(POLYMAKE_GIT_BRANCH) | bzip2 > $(TAR_DIR)/polymake-$(POLYMAKE_GIT_BRANCH_NAME)-$(DATE).tar.bz2
 	cd $(TMP)/polymake; \
 	  LD_LIBRARY_PATH=$(PREFIX)/lib \
 	  PATH=$(TMP)/local/bin:$(PREFIX)/bin:${PATH} \
