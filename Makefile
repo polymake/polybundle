@@ -58,11 +58,11 @@ PERMLIBHOME   := http://www.math.uni-rostock.de/~rehn/software/permlib.html
 NTLHOME       := http://www.shoup.net/ntl/
 NINJAHOME     := https://ninja-build.org/
 
-#POLYMAKE_GIT_SERVER := "https://github.com/polymake/polymake.git"
-#POLYMAKE_GIT_BRANCH := 'Releases'
-POLYMAKE_GIT_BRANCH := 'release/3.2'
+POLYMAKE_GIT_SERVER := "https://github.com/polymake/polymake.git"
+POLYMAKE_GIT_BRANCH := 'Releases'
+#POLYMAKE_GIT_BRANCH := 'release/3.2'
 #POLYMAKE_GIT_BRANCH := 'master'
-POLYMAKE_GIT_SERVER := "git@git.polymake.org:polymake"
+#POLYMAKE_GIT_SERVER := "git@git.polymake.org:polymake"
 
 POLYMAKE_GIT_BRANCH_NAME := $(POLYMAKE_GIT_BRANCH)
 POLYMAKE_GIT_BRANCH_NAME := 'release_3.2'
