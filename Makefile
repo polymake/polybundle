@@ -26,7 +26,8 @@ LIBTOOLVERSION      := 2.4
 AUTOCONFVERSION     := 2.69
 AUTOMAKEVERSION     := 1.14
 TERMRLGNUVERSION    := 1.35
-LIBXSLTVERSION      := 1.95
+LIBXSLTVERSION      := 1.96
+SVGVERSION          := 2.84
 SINGULARVERSION     := 4.0.3
 PPLVERSION          := 1.2
 NORMALIZVERSION     := 3.5.0
@@ -47,7 +48,8 @@ CDDHOME       := http://www.inf.ethz.ch/personal/fukudak/cdd_home/
 GLPKHOME      := https://www.gnu.org/software/glpk/
 4TI2HOME      := http://www.4ti2.de/
 TERMRLGNUHOME := http://search.cpan.org/dist/Term-ReadLine-Gnu/
-LIBXSLTHOME   := http://search.cpan.org/~shlomif/XML-LibXSLT-1.95/
+LIBXSLTHOME   := http://search.cpan.org/~shlomif/XML-LibXSLT/
+SVGHOME       := http://search.cpan.org/~manwar/SVG/
 SINGULARHOME  := https://github.com/Singular/
 PPLHOME       := http://bugseng.com/products/ppl/
 NORMALIZHOME  := https://www.normaliz.uni-osnabrueck.de
@@ -125,6 +127,8 @@ fetch_sources :
 	@cd $(TAR_DIR); curl -O -L http://search.cpan.org/CPAN/authors/id/H/HA/HAYASHI/Term-ReadLine-Gnu-$(TERMRLGNUVERSION).tar.gz
 	@echo "fetching libxslt"
 	@cd $(TAR_DIR); curl -O -L http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/XML-LibXSLT-$(LIBXSLTVERSION).tar.gz
+	@echo "fetching svg"
+	@cd $(TAR_DIR); curl -O -L http://search.cpan.org/CPAN/authors/id/M/MA/MANWAR/SVG-$(SVGVERSION).tar.gz
 	@echo "fetching boost"
 	@cd $(TAR_DIR); curl -O -L https://dl.bintray.com/boostorg/release/$(BOOSTVERSIONDIR)/source/boost_$(BOOSTVERSION).tar.bz2
 	@echo "fetching gmp"
@@ -268,7 +272,11 @@ perl :
 	@cd $(TMP)/Term-ReadLine-Gnu-$(TERMRLGNUVERSION);  ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX) --includedir=$(PREFIX)/include --libdir=$(PREFIX)/lib
 	@make -C $(TMP)/Term-ReadLine-Gnu-$(TERMRLGNUVERSION)
 	@make -C $(TMP)/Term-ReadLine-Gnu-$(TERMRLGNUVERSION) install
-
+	@tar xfz $(TAR_DIR)/SVG-$(SVGVERSION).tar.gz -C $(TMP)
+	@cd $(TMP)/SVG-2.33; ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX)
+	@make -C $(TMP)/SVG-$(SVGVERSION)
+	@make -C $(TMP)/SVG-$(SVGVERSION) install
+	
 
 ##################################
 ##################################
