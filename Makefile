@@ -273,7 +273,7 @@ perl :
 	@make -C $(TMP)/Term-ReadLine-Gnu-$(TERMRLGNUVERSION)
 	@make -C $(TMP)/Term-ReadLine-Gnu-$(TERMRLGNUVERSION) install
 	@tar xfz $(TAR_DIR)/SVG-$(SVGVERSION).tar.gz -C $(TMP)
-	@cd $(TMP)/SVG-2.33; ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX)
+	@cd $(TMP)/SVG-$(SVGVERSION); ARCHFLAGS='-arch x86_64' $(PERL) Makefile.PL PREFIX=$(PREFIX)
 	@make -C $(TMP)/SVG-$(SVGVERSION)
 	@make -C $(TMP)/SVG-$(SVGVERSION) install
 	
