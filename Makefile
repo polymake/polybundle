@@ -500,11 +500,13 @@ polymake-install :
 
 ##################################
 ##################################
+### compile documentation
+### last line: fix symbolic links, polymake creates absolute links
 polymake-docs :
 	@echo "creating polymake docs"
 	PATH=$(TMP)/local/bin:$(PREFIX)/bin:$(PREFIX)/polymake/bin:${PATH} \
 		polymake --script generate_docs $(PREFIX)/polymake_docs
-
+		cd $(PREFIX)/polymake_docs && find * -type l -print | while read l; do n=`readlink $l`; name=${n#$(PREFIX)}; ln -sf ../$name $l; done
 
 
 ##################################
