@@ -11,7 +11,7 @@ TAR_DIR           := $(CURDIR)/src
 
 POLYMAKEVERSION     := 3.2
 POLYMAKELONGVERSION := Release 3.2 of January 29, 2018
-ANTVERSION          := 1.10.2
+ANTVERSION          := 1.10.3
 MPFRVERSION         := "4.0.1"
 GMPVERSION          := 6.1.2
 GMPMINORVERSION     :=
