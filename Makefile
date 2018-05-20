@@ -281,10 +281,12 @@ perl :
 ##################################
 ##################################
 ### flint
+### FIXME: temporary fix of flint Makefile as install target does not check if shared libs are disabled before trying to modify them
 flint :
 	@echo "building flint"
 	@cd $(TMP); mkdir -p flint
 	@cd $(TMP)/flint; if [ ! -d .git ]; then git clone https://github.com/wbhart/flint2.git .; fi
+	@${SED} -i '' -e "s/\"$(OS)\" = \"Darwin\"/\"$(FLINT_SHARED)\" -eq \"1\" -a \"$(OS)\" = \"Darwin\"/" $(TMP)/flint/Makefile.in
 	@cd $(TMP)/flint; git archive trunk | bzip2 > $(TAR_DIR)/flint-github-$(DATE).tar.bz2
 	@cd $(TMP)/flint; \
 	PERL5LIB=$(PERL5LIB) \
