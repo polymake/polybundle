@@ -122,7 +122,7 @@ fetch_sources :
 	@echo "fetching ant"
 	@cd $(TAR_DIR); curl -O http://artfiles.org/apache.org//ant/binaries/apache-ant-$(ANTVERSION)-bin.tar.bz2
 	@echo "fetching 4ti2"
-	@cd $(TAR_DIR); curl -O http://www.4ti2.de/version_$(4TI2VERSION)/4ti2-$(4TI2VERSION).tar.gz
+	@cd $(TAR_DIR); curl -L -O http://www.4ti2.de/version_$(4TI2VERSION)/4ti2-$(4TI2VERSION).tar.gz
 	@echo "fetching term-readline-gnu"
 	@cd $(TAR_DIR); curl -O -L http://search.cpan.org/CPAN/authors/id/H/HA/HAYASHI/Term-ReadLine-Gnu-$(TERMRLGNUVERSION).tar.gz
 	@echo "fetching libxslt"
@@ -134,7 +134,7 @@ fetch_sources :
 	@echo "fetching gmp"
 	@cd $(TAR_DIR); curl -O https://gmplib.org/download/gmp/gmp-$(GMPVERSION)$(GMPMINORVERSION).tar.bz2
 	@echo "fetching mpfr"
-	@cd $(TAR_DIR); curl -O http://www.mpfr.org/mpfr-$(MPFRVERSION)/mpfr-$(MPFRVERSION).tar.bz2
+	@cd $(TAR_DIR); curl -O -L http://www.mpfr.org/mpfr-$(MPFRVERSION)/mpfr-$(MPFRVERSION).tar.bz2
 	@echo "fetching readline"
 	@cd $(TAR_DIR); curl -O ftp://ftp.cwru.edu/pub/bash/readline-$(READLINEVERSION).tar.gz
 	@echo "fetching autoconf"
@@ -144,7 +144,7 @@ fetch_sources :
 	@echo "fetching libtool"
 	@cd $(TAR_DIR); curl --remote-name http://ftp.gnu.org/gnu/libtool/libtool-$(LIBTOOLVERSION).tar.gz
 	@echo "fetching ntl"
-	@cd $(TAR_DIR); curl --remote-name http://www.shoup.net/ntl/ntl-$(NTLVERSION).tar.gz
+	@cd $(TAR_DIR); curl -O -L http://www.shoup.net/ntl/ntl-$(NTLVERSION).tar.gz
 	@echo "fetching cddlib"
 	@cd $(TAR_DIR); curl -O ftp://ftp.math.ethz.ch/users/fukudak/cdd/cddlib-$(CDDLIBVERSION).tar.gz
 	@echo "fetching glpk"
