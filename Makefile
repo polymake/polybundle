@@ -123,7 +123,7 @@ fetch_sources :
 	@echo "fetching ant"
 	@cd $(TAR_DIR); curl -O http://artfiles.org/apache.org//ant/binaries/apache-ant-$(ANTVERSION)-bin.tar.bz2
 	@echo "fetching 4ti2"
-	@cd $(TAR_DIR); curl -L -O https://github.com/4ti2/4ti2/releases/download/Release_$(4TI2VERSION)/4ti2-$(4TI2VERSION).tar.gz
+	@cd $(TAR_DIR); curl -L -O https://github.com/4ti2/4ti2/releases/download/Release_$(4TI2VERSIONDIR)/4ti2-$(4TI2VERSION).tar.gz
 	@echo "fetching term-readline-gnu"
 	@cd $(TAR_DIR); curl -O -L http://search.cpan.org/CPAN/authors/id/H/HA/HAYASHI/Term-ReadLine-Gnu-$(TERMRLGNUVERSION).tar.gz
 	@echo "fetching libxslt"
