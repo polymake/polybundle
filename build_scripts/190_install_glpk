@@ -8,5 +8,7 @@ SCRIPTBASE=${SCRIPTDIR}/..
 
 
 echo "building glpk"
-${SCRIPTDIR}/build.sh glpk-${GLPKVERSION} ${TAR_DIR} mpfr-${MPFRVERSION} "${TMP}" build \
+${SCRIPTDIR}/build.sh glpk-${GLPKVERSION} ${TAR_DIR} glpk-${GLPKVERSION} "${TMP}" build \
 								--prefix=${PREFIX} --with-gmp=${PREFIX} LDFLAGS="-Wl,-rpath,${PREFIX}/lib"
+
+${SCRIPTDIR}/install.sh glpk-${GLPKVERSION} "${TMP}" build
