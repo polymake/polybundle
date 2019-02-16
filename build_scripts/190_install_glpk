@@ -9,6 +9,6 @@ SCRIPTBASE=${SCRIPTDIR}/..
 
 echo "building glpk"
 ${SCRIPTDIR}/build.sh glpk-${GLPKVERSION} ${TAR_DIR} glpk-${GLPKVERSION} "${TMP}" build \
-								--prefix=${PREFIX} --with-gmp CXXFLAGS="-I${PREFIX}" LDFLAGS="-L${PREFIX} -Wl,-rpath,${PREFIX}/lib"
+								--prefix=${PREFIX} --with-gmp CXXFLAGS="-I${PREFIX}/include" LDFLAGS="-L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib"
 
 ${SCRIPTDIR}/install.sh glpk-${GLPKVERSION} "${TMP}" build
