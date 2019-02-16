@@ -1,0 +1,59 @@
+#!/bin/bash -x
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPTBASE=${SCRIPTDIR}/..
+
+. $SCRIPTDIR/000_versions
+. $SCRIPTDIR/010_variables
+
+echo "building perl modules"
+echo "building LibXSLT"
+tar xfz ${TAR_DIR}/${LIBXSLTNAME} -C ${TMP}
+cd ${TMP}/XML-LibXSLT-${LIBXSLTVERSION}
+ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
+make
+make install
+cd ${CURDIR}
+
+echo "building Term-Readline-Gnu"
+tar xvfz ${TAR_DIR}/${TERMRLGNUNAME} -C ${TMP}
+cd ${TMP}/Term-ReadLine-Gnu-${TERMRLGNUVERSION}
+${SED} -i '' -e "s|Config{cc}|Config{cc} -Wl,-rpath,${PREFIX}/lib|g" Makefile.PL
+ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX} --includedir=${PREFIX}/include --libdir=${PREFIX}/lib
+make
+make install
+cd ${CURDIR}
+
+echo "building SVG"
+tar xfz ${TAR_DIR}/${SVGNAME} -C ${TMP}
+cd ${TMP}/SVG-${SVGVERSION}
+ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
+make
+make install
+cd ${CURDIR}
+
+echo "building Canary::Stability"
+tar xfz ${TAR_DIR}/${CANARYNAME} -C ${TMP}
+cd ${TMP}/Canary-Stability-${CANARYVERSION}
+ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
+make
+make install
+cd ${CURDIR}
+
+echo "building JSON::XS"
+tar xfz ${TAR_DIR}/${JSONXSNAME} -C ${TMP}
+cd ${TMP}/JSON-XS-${JSONXSVERSION}
+PERL5LIB=${PREFIX}/lib/perl5/site_perl/${PERLVERSION}/darwin-thread-multi-2level/:${PREFIX}/lib/perl5/site_perl \
+ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
+make
+make install
+cd ${CURDIR}
+
+echo "building JSON"
+tar xfz ${TAR_DIR}/${JSONNAME} -C ${TMP}
+cd ${TMP}/JSON-${JSONVERSION}
+PERL5LIB=${PREFIX}/lib/perl5/site_perl/${PERLVERSION}/darwin-thread-multi-2level/:${PREFIX}/lib/perl5/site_perl \
+ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
+make
+make install
+cd ${CURDIR}

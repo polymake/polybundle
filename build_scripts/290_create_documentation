@@ -1,0 +1,64 @@
+#!/bin/bash -x
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPTBASE=${SCRIPTDIR}/..
+
+. $SCRIPTDIR/000_versions
+. $SCRIPTDIR/010_variables
+
+echo "create readme source"
+cd ${SCRIPTDIR}
+if [[ README.tex -nt ${PREFIX}/../../../README.pdf ]]; then
+    cp README.tex README_tmp.tex
+	${SED} -i "" -E "s/MACVERSION/${MACVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/POLYMAKELONGVERSION/${POLYMAKELONGVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/POLYMAKEVERSION/${POLYMAKEVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/ANTVERSION/${ANTVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/MPFRVERSION/${MPFRVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/GMPVERSION/${GMPVERSION}/g" README_tmp.tex 
+	${SED} -i "" -E "s/BOOSTVERSION/${BOOSTVERSIONDIR}/g" README_tmp.tex
+	${SED} -i "" -E "s/READLINEVERSION/${READLINEVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/CDDVERSION/${CDDVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/GLPKVERSION/${GLPKVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/4TI2VERSION/${FTI2VERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/TERMRLGNUVERSION/${TERMRLGNUVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/LIBXSLTVERSION/${LIBXSLTVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/SINGULARVERSION/${SINGULARVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/PPLVERSION/${PPLVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/NORMALIZVERSION/${NORMALIZVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/LRSVERSION/${LRSVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/NAUTYVERSION/${NAUTYVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/JREALITYVERSION/${JREALITYVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/PERMLIBVERSION/${PERMLIBVERSION}/g" README_tmp.tex 
+	${SED} -i "" -E "s/NTLVERSION/${NTLVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/NINJAVERSION/${NINJAVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s|POLYMAKEHOME|${POLYMAKEHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|ANTHOME|${ANTHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|MPFRHOME|${MPFRHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|GMPHOME|${GMPHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|BOOSTHOME|${BOOSTHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|READLINEHOME|${READLINEHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|CDDHOME|${CDDHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|GLPKHOME|${GLPKHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|4TI2HOME|${4TI2HOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|TERMRLGNUHOME|${TERMRLGNUHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|LIBXSLTHOME|${LIBXSLTHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|SINGULARHOME|${SINGULARHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|PPLHOME|${PPLHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|NORMALIZHOME|${NORMALIZHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|LRSHOME|${LRSHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|NAUTYHOME|${NAUTYHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|JREALITYHOME|${JREALITYHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|PERMLIBHOME|${PERMLIBHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|NTLHOME|${NTLHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|NINJAHOME|${NINJAHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|MACVERSION|${MACVERSION}|g" README_tmp.tex
+fi;
+
+echo "compile readme"
+cd ${SCRIPTDIR}
+if [[ README.tex -nt ${PREFIX}/../../../README.pdf ]]; then
+	PATH="/usr/local/texlive/2017basic/bin/x86_64-darwin/":$PATH pdflatex README_tmp
+	PATH="/usr/local/texlive/2017basic/bin/x86_64-darwin/":$PATH pdflatex README_tmp
+	mv README_tmp.pdf ${PREFIX}/../../../README.pdf && rm -f README_tmp.aux README_tmp.log README_tmp.out
+fi

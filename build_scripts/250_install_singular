@@ -1,0 +1,58 @@
+#!/bin/bash -x
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPTBASE=${SCRIPTDIR}/..
+
+. $SCRIPTDIR/000_versions
+. $SCRIPTDIR/010_variables
+
+mkdir -p ${TMP}/singular
+cd ${TMP}/singular
+if [ ! -d .git ]; then 
+    git clone https://github.com/Singular/Sources .; 
+else 
+#    git pull; 
+echo "no pull"
+fi
+git archive spielwiese | bzip2 > ${TAR_DIR}/singular-github-version-${DATE}.tar.bz2
+PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} ./autogen.sh
+PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} \
+./configure --without-dynamic-kernel \
+	            --without-MP \
+				--disable-static \
+				--with-ntl=${PREFIX} \
+				--prefix=${PREFIX} \
+				--disable-gfanlib \
+				--enable-arith-rings \
+				--with-flint=${PREFIX} \
+				--with-gmp=${PREFIX}  \
+				--with-mpfr=${PREFIX} \
+   PERL5LIB=${PERL5LIB} \
+   CPPFLAGS="-fpic -DPIC -DLIBSINGULAR -m64 -mcpu=generic -march=x86-64" \
+   LDFLAGS="-L${PREFIX}/lib/ -Wl,-rpath,${PREFIX}/lib" \
+   CFLAGS="-I${PREFIX}/include/ -fpic -DPIC -DLIBSINGULAR -m64 -mcpu=generic -march=x86-64"  \
+   CC="${CC}" CXX="${CXX}" \
+    
+
+
+echo "compiling singular"
+PATH=${TMP}/local/bin:${PATH} make -j2
+
+echo "installing singular"
+PATH=${TMP}/local/bin:${PATH} make install
+
+cd ${PREFIX}/include/resources
+chmod u+w singular_resourcesconfig.h
+${SED} -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents/\.\./g' singular_resourcesconfig.h > singular_resourcesconfig.h.tmp; mv singular_resourcesconfig.h.tmp singular_resourcesconfig.h
+cd ${PREFIX}/share/applications/
+chmod u+w Singular-manual.desktop
+${SED} -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents/\.\./g' Singular-manual.desktop > Singular-manual.desktop.tmp; mv Singular-manual.desktop.tmp Singular-manual.desktop
+chmod u+w Singular.desktop
+${SED} -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents/\.\./g' Singular.desktop > Singular.desktop.tmp; mv Singular.desktop.tmp Singular.desktop
+cd ${PREFIX}/include/singular
+chmod u+w libpolysconfig.h 
+chmod u+w singularconfig.h
+${SED} -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents/\.\./g' libpolysconfig.h > libpolysconfig.h.tmp; mv libpolysconfig.h.tmp libpolysconfig.h
+${SED} -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents/\.\./g' singularconfig.h > singularconfig.h.tmp; mv singularconfig.h.tmp singularconfig.h
+
+cd ${CURDIR}

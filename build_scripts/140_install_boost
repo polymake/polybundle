@@ -1,0 +1,16 @@
+#!/bin/bash -x
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPTBASE=${SCRIPTDIR}/..
+
+. $SCRIPTDIR/000_versions
+. $SCRIPTDIR/010_variables
+
+echo "extracting boost"
+tar xfj ${TAR_DIR}/${BOOSTNAME} -C ${PREFIX}/include
+### remove junk
+rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSIONDIR}/doc
+rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSIONDIR}/tools
+rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSIONDIR}/status
+rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSIONDIR}/more
+rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSIONDIR}/libs

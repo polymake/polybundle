@@ -1,0 +1,48 @@
+#!/bin/bash -x
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPTBASE=${SCRIPTDIR}/..
+
+. $SCRIPTDIR/000_versions
+. $SCRIPTDIR/010_variables
+
+
+echo "fixing paths in libraries"
+${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/lib ${PREFIX} dylib
+${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/bin ${PREFIX} ""
+${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib ${PREFIX} dylib
+${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/lib ${PREFIX} bundle
+${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/lib ${PREFIX} dylib
+${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/lib/perl5/site_perl/${PERLVERSION}/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu ${PREFIX} bundle
+${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/perlx/${PERLVERSION}/darwin-thread-multi-2level/auto/Polymake/Ext ${PREFIX} bundle
+for ext in ${shell ls polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'}; do \
+	${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/bundled/$$ext/lib ${PREFIX} bundle ; \
+done
+${SCRIPTDIR}/fix_rpath.sh ${PREFIX}/lib ${PREFIX}/lib dylib
+${SCRIPTDIR}/fix_rpath.sh ${PREFIX}/bin ${PREFIX}/lib ""
+${SCRIPTDIR}/fix_rpath.sh ${PREFIX}/polymake/lib ${PREFIX}/lib dylib
+${SCRIPTDIR}/fix_rpath.sh ${PREFIX}/polymake/lib/polymake/lib ${PREFIX}/lib bundle
+${SCRIPTDIR}/fix_rpath.sh ${PREFIX}/polymake/lib/polymake/lib ${PREFIX}/lib dylib
+${SCRIPTDIR}/fix_rpath.sh ${PREFIX}/polymake/lib/polymake/perlx/${PERLVERSION}/darwin-thread-multi-2level/auto/Polymake/Ext ${PREFIX}/lib bundle
+for ext in ${shell ls polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'}; do \
+	${SCRIPTDIR}/fix_rpath.sh ${PREFIX}/polymake/lib/polymake/bundled/$$ext/lib ${PREFIX}/lib bundle ; \
+done
+${SCRIPTDIR}/fix_libname.sh "${PREFIX}/lib" dylib ""
+${SCRIPTDIR}/fix_libname.sh "${PREFIX}/polymake/lib" dylib "../polymake/lib"
+${SCRIPTDIR}/fix_libname.sh "${PREFIX}/polymake/lib/polymake/lib" dylib "../polymake/lib/polymake/lib"
+
+cd ${CURDIR}
+
+### remove junk
+echo "clean install"
+cd polymake.app
+find . -name "*.pod" -exec rm -rf {} \;
+find . -name "*.3pm" -exec rm -rf {} \;
+find . -name "*.packlist" -exec rm -rf {} \;
+find . -name "*.la" -exec rm -rf {} \;
+find . -name "*.pc" -exec rm -rf {} \;
+rm -f Contents/Resources/bin/libpolys-config
+rm -f Contents/Resources/bin/libsingular-config
+rmdir Contents/Resources/lib/pkgconfig/
+
+cd ${CURDIR}

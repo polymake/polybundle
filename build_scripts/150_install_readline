@@ -1,0 +1,24 @@
+#!/bin/bash -x
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPTBASE=${SCRIPTDIR}/..
+
+. $SCRIPTDIR/000_versions
+. $SCRIPTDIR/010_variables
+
+echo "building readline"
+mkdir -p ${TMP}
+tar xfz ${TAR_DIR}/${READLINENAME} -C ${TMP}
+
+cd ${TMP}/readline-${READLINEVERSION}
+
+if [ "${MACVERSION}" = "10.8" ]; then
+	${SED} -i '' -e 's|-arch_only `/usr/bin/arch`|-dynamiclib|g' support/shobj-conf;
+else
+    ${SED} -i '' -e "s|SHOBJ_ARCHFLAGS=|SHOBJ_ARCHFLAGS=\'-dynamiclib\'|g" support/shobj-conf;
+fi
+
+CFLAGS=${CFLAGS} CPPFLAGS=${CXXFLAGS}  ./configure --prefix=${PREFIX}
+make
+make install
+cd ${CURDIR}

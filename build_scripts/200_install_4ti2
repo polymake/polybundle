@@ -1,0 +1,16 @@
+#!/bin/bash -x
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPTBASE=${SCRIPTDIR}/..
+
+. $SCRIPTDIR/000_versions
+. $SCRIPTDIR/010_variables
+
+    
+echo "building 4ti2"
+tar xfz ${TAR_DIR}/${FTI2NAME} -C ${TMP}
+cd ${TMP}/4ti2-${FTI2VERSION}
+./configure --prefix=${PREFIX} --with-glpk=${PREFIX} --with-gmp=${PREFIX}
+make
+make install
+cd ${CURDIR}

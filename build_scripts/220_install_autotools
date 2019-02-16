@@ -1,0 +1,30 @@
+#!/bin/bash -x
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPTBASE=${SCRIPTDIR}/..
+
+. $SCRIPTDIR/000_versions
+. $SCRIPTDIR/010_variables
+
+echo "building autoconf"
+mkdir -p ${TMP}/local
+tar xfz ${TAR_DIR}/autoconf-${AUTOCONFVERSION}.tar.gz -C ${TMP}
+cd ${TMP}/autoconf-${AUTOCONFVERSION}
+./configure --prefix=${TMP}/local
+make && make install
+cd ${CURDIR}
+
+echo "building automake"
+tar xfz ${TAR_DIR}/automake-${AUTOMAKEVERSION}.tar.gz -C ${TMP}
+cd ${TMP}/automake-${AUTOMAKEVERSION}
+PATH=${TMP}/local/bin:${PATH} ./configure --prefix=${TMP}/local
+make && make install
+cd ${CURDIR}
+
+echo "building libtool"
+tar xfz ${TAR_DIR}/libtool-${LIBTOOLVERSION}.tar.gz -C ${TMP}
+cd ${TMP}/libtool-${LIBTOOLVERSION}
+PATH=${TMP}/local/bin:${PATH} ./configure --prefix=${TMP}/local
+make && make install
+cd ${CURDIR}
+

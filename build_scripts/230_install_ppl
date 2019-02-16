@@ -1,0 +1,31 @@
+#!/bin/bash -x
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPTBASE=${SCRIPTDIR}/..
+
+. $SCRIPTDIR/000_versions
+. $SCRIPTDIR/010_variables
+
+echo "building ppl"
+cd ${TMP}; mkdir -p ppl
+cd ${TMP}/ppl 
+if [ ! -d .git ]; then 
+    git clone git://git.cs.unipr.it/ppl/ppl.git .; 
+else 
+    git pull; 
+fi
+git archive master | bzip2 > ${TAR_DIR}/ppl-git-${DATE}.tar.bz2
+PATH=${TMP}/local/bin:${PATH} libtoolize --force
+PATH=${TMP}/local/bin:${PATH} autoreconf -fi
+./configure --prefix=${PREFIX} --with-gmp=${PREFIX} --with-mpfr=${PREFIX} LDFLAGS="-Wl,-rpath,${PREFIX}/lib" CXXFLAGS="-m64 -mcpu=generic -march=x86-64 -stdlib=libc++" CFLAGS="-m64 -mcpu=generic -march=x86-64 -stdlib=libc++" 
+make
+${SED} 's/demos doc m4/demos m4/g' Makefile > Makefile.tmp && mv Makefile.tmp Makefile
+
+### fun thing: ppl puts its path into the header, so we need to fix this
+echo "installing ppl"
+make install
+cd ${CURDIR}
+cd ${PREFIX}/include;
+chmod u+w ppl.hh
+${SED} -E 's/\/[A-Z,a-z,\/]*\/polymake.app\/Contents\/Resources/\./g' ppl.hh > ppl.hh.tmp; mv ppl.hh.tmp ppl.hh
+cd ${CURDIR}

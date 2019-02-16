@@ -1,0 +1,14 @@
+#!/bin/bash -x
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPTBASE=${SCRIPTDIR}/..
+
+. $SCRIPTDIR/000_versions
+. $SCRIPTDIR/010_variables
+
+echo "building mpfr"
+${SCRIPTDIR}/build.sh mpfr-${MPFRVERSION} ${TAR_DIR} mpfr-${MPFRVERSION} "${TMP}" build --prefix=${PREFIX} --with-gmp=${PREFIX} LDFLAGS="-Wl,-rpath,${PREFIX}/lib"  CFLAGS="${CFLAGS}" CPPFLAGS="${CXXFLAGS}"
+
+echo "installing mpfr"
+${SCRIPTDIR}/install.sh mpfr-${MPFRVERSION} "${TMP}" build
+cd ${CURDIR}

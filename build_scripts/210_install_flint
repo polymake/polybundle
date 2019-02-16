@@ -1,0 +1,32 @@
+#!/bin/bash -x
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPTBASE=${SCRIPTDIR}/..
+
+. $SCRIPTDIR/000_versions
+. $SCRIPTDIR/010_variables
+
+echo "building flint"
+mkdir -p ${TMP}/flint
+cd ${TMP}/flint 
+if [ ! -d .git ]; then 
+    git clone https://github.com/wbhart/flint2.git .; 
+else 
+    git pull;
+fi
+${SED} -i '' -e 's/"$${OS}" = "Darwin"/"$${FLINT_SHARED}" -eq "1" -a "$${OS}" = "Darwin"/' Makefile.in
+git archive trunk | bzip2 > ${TAR_DIR}/flint-github-${DATE}.tar.bz2
+# FIXME we do not need the shared library, but 
+# FIXME building with option --disable-shared fails, 
+# FIXME make install still tries to copy libflint.dylib
+PERL5LIB=${PERL5LIB} \
+	CC="${CC}" CXX="${CXX}" CPPFLAGS="-fpic -DPIC -DLIBSINGULAR" \
+	LDFLAGS="-L${PREFIX}/lib/ -Wl,-rpath,${PREFIX}/lib" \
+	CFLAGS="-I${PREFIX}/include/ -fpic -DPIC -DLIBSINGULAR" \
+	./configure  --with-gmp=${PREFIX}/ \
+	            	--with-mpfr=${PREFIX}/ \
+				 	--prefix=${PREFIX}
+make
+make install
+
+cd ${CURDIR}

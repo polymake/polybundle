@@ -1,0 +1,12 @@
+#!/bin/bash -x
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPTBASE=${SCRIPTDIR}/..
+
+. $SCRIPTDIR/000_versions
+. $SCRIPTDIR/010_variables
+
+
+echo "building glpk"
+${SCRIPTDIR}/build.sh glpk-${GLPKVERSION} ${TAR_DIR} mpfr-${MPFRVERSION} "${TMP}" build \
+								--prefix=${PREFIX} --with-gmp=${PREFIX} LDFLAGS="-Wl,-rpath,${PREFIX}/lib"

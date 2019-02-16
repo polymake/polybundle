@@ -1,0 +1,21 @@
+#!/bin/bash -x
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPTBASE=${SCRIPTDIR}/..
+
+. $SCRIPTDIR/000_versions
+. $SCRIPTDIR/010_variables
+
+
+### Caveat: The configure is not a configure but a shell script, we need to source it
+###         as such it also does not care about extra CXXFLAGS, so we need to modify the makefile
+### we remove unwanted static lib in the end
+echo "building ntl"
+tar xfz ${TAR_DIR}/ntl-${NTLVERSION}.tar.gz -C ${TMP}
+cd ${TMP}/ntl-${NTLVERSION}/src
+PATH=${TMP}/local/bin:${PATH} . ./configure PREFIX=${PREFIX} SHARED=on NTL_GMP_LIP=on GMP_PREFIX=${PREFIX}
+${SED} -i '' -e "s|CXXFLAGS=-g -O2|CXXFLAGS=-g -O2 -I\${PREFIX}/include -Wl,-rpath,\${PREFIX}/lib|g" makefile 
+make 
+make install
+rm ${PREFIX}/lib/libntl.a
+cd ${CURDIR}

@@ -1,0 +1,92 @@
+#!/bin/bash -x
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPTBASE=${SCRIPTDIR}/..
+
+. $SCRIPTDIR/000_versions
+. $SCRIPTDIR/010_variables
+
+
+echo "preparing polymake build"
+mkdir -p ${TMP}/polymake;
+cd ${TMP}/polymake  
+if [ ! -d .git ]; then
+	git clone --branch=${POLYMAKE_GIT_BRANCH} ${POLYMAKE_GIT_SERVER} .; \
+else 
+    git checkout -- . && git pull;
+fi
+# FIXME Option without-jreality not working?
+git archive ${POLYMAKE_GIT_BRANCH} | bzip2 > ${TAR_DIR}/polymake-${POLYMAKE_GIT_BRANCH_NAME}-${DATE}.tar.bz2
+export PERL5LIB=${PREFIX}/lib/perl5/site_perl/${PERLVERSION}/darwin-thread-multi-2level/:${PREFIX}/lib/perl5/site_perl
+LD_LIBRARY_PATH=${PREFIX}/lib \
+    PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} \
+	./configure --prefix=${PREFIX}/polymake \
+				--with-jni-headers=${JNIHEADERS} \
+				--with-boost=${PREFIX}/include/boost_${BOOSTVERSION}/ \
+				--with-gmp=${PREFIX}/ \
+				--with-ppl=${PREFIX}/  \
+				--with-mpfr=${PREFIX}/ \
+				--with-singular=${PREFIX}/ \
+				--with-ant=${PREFIX}/apache-ant-${ANTVERSION}/bin/ant  \
+				--with-java=/usr/bin/java \
+				LDFLAGS="-L${PREFIX}/lib/ "  \
+				CXXFLAGS="-fpic -DPIC -DLIBSINGULAR -m64 -march=x86-64 -I${PREFIX}/include" \
+				CFLAGS="-m64 -march=x86-64 -fpic -DPIC -DLIBSINGULAR"\
+				CC="${CC}" CXX="${CXX}" \
+				PERL=${PERL}
+
+echo "building polymake"
+PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} ninja -C build/Opt -l2
+
+echo "installing polymake"  
+PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} ninja -C build/Opt -l2 install
+
+### compile documentation
+### last line: fix symbolic links, polymake creates absolute links
+echo "creating polymake docs"
+PATH=${TMP}/local/bin:${PREFIX}/bin:${PREFIX}/polymake/bin:${PATH} polymake --script generate_docs ${PREFIX}/polymake_docs
+cd ${PREFIX}/polymake_docs 
+find * -type l -print | while read l; do n=`readlink $l`; name=${n#${PREFIX}}; ln -sf ../$name $l; done
+cd ${CURDIR}
+
+### adjust the polymake script to the new paths
+echo "fixing the polymake executable"
+cd ${PREFIX}/polymake/bin 
+chmod u+w polymake; ${SED} 's/.*InstallTop=.*/   $InstallTop=\"$ENV\{POLYMAKE_BASE_PATH\}\/share\/polymake\";/' polymake \
+    | ${SED} 's/.*InstallArch=.*/   $InstallArch=\"$ENV\{POLYMAKE_BASE_PATH\}\/lib\/polymake\";/' \
+    | ${SED} '/.*addlibs=.*/d' > polymake.tmp
+mv polymake.tmp polymake
+chmod u+w polymake-config; ${SED} -e 's|my $InstallArch=.*|my $pconf_path = Cwd::abs_path{$0} =~ s\|/bin/polymake-config$\|\|r;\\\nmy $InstallArch="$pconf_path\/lib\/polymake";|' polymake-config \
+	| ${SED} -e 's/use strict;/use strict;\\\nuse Cwd;/' \
+	| ${SED} 's/my $root=.*/my $root="$pconf_path\/share\/polymake";/' \
+		> polymake-config.tmp; mv polymake-config.tmp polymake-config
+
+
+### make polymake script executable
+### shouldn't this already be the case?
+echo "making polymake executable"
+chmod a+rx ${PREFIX}/polymake/bin/polymake
+chmod a+rx ${PREFIX}/polymake/bin/polymake-config
+chmod a+rw ${PREFIX}/polymake/lib/polymake/config.ninja
+${SED} "s|${PREFIX}|/Volumes/polybundle/polymake.app/Contents/Resources|g" ${PREFIX}/polymake/lib/polymake/config.ninja > ${PREFIX}/polymake/lib/polymake/config.ninja.tmp
+cp ${PREFIX}/polymake/lib/polymake/config.ninja.tmp ${PREFIX}/polymake/lib/polymake/config.ninja
+rm ${PREFIX}/polymake/lib/polymake/config.ninja.tmp
+chmod a+rw ${PREFIX}/polymake/lib/polymake/config.ninja
+
+
+echo "changing default viewer to threejs"
+cd ${PREFIX}/polymake/share/polymake/apps/common/rules/ 
+chmod u+w threejs.rules 
+${SED} -i "" '/label threejs/a\\\n\\\nprefer threejs\\\n' threejs.rules 
+chmod u-w threejs.rules
+cd ${PREFIX}/polymake/share/polymake/bundled/jreality/apps/common/rules/ 
+chmod u+w main.rules 
+${SED} -i "" 's/prefer jreality.geometry//' main.rules 
+chmod u-w main.rules
+cd ${PREFIX}/polymake/share/polymake/bundled/jreality/apps/graph/rules/ 
+chmod u+w main.rules 
+${SED} -i "" 's/prefer jreality.graph//' main.rules 
+chmod u-w main.rules
+
+
+cd ${CURDIR}
