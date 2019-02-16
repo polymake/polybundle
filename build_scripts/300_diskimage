@@ -14,7 +14,7 @@ SED="/usr/bin/sed"
 mkdir -p ${CURDIR}/dmg
 
 cd ${CURDIR}/dmg
-hdiutil convert ${BASEPATH}/template.dmg -format UDSP -o polybundle
+hdiutil convert ${SCRIPTDIR}/template.dmg -format UDSP -o polybundle
 
 hdiutil mount polybundle.sparseimage
 
@@ -23,7 +23,7 @@ chmod a-w /Volumes/polybundle/polymake.app/Contents/Resources/polymake/lib/polym
 sudo cp -a ${TAR_DIR} /Volumes/polybundle/src
 sudo cp -a ${SCRIPTBASE}/bundle_scripts /Volumes/polybundle/src
 sudo cp -a ${SCRIPTDIR} /Volumes/polybundle/src
-cp -a ${CURDIR}/README.pdf /Volumes/polybundle/
+sudo cp -a ${CURDIR}/README.pdf /Volumes/polybundle/
 
 hdiutil eject /Volumes/polybundle
 
