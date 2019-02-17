@@ -3,8 +3,8 @@
 SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
 SCRIPTBASE=${SCRIPTDIR}/..
 
-${SCRIPTDIR}/110_fetch_sources
-${SCRIPTDIR}/120_create_skeleton
+${SCRIPTDIR}/110_create_skeleton
+${SCRIPTDIR}/120_fetch_sources
 ${SCRIPTDIR}/130_install_ant
 ${SCRIPTDIR}/140_install_boost
 ${SCRIPTDIR}/150_install_readline
