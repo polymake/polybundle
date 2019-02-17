@@ -5,7 +5,7 @@ if [[ -z ${VAR_READ} ]]; then
     export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
-fi $SCRIPTDIR/010_variables
+fi
 
 echo "building gmp"
 ${FUNCDIR}/build.sh gmp-${GMPVERSION} ${TAR_DIR} gmp-${GMPVERSION} "${TMP}" build --prefix=${PREFIX} --enable-cxx=yes CFLAGS="${CFLAGS}" CPPFLAGS="${CXXFLAGS}"
