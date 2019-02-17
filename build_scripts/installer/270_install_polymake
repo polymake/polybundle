@@ -72,7 +72,11 @@ chmod a+rw ${PREFIX}/polymake/lib/polymake/config.ninja
 ${SED} "s|${PREFIX}|/Volumes/polybundle/polymake.app/Contents/Resources|g" ${PREFIX}/polymake/lib/polymake/config.ninja > ${PREFIX}/polymake/lib/polymake/config.ninja.tmp
 cp ${PREFIX}/polymake/lib/polymake/config.ninja.tmp ${PREFIX}/polymake/lib/polymake/config.ninja
 rm ${PREFIX}/polymake/lib/polymake/config.ninja.tmp
-chmod a-w ${PREFIX}/polymake/lib/polymake/config.ninja
+### this file **must** contain the absolute path to the polymake root
+### hence, we need to be able to update it any time, so make it world writable
+### not nice, but out of our control. It is the only option in the current polymake setup
+## update is done at every start in polymake.start or polymake.debug
+chmod a+rw ${PREFIX}/polymake/lib/polymake/config.ninja
 
 
 echo "changing default viewer to threejs"

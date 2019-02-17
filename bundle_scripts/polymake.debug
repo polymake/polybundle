@@ -1,7 +1,9 @@
 #!/bin/bash
 
+echo -ne "\033]0;polymake\007"
 dir=$(cd "$(dirname "$0")"; pwd)
 ResourcesDir="$dir/../Resources/"
+BundleBase=${ResourcesDir%/polymake.app/Contents/Resources}
 
 alias perl=/usr/bin/perl
 
