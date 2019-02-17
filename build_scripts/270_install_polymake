@@ -71,7 +71,7 @@ chmod a+rw ${PREFIX}/polymake/lib/polymake/config.ninja
 ${SED} "s|${PREFIX}|/Volumes/polybundle/polymake.app/Contents/Resources|g" ${PREFIX}/polymake/lib/polymake/config.ninja > ${PREFIX}/polymake/lib/polymake/config.ninja.tmp
 cp ${PREFIX}/polymake/lib/polymake/config.ninja.tmp ${PREFIX}/polymake/lib/polymake/config.ninja
 rm ${PREFIX}/polymake/lib/polymake/config.ninja.tmp
-chmod a+rw ${PREFIX}/polymake/lib/polymake/config.ninja
+chmod a-w ${PREFIX}/polymake/lib/polymake/config.ninja
 
 
 echo "changing default viewer to threejs"

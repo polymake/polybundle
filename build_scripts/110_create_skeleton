@@ -6,6 +6,9 @@ SCRIPTBASE=${SCRIPTDIR}/..
 . $SCRIPTDIR/000_versions
 . $SCRIPTDIR/010_variables
 
+mkdir -p $TAR_DIR
+mkdir -p $TMP
+
 echo "creating skeleton"
 mkdir -p polymake.app/Contents/Resources
 mkdir -p polymake.app/Contents/Resources/config
