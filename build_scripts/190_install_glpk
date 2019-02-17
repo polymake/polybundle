@@ -2,13 +2,14 @@
 
 SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
 SCRIPTBASE=${SCRIPTDIR}/..
+FUNCDIR=${SCRIPTDIR}/functions
 
 . $SCRIPTDIR/000_versions
 . $SCRIPTDIR/010_variables
 
 
 echo "building glpk"
-${SCRIPTDIR}/build.sh glpk-${GLPKVERSION} ${TAR_DIR} glpk-${GLPKVERSION} "${TMP}" build \
+${FUNCDIR}/build.sh glpk-${GLPKVERSION} ${TAR_DIR} glpk-${GLPKVERSION} "${TMP}" build \
 								--prefix=${PREFIX} --with-gmp CFLAGS="-I${PREFIX}/include"  CXXFLAGS="-I${PREFIX}/include" LDFLAGS="-L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib"
 
-${SCRIPTDIR}/install.sh glpk-${GLPKVERSION} "${TMP}" build
+${FUNCDIR}/install.sh glpk-${GLPKVERSION} "${TMP}" build

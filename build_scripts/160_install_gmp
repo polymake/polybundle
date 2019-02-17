@@ -2,14 +2,15 @@
 
 SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
 SCRIPTBASE=${SCRIPTDIR}/..
+FUNCDIR=${SCRIPTDIR}/functions
 
 . $SCRIPTDIR/000_versions
 . $SCRIPTDIR/010_variables
 
 echo "building gmp"
-$SCRIPTDIR/build.sh gmp-${GMPVERSION} ${TAR_DIR} gmp-${GMPVERSION} "${TMP}" build --prefix=${PREFIX} --enable-cxx=yes CFLAGS="${CFLAGS}" CPPFLAGS="${CXXFLAGS}"
+${FUNCDIR}/build.sh gmp-${GMPVERSION} ${TAR_DIR} gmp-${GMPVERSION} "${TMP}" build --prefix=${PREFIX} --enable-cxx=yes CFLAGS="${CFLAGS}" CPPFLAGS="${CXXFLAGS}"
 cd ${CURDIR}
 
 echo "installing gmp"
-$SCRIPTDIR/install.sh gmp-${GMPVERSION} "${TMP}" build
+${FUNCDIR}/install.sh gmp-${GMPVERSION} "${TMP}" build
 cd ${CURDIR}

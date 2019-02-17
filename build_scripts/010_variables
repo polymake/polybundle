@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 CURDIR=$(pwd)
 TAR_DIR=${CURDIR}/src

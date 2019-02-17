@@ -2,34 +2,35 @@
 
 SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
 SCRIPTBASE=${SCRIPTDIR}/..
+FUNCDIR=${SCRIPTDIR}/functions
 
 . $SCRIPTDIR/000_versions
 . $SCRIPTDIR/010_variables
 
 
 echo "fixing paths in libraries"
-${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/lib ${PREFIX} dylib
-${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/bin ${PREFIX} ""
-${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib ${PREFIX} dylib
-${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/lib ${PREFIX} bundle
-${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/lib ${PREFIX} dylib
-${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/lib/perl5/site_perl/${PERLVERSION}/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu ${PREFIX} bundle
-${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/perlx/${PERLVERSION}/darwin-thread-multi-2level/auto/Polymake/Ext ${PREFIX} bundle
+${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/lib ${PREFIX} dylib
+${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/bin ${PREFIX} ""
+${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib ${PREFIX} dylib
+${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/lib ${PREFIX} bundle
+${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/lib ${PREFIX} dylib
+${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/lib/perl5/site_perl/${PERLVERSION}/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu ${PREFIX} bundle
+${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/perlx/${PERLVERSION}/darwin-thread-multi-2level/auto/Polymake/Ext ${PREFIX} bundle
 for ext in ${shell ls polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'}; do \
-	${SCRIPTDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/bundled/$$ext/lib ${PREFIX} bundle ; \
+	${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/bundled/$$ext/lib ${PREFIX} bundle ; \
 done
-${SCRIPTDIR}/fix_rpath.sh ${PREFIX}/lib ${PREFIX}/lib dylib
-${SCRIPTDIR}/fix_rpath.sh ${PREFIX}/bin ${PREFIX}/lib ""
-${SCRIPTDIR}/fix_rpath.sh ${PREFIX}/polymake/lib ${PREFIX}/lib dylib
-${SCRIPTDIR}/fix_rpath.sh ${PREFIX}/polymake/lib/polymake/lib ${PREFIX}/lib bundle
-${SCRIPTDIR}/fix_rpath.sh ${PREFIX}/polymake/lib/polymake/lib ${PREFIX}/lib dylib
-${SCRIPTDIR}/fix_rpath.sh ${PREFIX}/polymake/lib/polymake/perlx/${PERLVERSION}/darwin-thread-multi-2level/auto/Polymake/Ext ${PREFIX}/lib bundle
+${FUNCDIR}/fix_rpath.sh ${PREFIX}/lib ${PREFIX}/lib dylib
+${FUNCDIR}/fix_rpath.sh ${PREFIX}/bin ${PREFIX}/lib ""
+${FUNCDIR}/fix_rpath.sh ${PREFIX}/polymake/lib ${PREFIX}/lib dylib
+${FUNCDIR}/fix_rpath.sh ${PREFIX}/polymake/lib/polymake/lib ${PREFIX}/lib bundle
+${FUNCDIR}/fix_rpath.sh ${PREFIX}/polymake/lib/polymake/lib ${PREFIX}/lib dylib
+${FUNCDIR}/fix_rpath.sh ${PREFIX}/polymake/lib/polymake/perlx/${PERLVERSION}/darwin-thread-multi-2level/auto/Polymake/Ext ${PREFIX}/lib bundle
 for ext in ${shell ls polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'}; do \
-	${SCRIPTDIR}/fix_rpath.sh ${PREFIX}/polymake/lib/polymake/bundled/$$ext/lib ${PREFIX}/lib bundle ; \
+	${FUNCDIR}/fix_rpath.sh ${PREFIX}/polymake/lib/polymake/bundled/$$ext/lib ${PREFIX}/lib bundle ; \
 done
-${SCRIPTDIR}/fix_libname.sh "${PREFIX}/lib" dylib ""
-${SCRIPTDIR}/fix_libname.sh "${PREFIX}/polymake/lib" dylib "../polymake/lib"
-${SCRIPTDIR}/fix_libname.sh "${PREFIX}/polymake/lib/polymake/lib" dylib "../polymake/lib/polymake/lib"
+${FUNCDIR}/fix_libname.sh "${PREFIX}/lib" dylib ""
+${FUNCDIR}/fix_libname.sh "${PREFIX}/polymake/lib" dylib "../polymake/lib"
+${FUNCDIR}/fix_libname.sh "${PREFIX}/polymake/lib/polymake/lib" dylib "../polymake/lib/polymake/lib"
 
 cd ${CURDIR}
 
