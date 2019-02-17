@@ -1,0 +1,27 @@
+#!/bin/bash -x
+
+export VAR_READ=1
+
+export SCRIPTBASE=${SCRIPTDIR}/..
+export INSTALLSCRIPTDIR=${SCRIPTDIR}/installer
+export FUNCDIR=${SCRIPTDIR}/functions
+
+export CURDIR=$(pwd)
+export TAR_DIR=${CURDIR}/src
+export TMP=${CURDIR}/tmp/
+
+export SED=/usr/bin/sed
+export PERL=/usr/bin/perl
+export CURL="/usr/bin/curl -O -L"
+export DATE=$(date +'%Y-%m-%d')
+
+export MACVERSION=$(sw_vers | grep -o "10[.][0-9]\+")
+export PERLVERSION=$(${PERL} --version | grep -o "5[.][0-9]*[.][0-9]")
+export PREFIX=${CURDIR}/polymake.app/Contents/Resources
+
+export CC="ccache clang"
+export CXX="ccache clang++"
+
+export CFLAGS="-m64 -march=x86-64 -fpic -DPIC"
+export CXXFLAGS="-m64 -march=x86-64  -fpic -DPIC"
+

@@ -1,14 +1,16 @@
 #!/bin/bash -x
 
-SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
-SCRIPTBASE=${SCRIPTDIR}/..
-
-. $SCRIPTDIR/000_versions
-. $SCRIPTDIR/010_variables
+if [[ -s ${VAR_READ} ]]; then
+    DIR="$(cd "$(dirname "$0")" && pwd)"
+    export SCRIPTDIR=${DIR}/..
+    . ${SCRIPTDIR}/versions
+    . ${SCRIPTDIR}/variables
+fi
 
 echo "extracting boost"
 tar xfj ${TAR_DIR}/${BOOSTNAME} -C ${PREFIX}/include
-### remove junk
+
+echo "removing unneeded parets of boost"
 rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSIONDIR}/doc
 rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSIONDIR}/tools
 rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSIONDIR}/status

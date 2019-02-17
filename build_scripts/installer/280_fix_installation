@@ -1,11 +1,11 @@
 #!/bin/bash -x
 
-SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
-SCRIPTBASE=${SCRIPTDIR}/..
-FUNCDIR=${SCRIPTDIR}/functions
-
-. $SCRIPTDIR/000_versions
-. $SCRIPTDIR/010_variables
+if [[ -s ${VAR_READ} ]]; then
+    DIR="$(cd "$(dirname "$0")" && pwd)"
+    export SCRIPTDIR=${DIR}/..
+    . ${SCRIPTDIR}/versions
+    . ${SCRIPTDIR}/variables
+fi
 
 
 echo "fixing paths in libraries"

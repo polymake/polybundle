@@ -1,13 +1,14 @@
 #!/bin/bash -x
 
-SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
-SCRIPTBASE=${SCRIPTDIR}/..
+if [[ -s ${VAR_READ} ]]; then
+    DIR="$(cd "$(dirname "$0")" && pwd)"
+    export SCRIPTDIR=${DIR}/..
+    . ${SCRIPTDIR}/versions
+    . ${SCRIPTDIR}/variables
+fi
 
-. $SCRIPTDIR/000_versions
-. $SCRIPTDIR/010_variables
-
-mkdir -p $TAR_DIR
-mkdir -p $TMP
+mkdir -p ${TAR_DIR}
+mkdir -p ${TMP}
 
 echo "creating skeleton"
 mkdir -p polymake.app/Contents/Resources

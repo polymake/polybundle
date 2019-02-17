@@ -1,10 +1,11 @@
 #!/bin/bash -x
 
-SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
-SCRIPTBASE=${SCRIPTDIR}/..
-
-. $SCRIPTDIR/000_versions
-. $SCRIPTDIR/010_variables
+if [[ -s ${VAR_READ} ]]; then
+    DIR="$(cd "$(dirname "$0")" && pwd)"
+    export SCRIPTDIR=${DIR}/..
+    . ${SCRIPTDIR}/versions
+    . ${SCRIPTDIR}/variables
+fi
 
 function fetch_src {
     cd $TAR_DIR
@@ -15,7 +16,8 @@ function fetch_src {
     cd $CURDIR
 } 
 
-# fetch sources
+mkdir -p ${TAR_DIR}
+
 set_prefix "fetch sources"
 fetch_src $ANTNAME $ANTBASE
 fetch_src $FTI2NAME $FTI2BASE

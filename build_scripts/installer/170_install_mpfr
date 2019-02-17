@@ -1,11 +1,11 @@
 #!/bin/bash -x
 
-SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
-SCRIPTBASE=${SCRIPTDIR}/..
-FUNCDIR=${SCRIPTDIR}/functions
-
-. $SCRIPTDIR/000_versions
-. $SCRIPTDIR/010_variables
+if [[ -s ${VAR_READ} ]]; then
+    DIR="$(cd "$(dirname "$0")" && pwd)"
+    export SCRIPTDIR=${DIR}/..
+    . ${SCRIPTDIR}/versions
+    . ${SCRIPTDIR}/variables
+fi
 
 echo "building mpfr"
 ${FUNCDIR}/build.sh mpfr-${MPFRVERSION} ${TAR_DIR} mpfr-${MPFRVERSION} "${TMP}" build --prefix=${PREFIX} --with-gmp=${PREFIX} LDFLAGS="-Wl,-rpath,${PREFIX}/lib"  CFLAGS="${CFLAGS}" CPPFLAGS="${CXXFLAGS}"

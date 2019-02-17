@@ -1,0 +1,134 @@
+#!/bin/bash
+
+export  POLYMAKEVERSION=3.3
+export  POLYMAKELONGVERSION="Release 3.3 of February 2019"
+export  POLYMAKEHOME=https://github.com/polymake/polymake
+export  POLYMAKE_GIT_SERVER_RELEASE="https://github.com/polymake/polymake.git"
+export  POLYMAKE_GIT_BRANCH_RELEASE='Releases'
+export  POLYMAKE_GIT_SERVER_DEVEL="git@git.polymake.org:polymake"
+export  POLYMAKE_GIT_BRANCH_DEVEL='master'
+
+export  POLYMAKE_GIT_BRANCH=${POLYMAKE_GIT_BRANCH_RELEASE}
+export  POLYMAKE_GIT_SERVER=${POLYMAKE_GIT_SERVER_RELEASE}
+
+export  ANTVERSION=1.10.5
+export  ANTHOME=http://ant.apache.org/
+export  ANTNAME=apache-ant-$ANTVERSION-bin.tar.bz2
+export  ANTBASE=http://artfiles.org/apache.org//ant/binaries
+
+export  AUTOCONFVERSION=2.69
+export  AUTOCONFHOME=https://www.gnu.org/software/autoconf/
+export  AUTOCONFNAME=autoconf-$AUTOCONFVERSION.tar.gz
+export  AUTOCONFBASE=http://ftp.gnu.org/gnu/autoconf
+
+export  AUTOMAKEVERSION=1.16
+export  AUTOMAKEHOME=https://www.gnu.org/software/automake/
+export  AUTOMAKENAME=automake-$AUTOMAKEVERSION.tar.gz
+export  AUTOMAKEBASE=http://ftp.gnu.org/gnu/automake
+
+export  BOOSTVERSION=1_66_0
+export  BOOSTVERSIONDIR=1.66.0
+export  BOOSTHOME=http://www.boost.org/
+export  BOOSTNAME=boost_$BOOSTVERSION.tar.bz2
+export  BOOSTBASE=https://dl.bintray.com/boostorg/release/$BOOSTVERSIONDIR/source
+
+export  CANARYVERSION=2012
+export  CANARYHOME=https://metacpan.org/pod/Canary::Stability
+export  CANARYNAME=Canary-Stability-$CANARYVERSION.tar.gz
+export  CANARYBASE=https://cpan.metacpan.org/authors/id/M/ML/MLEHMANN
+
+export  CDDLIBVERSION=094h
+export  CDDHOME=http://www.inf.ethz.ch/personal/fukudak/cdd_home/
+export  CDDLIBNAME=cddlib-$CDDLIBVERSION.tar.gz
+export  CDDLIBBASE=ftp://ftp.math.ethz.ch/users/fukudak/cdd
+
+export  FTI2VERSION=1.6.9
+export  FTI2VERSION_DIR=1_6_9
+export  FTI2HOME=http://www.4ti2.de/
+export  FTI2NAME=4ti2-$FTI2VERSION.tar.gz
+export  FTI2BASE=https://github.com/4ti2/4ti2/releases/download/Release_$FTI2VERSION_DIR
+
+export  GLPKVERSION=4.61
+export  GLPKHOME=https://www.gnu.org/software/glpk/
+export  GLPKNAME=glpk-$GLPKVERSION.tar.gz
+export  GLPKBASE=http://ftp.gnu.org/gnu/glpk
+
+export  GMPVERSION=6.1.2
+export  GMPMINORVERSION=
+export  GMPHOME=http://gmplib.org/
+export  GMPNAME=gmp-$GMPVERSION$GMPMINORVERSION.tar.bz2
+export  GMPBASE=https://gmplib.org/download/gmp
+
+export  JREALITYVERSION=
+export  JREALITYHOME=http://www3.math.tu-berlin.de/jreality
+
+export  JSONVERSION=2.95
+export  JSONHOME=https://metacpan.org/pod/JSON
+export  JSONNAME=JSON-$JSONVERSION.tar.gz
+export  JSONBASE=https://cpan.metacpan.org/authors/id/I/IS/ISHIGAKI
+
+export  JSONXSVERSION=4.0
+export  JSONXSHOME=https://metacpan.org/pod/Eve::Json
+export  JSONXSNAME=JSON-XS-$JSONXSVERSION.tar.gz
+export  JSONXSBASE=https://cpan.metacpan.org/authors/id/M/ML/MLEHMANN
+
+export  LIBTOOLVERSION=2.4
+export  LIBTOOLHOME=
+export  LIBTOOLNAME=libtool-$LIBTOOLVERSION.tar.gz
+export  LIBTOOLBASE=http://ftp.gnu.org/gnu/libtool
+
+export  LIBXSLTVERSION=1.96
+export  LIBXSLTHOME=http://search.cpan.org/~shlomif/XML-LibXSLT/
+export  LIBXSLTNAME=XML-LibXSLT-$LIBXSLTVERSION.tar.gz
+export  LIBXSLTBASE=http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF
+
+export  LRSVERSION=4.2
+export  LRSHOME=http://cgm.cs.mcgill.ca/~avis/C/lrs.html
+
+export  MPFRVERSION=4.0.1
+export  MPFRHOME=http://mpfr.org/
+export  MPFRNAME=mpfr-$MPFRVERSION.tar.bz2
+export  MPFRBASE=http://www.mpfr.org/mpfr-$MPFRVERSION
+
+export  NAUTYVERSION=
+export  NAUTYHOME=http://cs.anu.edu.au/~bdm/nauty/
+
+export  NINJAVERSION="v1.8.2"
+export  NINJANAME=ninja-mac.zip
+export  NINJAHOME=https://ninja-build.org/
+export  NINJABASE=https://github.com/ninja-build/ninja/releases/download/$NINJAVERSION
+
+export  NORMALIZVERSION=3.5.0
+export  NORMALIZHOME=https://www.normaliz.uni-osnabrueck.de
+
+export  NTLVERSION=11.3.2
+export  NTLNAME=ntl-$NTLVERSION.tar.gz
+export  NTLHOME=http://www.shoup.net/ntl/
+export  NTLBASE=http://www.shoup.net/ntl
+
+export  PERMLIBVERSION=
+export  PERMLIBHOME=http://www.math.uni-rostock.de/~rehn/software/permlib.html
+
+export  PPLVERSION=1.2
+export  PPLHOME=http://bugseng.com/products/ppl/
+
+export  READLINEVERSION=6.3
+export  READLINEHOME=http://tiswww.case.edu/php/chet/readline/rltop.html
+export  READLINENAME=readline-$READLINEVERSION.tar.gz
+export  READLINEBASE=ftp://ftp.cwru.edu/pub/bash/
+
+export  SINGULARVERSION=4.0.3
+export  SINGULARHOME=https://github.com/Singular/
+
+export  SVGVERSION=2.84
+export  SVGHOME=http://search.cpan.org/~manwar/SVG/
+export  SVGNAME=SVG-$SVGVERSION.tar.gz
+export  SVGBASE=http://search.cpan.org/CPAN/authors/id/M/MA/MANWAR
+
+export  TERMRLGNUVERSION=1.35
+export  TERMRLGNUHOME=http://search.cpan.org/dist/Term-ReadLine-Gnu/
+export  TERMRLGNUNAME=Term-ReadLine-Gnu-$TERMRLGNUVERSION.tar.gz
+export  TERMRLGNUBASE=http://search.cpan.org/CPAN/authors/id/H/HA/HAYASHI
+
+
+export  JNIHEADERS=/System/Library/Frameworks/JavaVM.framework/Headers/

@@ -1,26 +1,30 @@
 #!/bin/bash
 
-SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
-SCRIPTBASE=${SCRIPTDIR}/..
+export SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
 
-${SCRIPTDIR}/110_create_skeleton
-${SCRIPTDIR}/120_fetch_sources
-${SCRIPTDIR}/130_install_ant
-${SCRIPTDIR}/140_install_boost
-${SCRIPTDIR}/150_install_readline
-${SCRIPTDIR}/160_install_gmp
-${SCRIPTDIR}/170_install_mpfr
-${SCRIPTDIR}/180_install_perl_modules
-${SCRIPTDIR}/190_install_glpk
-${SCRIPTDIR}/200_install_4ti2
-${SCRIPTDIR}/210_install_flint
-${SCRIPTDIR}/220_install_autotools
-${SCRIPTDIR}/230_install_ppl
-${SCRIPTDIR}/240_install_ntl
-${SCRIPTDIR}/250_install_singular
-${SCRIPTDIR}/260_install_ninja
-${SCRIPTDIR}/270_install_polymake
-${SCRIPTDIR}/280_fix_installation
-${SCRIPTDIR}/290_create_documentation
-${SCRIPTDIR}/300_diskimage
+if [[ -s ${VAR_READ} ]]; then
+  . versions
+  . variables
+fi
+
+${INSTALLSCRIPTDIR}/110_create_skeleton
+${INSTALLSCRIPTDIR}/120_fetch_sources
+${INSTALLSCRIPTDIR}/130_install_ant
+${INSTALLSCRIPTDIR}/140_install_boost
+${INSTALLSCRIPTDIR}/150_install_readline
+${INSTALLSCRIPTDIR}/160_install_gmp
+${INSTALLSCRIPTDIR}/170_install_mpfr
+${INSTALLSCRIPTDIR}/180_install_perl_modules
+${INSTALLSCRIPTDIR}/190_install_glpk
+${INSTALLSCRIPTDIR}/200_install_4ti2
+${INSTALLSCRIPTDIR}/210_install_flint
+${INSTALLSCRIPTDIR}/220_install_autotools
+${INSTALLSCRIPTDIR}/230_install_ppl
+${INSTALLSCRIPTDIR}/240_install_ntl
+${INSTALLSCRIPTDIR}/250_install_singular
+${INSTALLSCRIPTDIR}/260_install_ninja
+${INSTALLSCRIPTDIR}/270_install_polymake
+${INSTALLSCRIPTDIR}/280_fix_installation
+${INSTALLSCRIPTDIR}/290_create_documentation
+${INSTALLSCRIPTDIR}/300_diskimage
 
