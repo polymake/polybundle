@@ -142,7 +142,7 @@ echo "-----------------" >>$LOGFILE
 echo "\n\n-----------------" >>$LOGFILE
 echo "contents of conf.make" >>$LOGFILE
 echo "-----------------" >>$LOGFILE
-cat  $ResourcesDir/polymake/lib/polymake/conf.make >>$LOGFILE
+cat  $ResourcesDir/polymake/lib/polymake/config.ninja >>$LOGFILE
 echo "-----------------" >>$LOGFILE
 
 # start polymake
