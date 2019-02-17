@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-if [[ -s ${VAR_READ} ]]; then
+if [[ -z ${VAR_READ} ]]; then
     DIR="$(cd "$(dirname "$0")" && pwd)"
     export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
