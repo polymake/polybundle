@@ -3,8 +3,8 @@
 export SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
 
 if [[ -z ${VAR_READ} ]]; then
-  . versions
-  . variables
+  . ${SCRIPTDIR}/versions
+  . ${SCRIPTDIR}/variables
 fi
 
 ${INSTALLSCRIPTDIR}/110_create_skeleton
