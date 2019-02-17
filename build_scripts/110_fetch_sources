@@ -6,9 +6,6 @@ SCRIPTBASE=${SCRIPTDIR}/..
 . $SCRIPTDIR/000_versions
 . $SCRIPTDIR/010_variables
 
-mkdir -p $TAR_DIR
-mkdir -p $TMP
-
 function fetch_src {
     cd $TAR_DIR
     if [ ! -f  $1 ]; then 
