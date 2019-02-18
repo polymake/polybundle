@@ -18,15 +18,15 @@ $c->VISUAL;
 # check singular
 use application "fulton";
 
-$c = new Cone(INPUT_RAYS=>[[-1,1],[0,1],[1,1]]);
+my $c = new Cone(INPUT_RAYS=>[[-1,1],[0,1],[1,1]]);
 
-$tv = new NormalToricVariety($c);
+my $tv = new NormalToricVariety($c);
 
-$toric = $c->TORIC_IDEAL;
+my $toric = $c->TORIC_IDEAL;
 
 singular_eval("listvar();");
 
-$radical = $toric->RADICAL;
+my $radical = $toric->RADICAL;
 
 print join("\n", @{$radical->GENERATORS});
 
