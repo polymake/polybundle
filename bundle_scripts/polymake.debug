@@ -91,7 +91,7 @@ echo "---------------" >>$LOGFILE
 echo >>$LOGFILE
 echo "Perl load path of Term::Readline" >>$LOGFILE
 echo "-----------------" >>$LOGFILE
-perl -M'Term::Readline' -e 'print join "\n", %INC' >>$LOGFILE
+perl -M'Term::ReadLine' -e 'print join "\n", %INC' >>$LOGFILE
 echo >>$LOGFILE
 echo "---------------" >>$LOGFILE
 

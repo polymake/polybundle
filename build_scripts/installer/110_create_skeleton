@@ -18,15 +18,17 @@ mkdir -p polymake.app/Contents/MacOS
 
 ${SED} "s/REPLACE_PERLVERSION/${PERLVERSION}/g" ${SCRIPTBASE}/bundle_scripts/polymake.start > ${TMP}/polymake.start.tmp;
 ${SED} "s/REPLACE_PERLVERSION/${PERLVERSION}/g" ${SCRIPTBASE}/bundle_scripts/polymake.debug > ${TMP}/polymake.debug.tmp;
+${SED} "s/REPLACE_PERLVERSION/${PERLVERSION}/g" ${SCRIPTBASE}/bundle_scripts/polymake.run > ${TMP}/polymake.run.tmp;
 ${SED} "s/REPLACE_POLYMAKE_VERSION/${POLYMAKEVERSION}/g" ${SCRIPTBASE}/bundle_scripts/prefer.pl > ${TMP}/prefer.pl.tmp;
 install -m 555 ${SCRIPTBASE}/bundle_scripts/polymake polymake.app/Contents/MacOS/
 install -m 555 ${TMP}/polymake.start.tmp polymake.app/Contents/MacOS/polymake.start
-install -m 555 ${SCRIPTBASE}/bundle_scripts/polymake.run polymake.app/Contents/MacOS/
+install -m 555 ${TMP}/polymake.run.tmp polymake.app/Contents/MacOS/polymake.run
 install -m 555 ${TMP}/polymake.debug.tmp polymake.app/Contents/MacOS/polymake.debug
 install -m 644 ${TMP}/prefer.pl.tmp polymake.app/Contents/Resources/config/prefer.pl
 install -m 644 ${SCRIPTBASE}/bundle_scripts/debug.commands polymake.app/Contents/Resources/
 rm ${TMP}/polymake.start.tmp;
 rm ${TMP}polymake.debug.tmp;
+rm ${TMP}polymake.run.tmp;
 install -m 644 ${SCRIPTBASE}/bundle_scripts/Info.plist polymake.app/Contents/
 install -m 644 ${SCRIPTBASE}/bundle_scripts/poly.icns polymake.app/Contents/Resources/
 install -m 644 ${SCRIPTBASE}/bundle_scripts/polymake.icns polymake.app/Contents/Resources/

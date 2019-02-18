@@ -77,7 +77,7 @@ rm ${PREFIX}/polymake/lib/polymake/config.ninja.tmp
 ### this file **must** contain the absolute path to the polymake root
 ### hence, we need to be able to update it any time, so make it world writable
 ### not nice, but out of our control. It is the only option in the current polymake setup
-## update is done at every start in polymake.start or polymake.debug
+## update is done at every start in polymake.run
 chmod a+rw ${PREFIX}/polymake/lib/polymake/config.ninja
 
 
