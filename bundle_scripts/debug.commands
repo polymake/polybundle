@@ -7,23 +7,27 @@ my $h=new HashMap<Array<Int>,Rational>;
 
 my $c=cube(3);
 
-# check libnormaliz
+# check libnormaliz and 4ti2
 $c->HILBERT_BASIS;
 
-# check jreality
+$c->EHRHART_POLYNOMIAL;
+
+# check threejs
 $c->VISUAL;
 
 # check singular
-use application "ideal";
+use application "fulton";
 
-my $r=new Ring(qw(x y w z));
+$c = new Cone(INPUT_RAYS=>[[-1,1],[0,1],[1,1]]);
 
-(my $x,my $y, my $w, my $z)=$r->variables;
+$tv = new NormalToricVariety($c);
 
-my $p= -1* ($x^3) + ($x^2)*$y*$z*$w + $z*$w - $x*$y*$z*$w + ($y^3)*$w; 
+$toric = $c->TORIC_IDEAL;
 
-my $q= ($x^3) - ($y^4);
+singular_eval("listvar();");
 
-my  $j=new Ideal(GENERATORS=>[$p,$q],RING=>$r);
+$radical = $toric->RADICAL;
 
-$j->DIM;
+print join("\n", @{$radical->GENERATORS});
+
+singular_eval("listvar();");

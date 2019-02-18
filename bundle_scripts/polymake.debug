@@ -2,7 +2,7 @@
 
 echo -ne "\033]0;polymake\007"
 dir=$(cd "$(dirname "$0")"; pwd)
-ResourcesDir="$dir/../Resources/"
+ResourcesDir="${dir%MacOS}Resources"
 BundleBase=${ResourcesDir%/polymake.app/Contents/Resources}
 
 alias perl=/usr/bin/perl
@@ -31,13 +31,14 @@ fi
 unset VERSIONER_PERL_PREFER_32_BIT
 
 export PATH=${ResourcesDir}/polymake/bin:${ResourcesDir}/bin:$PATH
+export POLYMAKE_CONFIG_PATH="$ResourcesDir/config;user"
 export POLYMAKE_USER_DIR="${HOME}/.polymake-macbundle-debug"
 export POLYMAKE_BASE_PATH=$ResourcesDir/polymake
-export LD_LIBRARY_PATH=$ResourcesDir/lib:$ResourcesDir/include/boost_1_47_0/:$LD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH=$ResourcesDir/lib:$ResourcesDir/include/boost_1_66_0/:$DYLD_LIBRARY_PATH
 export CPLUS_INCLUDE_PATH=$ResourcesDir/include/
 export CFLAGS=-I$ResourcesDir/include/
 export CPPFLAGS=-I$ResourcesDir/include/
-export PERL5LIB=$ResourcesDir/lib/perl5/site_perl/REPLACE_PERLVERSION/darwin-thread-multi-2level/:$ResourcesDir/polymake/lib/polymake/lib/:$ResourcesDir/lib/perl5/:$ResourcesDir/polymake/lib/polymake/perlx/:$ResourcesDir/polymake/share/polymake/perllib/:$PERL5LIB
+export PERL5LIB=$ResourcesDir/lib/perl5/site_perl/REPLACE_PERLVERSION/darwin-thread-multi-2level/:$ResourcesDir/lib/perl5/site_perl:$ResourcesDir/polymake/lib/polymake/lib/:$ResourcesDir/lib/perl5/:$ResourcesDir/polymake/lib/polymake/perlx/:$ResourcesDir/polymake/share/polymake/perllib/:$PERL5LIB
 
 # seems necessary, why?
 dir=$(cd "$(dirname "$0")"; pwd)
