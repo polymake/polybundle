@@ -2,22 +2,54 @@
 
 dirtmp=$(cd "$(dirname "$0")"; pwd)
 dir=`echo $dirtmp | awk '{ print $1 }'`
+
+ResourcesDir="${dir%MacOS}Resources"
+BundleBase=${ResourcesDir%/polymake.app/Contents/Resources}
+
 write_default_config=0
 
-if [[ -f $HOME/.polymake-macbundle/bundle.config ]]; then
-. $HOME/.polymake-macbundle/bundle.config
+alias perl=/usr/bin/perl
+perlversion=`/usr/bin/perl --version | grep -o "5[.][0-9]*[.][0-9]"`
+
+debug=0
+polymake_user_dir=".polymake-macbundle"
+if [[ "$#" -gt  "0" ]]; then
+  if [[ "$1" = "-d" ]]; then
+    shift;
+    polymake_user_dir=".polymake-macbundle-debug"
+    debug=1;
+  fi;
+fi;
+
+if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then
+   echo "=========================================================================="
+   echo "your perl version ($perlversion) does not match the perl version this"
+   echo "app was built for (REPLACE_PERLVERSION)"
+   echo "please download and install the version of polymake that corresponds"
+   echo "to the version of your system perl"
+   echo "You can find the version number by executing"
+   echo "/usr/bin/perl --version"
+   echo "in a terminal."
+   echo "If there is no version of the polymake app matching your perl version"
+   echo "please contact us at http://forum.polymake.org"
+   echo "=========================================================================="
+   exit
+fi;
+
+if [[ -f $HOME/$polymake_user_dir/bundle.config ]]; then
+. $HOME/$polymake_user_dir/bundle.config
    if [[ "$POLYMAKE_BASE_DIR" != "$dir" ]]; then
       echo "========================================================================="
       echo "Your polymake customization files in"
       echo
-      echo "${HOME}/.polymake-macbundle"
+      echo "${HOME}/$polymake_user_dir"
       echo
       echo "correspond to a different installation of polymake"
       echo "(or you have moved your installation to a different location on your Mac)"
       echo "if you continue then all files in this directory will be reset "
       echo "to default values".
       echo
-      echo "If you have imported extensions into polymake then you have to should call"
+      echo "If you have imported extensions into polymake then you should call"
       echo "make clean"
       echo "in all extension base directories befor you continue "
       echo "and reimport them into polymake afterwards."
@@ -29,7 +61,7 @@ if [[ -f $HOME/.polymake-macbundle/bundle.config ]]; then
       echo "if you continue."
       echo 
       echo "If you have a saved copy of bundle.config and want to put "
-      echo "this back to ~/.polymake-macbundle, then"
+      echo "this back to ~/$polymake_user_dir, then"
       echo "make sure that POLYMAKE_JUPYTER_FORCE_REINSTALL is set to 1."
       echo
       echo "If you want to save some of your previous settings you should abort now"
@@ -37,7 +69,7 @@ if [[ -f $HOME/.polymake-macbundle/bundle.config ]]; then
       echo "otherwise you can continue"
       read -p "[a]bort or [c]ontinue? "
       [ "$REPLY" == "c" ] || exit
-      rm -rf "${HOME}/.polymake-macbundle"
+      rm -rf "${HOME}/$polymake_user_dir"
       write_default_config=1
    fi
 else
@@ -45,8 +77,8 @@ else
 fi
   
 if [[ $write_default_config == 1 ]]; then
-   mkdir -p $HOME/.polymake-macbundle
-   cat <<EOT >> $HOME/.polymake-macbundle/bundle.config
+   mkdir -p $HOME/$polymake_user_dir
+   cat <<EOT >> $HOME/$polymake_user_dir/bundle.config
    # The terminal app used to start polymake, either Terminal or iTerm
    # POLYMAKE_TERM=Terminal
 
@@ -101,18 +133,37 @@ if [[ $write_default_config == 1 ]]; then
    # additional path variables
    # POLYMAKE_ADD_PATH=
    
-   # Pleas do not edit the following line
+   # Please do not edit the following line
 EOT
-echo "   POLYMAKE_BASE_DIR=$dir" >> $HOME/.polymake-macbundle/bundle.config
-. $HOME/.polymake-macbundle/bundle.config
+echo "   POLYMAKE_BASE_DIR=$dir" >> $HOME/$polymake_user_dir/bundle.config
+. $HOME/$polymake_user_dir/bundle.config
 fi
 
 if [[ -n $POLYMAKE_ADD_PATH ]]; then
    export PATH=$PATH:$POLYMAKE_ADD_PATH
 fi
 
-if [[ $POLYMAKE_START_IN_JUPYTER == 0 ]]; then
-  $dir/polymake.start
+root=`grep -m 1 "root=.*" $ResourcesDir/polymake/lib/polymake/config.ninja | sed -Ee "s|root=(.*)/polymake.app/Contents/Resources/polymake/share/polymake|\1|"`
+if [[ -z "$root" ]]; then
+   echo "polymake build configure file is missing"
+   echo "This should not happen. Your bundle seems to be corrupt. Please reinstall."
+   exit
+fi
+
+if [[ ! $root =~ ${BundleBase} ]]; then
+   echo "========================================================================="
+   echo "The bundle is started for the first time or has been relocated. Updating the configuration file..."
+   tfile=$(mktemp /tmp/polybundle.XXXXXXXXX)
+   sed "s|$root|$BundleBase|g" $ResourcesDir/polymake/lib/polymake/config.ninja > $tfile && cp $tfile $ResourcesDir/polymake/lib/polymake/config.ninja && rm $tfile
+   echo "...done"
+fi
+
+if [[ $POLYMAKE_START_IN_JUPYTER == 0 || "$#" -gt  "0" || $debug == 1 ]]; then
+  if [[  $debug == 1 ]]; then
+    $dir/polymake.debug $@
+  else 
+    $dir/polymake.start $@
+  fi;
 else
    options=()
    if [[ $POLYMAKE_JUPYTER_ASK_IF_RUNNING_SERVER == 1 && $POLYMAKE_JUPYTER_FORCE_REINSTALL == 0 ]]; then
@@ -130,7 +181,7 @@ else
    if [[ $POLYMAKE_JUPYTER_FORCE_REINSTALL == 1 ]]; then
      options+=("--force")
      tfile=$(mktemp /tmp/polybundle.XXXXXXXXX)
-     sed "s/POLYMAKE_JUPYTER_FORCE_REINSTALL=1/POLYMAKE_JUPYTER_FORCE_REINSTALL=0/" $HOME/.polymake-macbundle/bundle.config > $tfile && cp $tfile $HOME/.polymake-macbundle/bundle.config && rm $tfile
+     sed "s/POLYMAKE_JUPYTER_FORCE_REINSTALL=1/POLYMAKE_JUPYTER_FORCE_REINSTALL=0/" $HOME/$polymake_user_dir/bundle.config > $tfile && cp $tfile $HOME/$polymake_user_dir/bundle.config && rm $tfile
    fi
    if [[ -n $POLYMAKE_JUPYTER_NOTEBOOK_DIR ]]; then
       options+=("--notebook-dir=$POLYMAKE_JUPYTER_NOTEBOOK_DIR")

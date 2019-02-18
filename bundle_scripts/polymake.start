@@ -3,81 +3,9 @@
 echo -ne "\033]0;polymake\007"
 dir=$(cd "$(dirname "$0")"; pwd)
 ResourcesDir="${dir%MacOS}Resources"
-BundleBase=${ResourcesDir%/polymake.app/Contents/Resources}
-
-alias perl=/usr/bin/perl
-
-perlversion=`/usr/bin/perl --version | grep -o "5[.][0-9]*[.][0-9]"`
-
-if [ "$perlversion" != "REPLACE_PERLVERSION" ]; then
-   echo "=========================================================================="
-   echo "your perl version ($perlversion) does not match the perl version this"
-   echo "app was built for (REPLACE_PERLVERSION)"
-   echo "please download and install the version of polymake that corresponds"
-   echo "to the version of your system perl"
-   echo "You can find the version number by executing"
-   echo "/usr/bin/perl --version"
-   echo "in a terminal."
-   echo "If there is no version of the polymake app matching your perl version"
-   echo "please contact us at http://forum.polymake.org"
-   echo "=========================================================================="
-   exit
-fi;
-
-if [ -f ${HOME}/.polymake-macbundle/customize.pl ]; then
-  base=`grep -m 1 "polymake.app/Contents/Resources" ${HOME}/.polymake-macbundle/customize.pl`
-  if [[ ! -z "$base" ]] && [[ ! $base =~ $ResourcesDir ]]; then
-    echo "========================================================================="
-    echo "Your polymake customization files in"
-    echo
-    echo "${HOME}/.polymake-macbundle"
-    echo
-    echo "correspond to a different installation of polymake"
-    echo "(or you have moved your installation to a different location on your Mac)"
-    echo "if you continue then all files in this directory will be reset to default values".
-    echo
-    echo "If you have imported extensions into polymake then you have to should call"
-    echo "make clean"
-    echo "in all extension base directories befor you continue "
-    echo "and reimport them into polymake afterwards."
-    echo
-    echo "If you have activated the jupyter version of polymake "
-    echo "you will have to redo your changes to the file"
-    echo "bundle.config and at least reactivate the jupyter version."
-    echo "The file will be rewritten with its default values "
-    echo "the next time you start the polymake bundle (not this script)."
-    echo 
-    echo "If you have a saved copy of bundle.config and want to put "
-    echo "this back to ~/.polymake-macbundle later, then"
-    echo "make sure that POLYMAKE_JUPYTER_FORCE_REINSTALL is set to 1."
-    echo
-    echo "If you want to save some of your previous settings you should abort now"
-    echo "(see the README.pdf that came with the bundle if you need help)"
-    echo "otherwise you can continue"
-    read -p "[a]bort or [c]ontinue? "
-   [ "$REPLY" == "c" ] || exit
-   rm -rf "${HOME}/.polymake-macbundle"
-  fi
-fi
-
-root=`grep -m 1 "root=.*" $ResourcesDir/polymake/lib/polymake/config.ninja | sed -Ee "s|root=(.*)/polymake.app/Contents/Resources/polymake/share/polymake|\1|"`
-if [[ -z "$root" ]]; then
-   echo "polymake build configure file is missing"
-   echo "This should not happen. Your bundle seems to be corrupt. Please reinstall."
-   exit
-fi
-
-if [[ ! $root =~ ${BundleBase} ]]; then
-   echo "========================================================================="
-   echo "The bundle is started for the first time or has been relocated. Updating the configuration file..."
-   tfile=$(mktemp /tmp/polybundle.XXXXXXXXX)
-   sed "s|$root|$BundleBase|g" $ResourcesDir/polymake/lib/polymake/config.ninja > $tfile && cp $tfile $ResourcesDir/polymake/lib/polymake/config.ninja && rm $tfile
-   echo "...done"
-fi
 
 # the user might have a 32bit version of fink which conflicts with 64bit polymake, so
 unset VERSIONER_PERL_PREFER_32_BIT
-
 
 export PATH=${ResourcesDir}/polymake/bin:${ResourcesDir}/bin:$PATH
 export POLYMAKE_CONFIG_PATH="$ResourcesDir/config;user"
