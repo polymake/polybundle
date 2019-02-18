@@ -53,14 +53,16 @@ cd ${CURDIR}
 ### adjust the polymake script to the new paths
 echo "fixing the polymake executable"
 cd ${PREFIX}/polymake/bin 
-chmod u+w polymake; ${SED} 's/.*InstallTop=.*/   $InstallTop=\"$ENV\{POLYMAKE_BASE_PATH\}\/share\/polymake\";/' polymake \
+chmod u+w polymake 
+${SED} 's/.*InstallTop=.*/   $InstallTop=\"$ENV\{POLYMAKE_BASE_PATH\}\/share\/polymake\";/' polymake \
     | ${SED} 's/.*InstallArch=.*/   $InstallArch=\"$ENV\{POLYMAKE_BASE_PATH\}\/lib\/polymake\";/' \
     | ${SED} '/.*addlibs=.*/d' > polymake.tmp
 mv polymake.tmp polymake
-chmod u+w polymake-config; ${SED} -e 's|my $InstallArch=.*|my $pconf_path = Cwd::abs_path{$0} =~ s\|/bin/polymake-config$\|\|r;\\\nmy $InstallArch="$pconf_path\/lib\/polymake";|' polymake-config \
-	| ${SED} -e 's/use strict;/use strict;\\\nuse Cwd;/' \
-	| ${SED} 's/my $root=.*/my $root="$pconf_path\/share\/polymake";/' \
-		> polymake-config.tmp; mv polymake-config.tmp polymake-config
+chmod u+w polymake-config 
+${SED} -e "s|my \$InstallArch=.*|my \$pconf_path = Cwd::abs_path(\$0) =~ s\|/bin/polymake-config\$\|\|r;\nmy \$InstallArch=\"\$pconf_path\/lib\/polymake\";|" polymake-config \
+	| ${SED} -e "s/use strict;/use strict;\nuse Cwd;/" \
+	| ${SED} 's/my $root=.*/my $root="$pconf_path\/share\/polymake";/' > polymake-config.tmp 
+mv polymake-config.tmp polymake-config
 
 
 ### make polymake script executable
