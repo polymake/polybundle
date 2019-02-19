@@ -6,7 +6,7 @@
 \usepackage{xspace}
 
 \newcommand{\macversion}{MACVERSION}
-\newcommand{\polymakeversion}{Release 3.2 of January 29, 2018\xspace}
+\newcommand{\polymakeversion}{POLYMAKELONGVERSION\xspace}
 
 \title{\texttt{polymake} on the Mac\\\polymakeversion}
 
@@ -90,6 +90,8 @@ There are two general options
 \item \texttt{POLYMAKE\_ADD\_PATH}: adds directories to the path variable used during a \polymake session. Here you can in particular add the path to jupyter, if this is not installed to a default location.
 \end{itemize}
 
+You can use the \polymake app along with a standard installation, but you cannot import extensions from the same directory (but you can install extensions again to a different directory).
+
 \section*{Uninstalling polymake}
 
 To uninstall \polymake just drag the \polymake icon to the trash and remove the directory \texttt{\${HOME}/.polymake-macbundle} (This is only created after you have started \polymake at least once). Note that this directory is a hidden directory, so you cannot delete it in the Finder. Instead, open a \texttt{Terminal}, \texttt{cd} into your home directory, and type \texttt{rm -rf .polymake-macbundle} (observe the ``.'').
@@ -100,13 +102,14 @@ in a terminal. The kernel is installed into a directory \texttt{Jupyter/kernels/
 
 \section*{Trouble-shooting}
 
-\textbf{Please note that the \polymake app is not relocatable after the first start}, so please move it to a location on your hard disk (e.g.\ the Application folder) before starting it. If you need to move the app then please follow the instructions given in the section about customization files. You can use the \polymake app along with a standard installation, but you cannot import extensions from the same directory (but you can install extensions again to a different directory).
-
 Support queries concerning installation and usage are welcome (please use our forum at \href{http://forum.polymake.org}{\tt forum.polymake.org}), as well as any other feedback, but are served on voluntary base, depending, first of all, on the authors' free time resources.  The \polymake package for Mac is still experimental, so it might not work on your computer. Also, we don't have many different Mac OS X installations at hand to test. If it doesn't work we'd value feedback about what went wrong. To obtain relevant information you could try to start the script from a terminal instead of the Applications folder and send us the output. If you have installed \polymake into the standard \texttt{Applications} folder, then the steps are as follows.
 \begin{enumerate}
 \item open the \texttt{Terminal} application (inside \texttt{Utilities} in your \texttt{Applications} folder).
 \item at the prompt type\\
- \texttt{. /Application/polymake.app/Contents/MacOS/polymake.start}
+ \texttt{. /Application/polymake.app/Contents/MacOS/polymake.run}
+\item alternatively, typing \\
+ \texttt{. /Application/polymake.app/Contents/MacOS/polymake.run -d -c}\\
+at the promt generates a file \texttt{poly.log.<date>} in your home directory with some debug output that you could check or send to us.
 \end{enumerate}
 
 \section*{License}
@@ -131,9 +134,12 @@ Additionally, the \polymake application package comes with compiled versions of 
 \item \href{JREALITYHOME}{\texttt{jReality JREALITYVERSION}}
 \item \href{LIBXSLTHOME}{\texttt{XML-LibXSLT LIBXSLTVERSION}}
 \item \href{SVGHOME}{\texttt{SVG SVGVERSION}}
+\item \href{CANARYHOME}{\texttt{Canary::Stability CANARYVERSION}}
+\item \href{JSONXSHOME}{\texttt{JSON::XS JSONXSVERSION}}
+\item \href{JSONHOME}{\texttt{JSON::XS JSONVERSION}}
 \item \href{PERMLIBHOME}{\texttt{permlib PERMLIBVERSION}}
 \item \href{NTLHOME}{\texttt{ntl NTLVERSION}}
-\item \href{4TI2HOME}{\texttt{4ti2 4TI2VERSION}}
+\item \href{FTI2HOME}{\texttt{4ti2 FTI2VERSION}}
 \item \href{GLPKHOME}{\texttt{glpk GLPKVERSION}}
 \item \href{SINGULARHOME}{\texttt{Singular SINGULARVERSION}}
 \item \href{NINJAHOME}{\texttt{ninja NINJAVERSION}}
@@ -143,6 +149,6 @@ Also these packages are protected by open source licences compliant to the GPL. 
 
 \section*{Rebuilding the disk-image}
 
-If you need to rebuild the disk-image just copy the \texttt{src} directory to some location on your Mac. Change to the \texttt{src} directory and type \texttt{make fetch\_sources \&\& make compile \&\& make dmg}.
+If you need to rebuild the disk-image just copy the \texttt{src} directory to some location on your Mac. Change to the \texttt{src} directory and type \texttt{./build_bundle}.
 
 \end{document}
