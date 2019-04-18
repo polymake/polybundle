@@ -26,6 +26,7 @@ if [[ README.tex -nt ${PREFIX}/../../../README.pdf ]]; then
 	${SED} -i "" -E "s/LIBXSLTVERSION/${LIBXSLTVERSION}/g" README_tmp.tex
 	${SED} -i "" -E "s/JSONXSVERSION/${JSONXSVERSION}/g" README_tmp.tex
 	${SED} -i "" -E "s/JSONVERSION/${JSONVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/CANARYERSION/${CANARYVERSION}/g" README_tmp.tex
 	${SED} -i "" -E "s/SINGULARVERSION/${SINGULARVERSION}/g" README_tmp.tex
 	${SED} -i "" -E "s/PPLVERSION/${PPLVERSION}/g" README_tmp.tex
 	${SED} -i "" -E "s/NORMALIZVERSION/${NORMALIZVERSION}/g" README_tmp.tex
@@ -48,6 +49,7 @@ if [[ README.tex -nt ${PREFIX}/../../../README.pdf ]]; then
 	${SED} -i "" -E "s|LIBXSLTHOME|${LIBXSLTHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|JSONXSHOME|${JSONXSHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|JSONHOME|${JSONHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|CANARYHOME|${CANARYHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|SINGULARHOME|${SINGULARHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|PPLHOME|${PPLHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|NORMALIZHOME|${NORMALIZHOME}|g" README_tmp.tex
