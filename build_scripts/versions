@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export  POLYMAKEVERSION=3.3
-export  POLYMAKELONGVERSION="Release 3.3 of February 2019"
+export  POLYMAKEVERSION=3.4
+export  POLYMAKELONGVERSION="Release 3.4 of June 2019"
 export  POLYMAKEHOME=https://github.com/polymake/polymake
 export  POLYMAKE_GIT_SERVER_RELEASE="https://github.com/polymake/polymake.git"
 export  POLYMAKE_GIT_BRANCH_RELEASE='Releases'
