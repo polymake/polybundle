@@ -82,7 +82,7 @@ export MODULERUNTIMEHOME=https://metacpan.org/pod/Module::Runtime
 export MODULERUNTIMENAME=Module-Runtime-$MODULERUNTIMEVERSION.tar.gz
 export MODULERUNTIMEBASE=https://cpan.metacpan.org/authors/id/Z/ZE/ZEFRAM/
 
-export MONGODBVERSION=v.2.0.3
+export MONGODBVERSION=v2.0.3
 export MONGODBHOME=https://metacpan.org/pod/MongoDB#VERSION
 export MONGODBNAME=MongoDB-$MONGODBVERSION.tar.gz
 export MONGODBBASE=https://cpan.metacpan.org/authors/id/M/MO/MONGODB/
