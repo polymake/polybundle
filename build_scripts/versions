@@ -72,6 +72,21 @@ export  JSONXSHOME=https://metacpan.org/pod/Eve::Json
 export  JSONXSNAME=JSON-XS-$JSONXSVERSION.tar.gz
 export  JSONXSBASE=https://cpan.metacpan.org/authors/id/M/ML/MLEHMANN
 
+export MOOVERSION=2.003004
+export MOOHOME=https://metacpan.org/pod/Moo
+export MOONAME=Moo-$MOOVERSION.tar.gz
+export MOOBASE=https://cpan.metacpan.org/authors/id/H/HA/HAARG/
+
+export MODULERUNTIMEVERSION=0.016
+export MODULERUNTIMEHOME=https://metacpan.org/pod/Module::Runtime
+export MODULERUNTIMENAME=Module-Runtime-$MODULERUNTIMEVERSION.tar.gz
+export MODULERUNTIMEBASE=https://cpan.metacpan.org/authors/id/Z/ZE/ZEFRAM/
+
+export MONGODBVERSION=v.2.0.3
+export MONGODBHOME=https://metacpan.org/pod/MongoDB#VERSION
+export MONGODBNAME=MongoDB-$MONGODBVERSION.tar.gz
+export MONGODBBASE=https://cpan.metacpan.org/authors/id/M/MO/MONGODB/
+
 export  LIBTOOLVERSION=2.4
 export  LIBTOOLHOME=
 export  LIBTOOLNAME=libtool-$LIBTOOLVERSION.tar.gz

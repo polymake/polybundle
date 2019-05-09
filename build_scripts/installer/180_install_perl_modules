@@ -58,3 +58,27 @@ ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
 make
 make install
 cd ${CURDIR}
+
+echo "building Moo"
+tar xfz ${TAR_DIR}/${MOONAME} -C ${TMP}
+cd ${TMP}/SVG-${MOOVERSION}
+ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
+make
+make install
+cd ${CURDIR}
+
+echo "building Module::Readline"
+tar xfz ${TAR_DIR}/${MODULEREADLINENAME} -C ${TMP}
+cd ${TMP}/MODULEREADLINE-${MODULEREADLINEVERSION}
+ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
+make
+make install
+cd ${CURDIR}
+
+echo "building MongoDB"
+tar xfz ${TAR_DIR}/${MONGODBNAME} -C ${TMP}
+cd ${TMP}/MONGODB-${MONGODBVERSION}
+ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
+make
+make install
+cd ${CURDIR}
