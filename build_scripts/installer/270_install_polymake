@@ -59,8 +59,8 @@ ${SED} 's/.*InstallTop=.*/   $InstallTop=\"$ENV\{POLYMAKE_BASE_PATH\}\/share\/po
     | ${SED} '/.*addlibs=.*/d' > polymake.tmp
 mv polymake.tmp polymake
 chmod u+w polymake-config 
-${SED} -e "s|my \$InstallArch=.*|my \$pconf_path = Cwd::abs_path(\$0) =~ s\|/bin/polymake-config\$\|\|r;xxmy \$InstallArch=\"\$pconf_path\/lib\/polymake\";|" polymake-config  \
-	| ${SED} 's|xx|\n|' \
+${SED} -e "s|my \$InstallArch=.*|my \$pconf_path = Cwd::abs_path(\$0) =~ s\|/bin/polymake-config\$\|\|r;xxxmy \$InstallArch=\"\$pconf_path\/lib\/polymake\";|" polymake-config  \
+	| ${AWK} '{gsub("xxx","\n");print $0;}' \
 	| ${SED} -e "s/use strict;/use strict;\nuse Cwd;/" \
 	| ${SED} 's/my $root=.*/my $root="$pconf_path\/share\/polymake";/' > polymake-config.tmp 
 mv polymake-config.tmp polymake-config

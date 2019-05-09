@@ -11,7 +11,7 @@ export TAR_DIR=${CURDIR}/src
 export TMP=${CURDIR}/tmp/
 
 export SED=/usr/bin/sed
-export TR=/usr/bin/tr
+export AWK=/usr/bin/awk
 export PERL=/usr/bin/perl
 export CURL="/usr/bin/curl -O -L"
 export DATE=$(date +'%Y-%m-%d')
