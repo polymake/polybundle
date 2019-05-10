@@ -26,3 +26,10 @@ export CXX="ccache clang++"
 export CFLAGS="-m64 -march=x86-64 -fpic -DPIC"
 export CXXFLAGS="-m64 -march=x86-64  -fpic -DPIC"
 
+
+export CPAN_BASE=${PREFIX}/perl5
+export PERL_LOCAL_LIB_ROOT="$CPAN_BASE";
+export PERL5LIB="$CPAN_BASE/lib/perl5";
+export PATH="$CPAN_BASE/bin:$PATH";
+export PERL_MB_OPT="--install_base $CPAN_BASE"
+export PERL_MM_OPT="INSTALL_BASE=$CPAN_BASE"

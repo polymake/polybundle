@@ -72,27 +72,7 @@ export  JSONXSHOME=https://metacpan.org/pod/Eve::Json
 export  JSONXSNAME=JSON-XS-$JSONXSVERSION.tar.gz
 export  JSONXSBASE=https://cpan.metacpan.org/authors/id/M/ML/MLEHMANN
 
-export ROlETINYVERSION=2.000006
-export ROlETINYHOME=https://metacpan.org/pod/Role::Tiny
-export ROlETINYNAME=Role-Tiny-$ROlETINYVERSION.tar.gz
-export ROlETINYBASE=https://cpan.metacpan.org/authors/id/H/HA/HAARG/
-
-export SUBDEFERVERSION=2.006003
-export SUBDEFERHOME=https://metacpan.org/pod/Sub::Defer
-export SUBDEFERNAME=Sub-Quote-$SUBQUOTEVERSION.tar.gz
-export SUBDEFERBASE=https://cpan.metacpan.org/authors/id/H/HA/HAARG/
-
-export SUBQUOTEVERSION=2.006003
-export SUBQUOTEHOME=https://metacpan.org/pod/Sub::Quote
-export SUBQUOTENAME=Sub-Quote-$SUBQUOTEVERSION.tar.gz
-export SUBQUOTEBASE=https://cpan.metacpan.org/authors/id/H/HA/HAARG/
-
-export MOOVERSION=2.003004
-export MOOHOME=https://metacpan.org/pod/Moo
-export MOONAME=Moo-$MOOVERSION.tar.gz
-export MOOBASE=https://cpan.metacpan.org/authors/id/H/HA/HAARG/
-
-export MODULERUNTIMEVERSION=0.016
+export MODULERUNTIMEVERSION=0.013
 export MODULERUNTIMEHOME=https://metacpan.org/pod/Module::Runtime
 export MODULERUNTIMENAME=Module-Runtime-$MODULERUNTIMEVERSION.tar.gz
 export MODULERUNTIMEBASE=https://cpan.metacpan.org/authors/id/Z/ZE/ZEFRAM/

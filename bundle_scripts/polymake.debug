@@ -23,7 +23,11 @@ export DYLD_LIBRARY_PATH=$ResourcesDir/lib:$ResourcesDir/include/boost_1_66_0/:$
 export CPLUS_INCLUDE_PATH=$ResourcesDir/include/
 export CFLAGS=-I$ResourcesDir/include/
 export CPPFLAGS=-I$ResourcesDir/include/
-export PERL5LIB=$ResourcesDir/lib/perl5/site_perl/REPLACE_PERLVERSION/darwin-thread-multi-2level/:$ResourcesDir/lib/perl5/site_perl:$ResourcesDir/polymake/lib/polymake/lib/:$ResourcesDir/lib/perl5/:$ResourcesDir/polymake/lib/polymake/perlx/:$ResourcesDir/polymake/share/polymake/perllib/:$PERL5LIB
+export PERL5LIB=$ResourcesDir/perl5/lib/perl5\
+                :$ResourcesDir/polymake/lib/polymake/lib/\
+                :$ResourcesDir/polymake/lib/polymake/perlx/\
+                :$ResourcesDir/polymake/share/polymake/perllib/\
+                :$PERL5LIB
 
 # seems necessary, why?
 dir=$(cd "$(dirname "$0")"; pwd)

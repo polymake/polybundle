@@ -8,101 +8,22 @@ if [[ -z ${VAR_READ} ]]; then
 fi
 
 echo "building perl modules"
-echo "building LibXSLT"
-tar xfz ${TAR_DIR}/${LIBXSLTNAME} -C ${TMP}
-cd ${TMP}/XML-LibXSLT-${LIBXSLTVERSION}
-ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
-make
-make install
-cd ${CURDIR}
-
 echo "building Term-Readline-Gnu"
 tar xvfz ${TAR_DIR}/${TERMRLGNUNAME} -C ${TMP}
 cd ${TMP}/Term-ReadLine-Gnu-${TERMRLGNUVERSION}
 ${SED} -i '' -e "s|Config{cc}|Config{cc} -Wl,-rpath,${PREFIX}/lib|g" Makefile.PL
-ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX} --includedir=${PREFIX}/include --libdir=${PREFIX}/lib
+ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL --includedir=${PREFIX}/include --libdir=${PREFIX}/lib
 make
 make install
 cd ${CURDIR}
 
-echo "building SVG"
-tar xfz ${TAR_DIR}/${SVGNAME} -C ${TMP}
-cd ${TMP}/SVG-${SVGVERSION}
-ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
-make
-make install
-cd ${CURDIR}
+curl -L https://cpanmin.us | perl - App::cpanminus
+#cpanm --local-lib $PERL_MP_OPT local::lib
+cpanm XML::LibXSLT
+cpanm SVG
+cpanm Moo
+cpanm ZEFRAM/Module-Runtime-0.013.tar.gz
+cpanm MongoDB
+cpanm JSON::XS
+cpanm JSON
 
-echo "building Canary::Stability"
-tar xfz ${TAR_DIR}/${CANARYNAME} -C ${TMP}
-cd ${TMP}/Canary-Stability-${CANARYVERSION}
-ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
-make
-make install
-cd ${CURDIR}
-
-echo "building JSON::XS"
-tar xfz ${TAR_DIR}/${JSONXSNAME} -C ${TMP}
-cd ${TMP}/JSON-XS-${JSONXSVERSION}
-PERL5LIB=${PREFIX}/lib/perl5/site_perl/${PERLVERSION}/darwin-thread-multi-2level/:${PREFIX}/lib/perl5/site_perl \
-ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
-make
-make install
-cd ${CURDIR}
-
-echo "building JSON"
-tar xfz ${TAR_DIR}/${JSONNAME} -C ${TMP}
-cd ${TMP}/JSON-${JSONVERSION}
-PERL5LIB=${PREFIX}/lib/perl5/site_perl/${PERLVERSION}/darwin-thread-multi-2level/:${PREFIX}/lib/perl5/site_perl \
-ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
-make
-make install
-cd ${CURDIR}
-
-echo "building Role::Tiny"
-tar xfz ${TAR_DIR}/${ROLETINYNAME} -C ${TMP}
-cd ${TMP}/ROLETINY-${ROLETINYVERSION}
-ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
-make
-make install
-cd ${CURDIR}
-
-echo "building Su::Quote"
-tar xfz ${TAR_DIR}/${SUBQUOTENAME} -C ${TMP}
-cd ${TMP}/SUBQUOTE-${SUBQUOTEVERSION}
-ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
-make
-make install
-cd ${CURDIR}
-
-echo "building Sub::Defer"
-tar xfz ${TAR_DIR}/${SUBDEFERNAME} -C ${TMP}
-cd ${TMP}/SUBDEFER-${SUBDEFERVERSION}
-ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
-make
-make install
-cd ${CURDIR}
-
-echo "building Module::Runtime"
-tar xfz ${TAR_DIR}/${MODULERUNTIMENAME} -C ${TMP}
-cd ${TMP}/MODULERUNTIME-${MODULERUNTIMEVERSION}
-ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
-make
-make install
-cd ${CURDIR}
-
-echo "building Moo"
-tar xfz ${TAR_DIR}/${MOONAME} -C ${TMP}
-cd ${TMP}/MOO-${MOOVERSION}
-ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
-make
-make install
-cd ${CURDIR}
-
-echo "building MongoDB"
-tar xfz ${TAR_DIR}/${MONGODBNAME} -C ${TMP}
-cd ${TMP}/MONGODB-${MONGODBVERSION}
-ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
-make
-make install
-cd ${CURDIR}
