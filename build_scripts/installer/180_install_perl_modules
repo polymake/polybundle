@@ -59,17 +59,41 @@ make
 make install
 cd ${CURDIR}
 
-echo "building Moo"
-tar xfz ${TAR_DIR}/${MOONAME} -C ${TMP}
-cd ${TMP}/MOO-${MOOVERSION}
+echo "building Role::Tiny"
+tar xfz ${TAR_DIR}/${ROLETINYNAME} -C ${TMP}
+cd ${TMP}/ROLETINY-${ROLETINYVERSION}
 ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
 make
 make install
 cd ${CURDIR}
 
-echo "building Module::Readline"
+echo "building Su::Quote"
+tar xfz ${TAR_DIR}/${SUBQUOTENAME} -C ${TMP}
+cd ${TMP}/SUBQUOTE-${SUBQUOTEVERSION}
+ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
+make
+make install
+cd ${CURDIR}
+
+echo "building Sub::Defer"
+tar xfz ${TAR_DIR}/${SUBDEFERNAME} -C ${TMP}
+cd ${TMP}/SUBDEFER-${SUBDEFERVERSION}
+ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
+make
+make install
+cd ${CURDIR}
+
+echo "building Module::Runtime"
 tar xfz ${TAR_DIR}/${MODULERUNTIMENAME} -C ${TMP}
 cd ${TMP}/MODULERUNTIME-${MODULERUNTIMEVERSION}
+ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
+make
+make install
+cd ${CURDIR}
+
+echo "building Moo"
+tar xfz ${TAR_DIR}/${MOONAME} -C ${TMP}
+cd ${TMP}/MOO-${MOOVERSION}
 ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL PREFIX=${PREFIX}
 make
 make install
