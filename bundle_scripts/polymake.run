@@ -165,39 +165,40 @@ if [[ $POLYMAKE_START_IN_JUPYTER == 0 || "$#" -gt  "0" || $debug == 1 ]]; then
     $dir/polymake.start $@
   fi;
 else
-   options=()
-   if [[ $POLYMAKE_JUPYTER_ASK_IF_RUNNING_SERVER == 1 && $POLYMAKE_JUPYTER_FORCE_REINSTALL == 0 ]]; then
-     if [[ `jupyter notebook list | grep http` ]]; then
-       echo "Running jupyter server on your machine detected."
-       read -p "Do you want to start a new one (y/n)?"
-       while [[ "$REPLY" != "y" && "$REPLY" != "n" ]]; do
-         read -p "Please type y or n" 
-       done
-       if [[ "$REPLY" == n ]]; then
-         exit 0
-       fi
-     fi
-   fi
-   if [[ $POLYMAKE_JUPYTER_FORCE_REINSTALL == 1 ]]; then
-     options+=("--force")
-     tfile=$(mktemp /tmp/polybundle.XXXXXXXXX)
-     sed "s/POLYMAKE_JUPYTER_FORCE_REINSTALL=1/POLYMAKE_JUPYTER_FORCE_REINSTALL=0/" $HOME/$polymake_user_dir/bundle.config > $tfile && cp $tfile $HOME/$polymake_user_dir/bundle.config && rm $tfile
-   fi
-   if [[ -n $POLYMAKE_JUPYTER_NOTEBOOK_DIR ]]; then
-      options+=("--notebook-dir=$POLYMAKE_JUPYTER_NOTEBOOK_DIR")
-   fi
-   if [[ -n $POLYMAKE_JUPYTER_IP ]]; then
-      options+=("--ip=$POLYMAKE_JUPYTER_IP")
-   fi
-   if [[ -n $POLYMAKE_JUPYTER_PORT ]]; then
-      options+=("--port=$POLYMAKE_JUPYTER_PORT")
-   fi
-   if [[ $POLYMAKE_JUPYTER_START_BROWSER == 0 ]]; then
-      options+=("--no-browser")
-   fi
-   if [[ -n $POLYMAKE_JUPYTER_BROWSER ]]; then
-      options+=("--browser='$POLYMAKE_JUPYTER_BROWSER'")
-   fi
-   $dir/polymake.start --script jupyter "${options[@]}"
+  options=()
+  if [[ $POLYMAKE_JUPYTER_ASK_IF_RUNNING_SERVER == 1 && $POLYMAKE_JUPYTER_FORCE_REINSTALL == 0 ]]; then
+    if [[ `jupyter notebook list | grep http` ]]; then
+      echo "Running jupyter server on your machine detected."
+      read -p "Do you want to start a new one (y/n)?"
+      while [[ "$REPLY" != "y" && "$REPLY" != "n" ]]; do
+        read -p "Please type y or n" 
+      done
+      if [[ "$REPLY" == n ]]; then
+        exit 0
+      fi
+    fi
+  fi
+  if [[ $POLYMAKE_JUPYTER_FORCE_REINSTALL == 1 ]]; then
+    options+=("--force")
+    tfile=$(mktemp /tmp/polybundle.XXXXXXXXX)
+    sed "s/POLYMAKE_JUPYTER_FORCE_REINSTALL=1/POLYMAKE_JUPYTER_FORCE_REINSTALL=0/" $HOME/$polymake_user_dir/bundle.config > $tfile && cp $tfile $HOME/$polymake_user_dir/bundle.config && rm $tfile
+  fi
+  if [[ -n $POLYMAKE_JUPYTER_NOTEBOOK_DIR ]]; then
+    options+=("--notebook-dir=$POLYMAKE_JUPYTER_NOTEBOOK_DIR")
+  fi
+  if [[ -n $POLYMAKE_JUPYTER_IP ]]; then
+    options+=("--ip=$POLYMAKE_JUPYTER_IP")
+  fi
+  if [[ -n $POLYMAKE_JUPYTER_PORT ]]; then
+    options+=("--port=$POLYMAKE_JUPYTER_PORT")
+  fi
+  if [[ $POLYMAKE_JUPYTER_START_BROWSER == 0 ]]; then
+    options+=("--no-browser")
+  fi
+  if [[ -n $POLYMAKE_JUPYTER_BROWSER ]]; then
+    options+=("--browser='$POLYMAKE_JUPYTER_BROWSER'")
+  fi
+  $dir/polymake.start --script jupyter "${options[@]}"
 fi
+
 exit 0
