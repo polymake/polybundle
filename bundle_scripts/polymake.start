@@ -7,19 +7,19 @@ ResourcesDir="${dir%MacOS}Resources"
 # the user might have a 32bit version of fink which conflicts with 64bit polymake, so
 unset VERSIONER_PERL_PREFER_32_BIT
 
-export PATH=${ResourcesDir}/polymake/bin:${ResourcesDir}/bin:${ResourcesDir}/perl5/bin:$PATH
+export PATH=${ResourcesDir}/polymake/bin:${ResourcesDir}/bin:${ResourcesDir}/perl5/bin${PATH+:$PATH}
 export POLYMAKE_CONFIG_PATH="$ResourcesDir/config;user"
 export POLYMAKE_USER_DIR="${HOME}/.polymake-macbundle"
 export POLYMAKE_BASE_PATH=$ResourcesDir/polymake
-export DYLD_LIBRARY_PATH=$ResourcesDir/lib:$ResourcesDir/include/boost_1_66_0/:$DYLD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH=$ResourcesDir/lib:$ResourcesDir/include/boost_1_66_0/${DYLD_LIBRARY_PATH+:$DYLD_LIBRARY_PATH}
 export CPLUS_INCLUDE_PATH=$ResourcesDir/include/
 export CFLAGS=-I$ResourcesDir/include/
 export CPPFLAGS=-I$ResourcesDir/include/
-export PERL5LIB=$ResourcesDir/perl5/lib/perl5\
-                :$ResourcesDir/polymake/lib/polymake/lib/\
-                :$ResourcesDir/polymake/lib/polymake/perlx/\
-                :$ResourcesDir/polymake/share/polymake/perllib/\
-                :$PERL5LIB
+export PERL5LIB="$ResourcesDir/perl5/lib/perl5\
+:$ResourcesDir/polymake/lib/polymake/lib/\
+:$ResourcesDir/polymake/lib/polymake/perlx/\
+:$ResourcesDir/polymake/share/polymake/perllib/\
+${PERL5LIB+:$PERL5LIB}"
 
 # seems necessary, why?
 dir=$(cd "$(dirname "$0")"; pwd)

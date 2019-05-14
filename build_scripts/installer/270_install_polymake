@@ -18,7 +18,7 @@ else
 fi
 # FIXME Option without-jreality not working?
 git archive ${POLYMAKE_GIT_BRANCH} | bzip2 > ${TAR_DIR}/polymake-${POLYMAKE_GIT_BRANCH_NAME}-${DATE}.tar.bz2
-export PERL5LIB=${PREFIX}/lib/perl5/site_perl/${PERLVERSION}/darwin-thread-multi-2level/:${PREFIX}/lib/perl5/site_perl
+export PERL5LIB=${PREFIX}/perl5:${PREFIX}/perl5/lib/perl5
 LD_LIBRARY_PATH=${PREFIX}/lib \
     PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} \
 	./configure --prefix=${PREFIX}/polymake \
@@ -72,7 +72,7 @@ echo "making polymake executable"
 chmod a+rx ${PREFIX}/polymake/bin/polymake
 chmod a+rx ${PREFIX}/polymake/bin/polymake-config
 chmod a+rw ${PREFIX}/polymake/lib/polymake/config.ninja
-${SED} "s|${PREFIX}|/Volumes/polybundle/polymake.app/Contents/Resources|g" ${PREFIX}/polymake/lib/polymake/config.ninja > ${PREFIX}/polymake/lib/polymake/config.ninja.tmp
+${SED} "s|${PREFIX}|/Volumes/polybundle/polymake.app/Contents/Resources|g" ${PREFIX}/polymake/lib/polymake/config.ninja | ${SED} "s|ccache ||g" > ${PREFIX}/polymake/lib/polymake/config.ninja.tmp
 cp ${PREFIX}/polymake/lib/polymake/config.ninja.tmp ${PREFIX}/polymake/lib/polymake/config.ninja
 rm ${PREFIX}/polymake/lib/polymake/config.ninja.tmp
 ### this file **must** contain the absolute path to the polymake root

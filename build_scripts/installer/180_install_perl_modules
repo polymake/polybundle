@@ -26,4 +26,5 @@ cpanm ZEFRAM/Module-Runtime-0.013.tar.gz
 cpanm MongoDB
 cpanm JSON::XS
 cpanm JSON
+cpanm Mozilla::CA
 
