@@ -85,7 +85,7 @@ chmod a+rw ${PREFIX}/polymake/lib/polymake/config.ninja
 echo "changing default viewer to threejs"
 cd ${PREFIX}/polymake/share/polymake/apps/common/rules/ 
 chmod u+w threejs.rules 
-${SED} -i "" '/label threejs/a\\\n\\\nprefer threejs\\\n' threejs.rules 
+${SED} -i "" 's/label threejs/label threejs\\\n\\\nprefer threejs\\\n' threejs.rules 
 chmod u-w threejs.rules
 cd ${PREFIX}/polymake/share/polymake/bundled/jreality/apps/common/rules/ 
 chmod u+w main.rules 

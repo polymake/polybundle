@@ -14,7 +14,7 @@ ${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/bin ${PREFIX} ""
 ${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib ${PREFIX} dylib
 ${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/lib ${PREFIX} bundle
 ${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/lib ${PREFIX} dylib
-${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/lib/perl5/site_perl/${PERLVERSION}/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu ${PREFIX} bundle
+${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/perl5/lib/perl5/darwin-thread-multi-2level/auto/Term/ReadLine/Gnu ${PREFIX} bundle
 ${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/perlx/${PERLVERSION}/darwin-thread-multi-2level/auto/Polymake/Ext ${PREFIX} bundle
 for ext in ${shell ls polymake.app/Contents/Resources/polymake/lib/polymake/bundled/ | sed 's|/||'}; do \
 	${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/polymake/lib/polymake/bundled/$$ext/lib ${PREFIX} bundle ; \
