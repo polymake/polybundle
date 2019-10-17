@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export  POLYMAKEVERSION=3.4
+export  POLYMAKEVERSION=3.5
 export  POLYMAKELONGVERSION="Release 3.4 of June 2019"
 export  POLYMAKEHOME=https://github.com/polymake/polymake
 export  POLYMAKE_GIT_SERVER_RELEASE="https://github.com/polymake/polymake.git"
@@ -11,7 +11,7 @@ export  POLYMAKE_GIT_BRANCH_DEVEL='master'
 export  POLYMAKE_GIT_BRANCH=${POLYMAKE_GIT_BRANCH_RELEASE}
 export  POLYMAKE_GIT_SERVER=${POLYMAKE_GIT_SERVER_RELEASE}
 
-export  ANTVERSION=1.10.5
+export  ANTVERSION=1.10.7
 export  ANTHOME=http://ant.apache.org/
 export  ANTNAME=apache-ant-$ANTVERSION-bin.tar.bz2
 export  ANTBASE=http://artfiles.org/apache.org//ant/binaries
@@ -135,7 +135,7 @@ export  SVGHOME=http://search.cpan.org/~manwar/SVG/
 export  SVGNAME=SVG-$SVGVERSION.tar.gz
 export  SVGBASE=http://search.cpan.org/CPAN/authors/id/M/MA/MANWAR
 
-export  TERMRLGNUVERSION=1.35
+export  TERMRLGNUVERSION=1.36
 export  TERMRLGNUHOME=http://search.cpan.org/dist/Term-ReadLine-Gnu/
 export  TERMRLGNUNAME=Term-ReadLine-Gnu-$TERMRLGNUVERSION.tar.gz
 export  TERMRLGNUBASE=http://search.cpan.org/CPAN/authors/id/H/HA/HAYASHI
