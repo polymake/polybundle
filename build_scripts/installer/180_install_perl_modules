@@ -6,13 +6,16 @@ if [[ -z ${VAR_READ} ]]; then
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
-
+CPATH_DIR=
+if [[ "$MACVERSION" == "10.15" ]]; then
+  CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Perl/5.28/darwin-thread-multi-2level/CORE/
+fi
 echo "building perl modules"
 echo "building Term-Readline-Gnu"
 tar xvfz ${TAR_DIR}/${TERMRLGNUNAME} -C ${TMP}
 cd ${TMP}/Term-ReadLine-Gnu-${TERMRLGNUVERSION}
 ${SED} -i '' -e "s|Config{cc}|Config{cc} -Wl,-rpath,${PREFIX}/lib|g" Makefile.PL
-ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL --includedir=${PREFIX}/include --libdir=${PREFIX}/lib
+CPATH=$CPATH_DIR ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL --includedir=${PREFIX}/include --libdir=${PREFIX}/lib
 make
 make install
 cd ${CURDIR}

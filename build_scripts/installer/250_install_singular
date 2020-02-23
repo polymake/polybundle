@@ -7,6 +7,11 @@ if [[ -z ${VAR_READ} ]]; then
     . ${SCRIPTDIR}/variables
 fi
 
+PYTHON_CPPFLAGS_VAR=
+if [ $MACVERSION == "10.15" ]; then
+    PYTHON_CPPFLAGS_VAR=-I/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
+fi
+
 mkdir -p ${TMP}/singular
 cd ${TMP}/singular
 if [ ! -d .git ]; then 
@@ -29,9 +34,9 @@ PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} \
 				--with-gmp=${PREFIX}  \
 				--with-mpfr=${PREFIX} \
    PERL5LIB=${PERL5LIB} \
-   CPPFLAGS="-fpic -DPIC -DLIBSINGULAR -m64 -mcpu=generic -march=x86-64" \
+   CPPFLAGS="-fpic -DPIC -DLIBSINGULAR -m64 -mcpu=generic -march=x86-64 ${PYTHON_CPPFLAGS_VAR}" \
    LDFLAGS="-L${PREFIX}/lib/ -Wl,-rpath,${PREFIX}/lib" \
-   CFLAGS="-I${PREFIX}/include/ -fpic -DPIC -DLIBSINGULAR -m64 -mcpu=generic -march=x86-64"  \
+   CFLAGS="-I${PREFIX}/include/ -fpic -DPIC -DLIBSINGULAR -m64 -mcpu=generic -march=x86-64 ${PYTHON_CPPFLAGS_VAR}"  \
    CC="${CC}" CXX="${CXX}" \
     
 

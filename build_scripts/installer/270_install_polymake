@@ -7,6 +7,9 @@ if [[ -z ${VAR_READ} ]]; then
     . ${SCRIPTDIR}/variables
 fi
 
+if [ $MACVERSION == "10.15" ]; then
+  JNIHEADERS=/Library/Java/JavaVirtualMachines/jdk-12.jdk/Contents/Home/include/
+fi
 
 echo "preparing polymake build"
 mkdir -p ${TMP}/polymake;

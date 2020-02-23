@@ -12,7 +12,7 @@ export TMP=${CURDIR}/tmp/
 
 export SED=/usr/bin/sed
 export AWK=/usr/bin/awk
-export PERL=/usr/bin/perl
+export PERL=/usr/bin/perl5.28
 export CURL="/usr/bin/curl -O -L"
 export DATE=$(date +'%Y-%m-%d')
 
