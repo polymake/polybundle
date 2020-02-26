@@ -30,7 +30,6 @@ LD_LIBRARY_PATH=${PREFIX}/lib \
 				--with-gmp=${PREFIX}/ \
 				--with-ppl=${PREFIX}/  \
 				--with-mpfr=${PREFIX}/ \
-				--with-singular=${PREFIX}/ \
 				--with-ant=${PREFIX}/apache-ant-${ANTVERSION}/bin/ant  \
 				--with-java=/usr/bin/java \
 				LDFLAGS="-L${PREFIX}/lib/ "  \
@@ -38,6 +37,8 @@ LD_LIBRARY_PATH=${PREFIX}/lib \
 				CFLAGS="-m64 -march=x86-64 -fpic -DPIC -DLIBSINGULAR"\
 				CC="${CC}" CXX="${CXX}" \
 				PERL=${PERL}
+
+#				--with-singular=${PREFIX}/ \
 
 echo "building polymake"
 PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} ninja -C build/Opt -l2

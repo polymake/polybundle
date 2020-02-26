@@ -62,13 +62,23 @@ export  GMPBASE=https://gmplib.org/download/gmp
 export  JREALITYVERSION=
 export  JREALITYHOME=http://www3.math.tu-berlin.de/jreality
 
-export  JSONVERSION=2.95
+export  JSONVERSION=4.02
 export  JSONHOME=https://metacpan.org/pod/JSON
 export  JSONNAME=JSON-$JSONVERSION.tar.gz
 export  JSONBASE=https://cpan.metacpan.org/authors/id/I/IS/ISHIGAKI
 
-export  JSONXSVERSION=4.0
-export  JSONXSHOME=https://metacpan.org/pod/Eve::Json
+export  JSONPPVERSION=4.04
+export  JSONPPHOME=https://metacpan.org/pod/JSON::PP
+export  JSONPPNAME=JSON-PP-$JSONPPVERSION.tar.gz
+export  JSONPPBASE=https://cpan.metacpan.org/authors/id/I/IS/ISHIGAKI
+
+export  JSONMAYBEXSVERSION=1.004000
+export  JSONMAYBEXSHOME=https://metacpan.org/pod/JSON::MaybeXS
+export  JSONMAYBEXSNAME=JSON-MaybeXS-$JSONMAYBEXSVERSION.tar.gz
+export  JSONMAYBEXSBASE=https://cpan.metacpan.org/authors/id/H/HA/HAARG
+
+export  JSONXSVERSION=4.02
+export  JSONXSHOME=https://metacpan.org/pod/JSON::XS
 export  JSONXSNAME=JSON-XS-$JSONXSVERSION.tar.gz
 export  JSONXSBASE=https://cpan.metacpan.org/authors/id/M/ML/MLEHMANN
 

@@ -8,7 +8,7 @@ if [[ -z ${VAR_READ} ]]; then
 fi
 CPATH_DIR=
 if [[ "$MACVERSION" == "10.15" ]]; then
-  CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Perl/5.28/darwin-thread-multi-2level/CORE/
+  CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Perl/5.18/darwin-thread-multi-2level/CORE/
 fi
 echo "building perl modules"
 echo "building Term-Readline-Gnu"
@@ -27,6 +27,8 @@ cpanm SVG
 cpanm Moo
 cpanm ZEFRAM/Module-Runtime-0.013.tar.gz
 cpanm MongoDB
+cpanm JSON::PP
+cpanm JSON::MaybeXS
 cpanm JSON::XS
 cpanm JSON
 cpanm Mozilla::CA
