@@ -6,6 +6,8 @@ if [[ -z ${VAR_READ} ]]; then
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
+. ${SCRIPTDIR}/functions
 
 echo "extracting ant"
+set_prefix "extracting ant"
 tar xfj ${TAR_DIR}/${ANTNAME} -C ${PREFIX}

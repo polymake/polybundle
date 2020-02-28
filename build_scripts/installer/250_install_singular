@@ -1,11 +1,15 @@
 #!/bin/bash -x
 
+
 if [[ -z ${VAR_READ} ]]; then
     DIR="$(cd "$(dirname "$0")" && pwd)"
     export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
+. ${SCRIPTDIR}/functions
+
+set_prefix "installing singular"
 
 PYTHON_CPPFLAGS_VAR=
 if [ $MACVERSION == "10.15" ]; then

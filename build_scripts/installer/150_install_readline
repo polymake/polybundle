@@ -6,8 +6,10 @@ if [[ -z ${VAR_READ} ]]; then
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
+. ${SCRIPTDIR}/functions
 
 echo "building readline"
+set_prefix "building readline"
 mkdir -p ${TMP}
 tar xfz ${TAR_DIR}/${READLINENAME} -C ${TMP}
 

@@ -6,8 +6,10 @@ if [[ -z ${VAR_READ} ]]; then
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
+. ${SCRIPTDIR}/functions
 
 echo "extracting boost"
+set_prefix "extracting boost"
 tar xfj ${TAR_DIR}/${BOOSTNAME} -C ${PREFIX}/include
 
 echo "removing unneeded parets of boost"

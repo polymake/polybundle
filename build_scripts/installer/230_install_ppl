@@ -6,8 +6,10 @@ if [[ -z ${VAR_READ} ]]; then
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
+. ${SCRIPTDIR}/functions
 
 echo "building ppl"
+set_prefix "building ppl"
 cd ${TMP}; mkdir -p ppl
 cd ${TMP}/ppl 
 if [ ! -d .git ]; then 

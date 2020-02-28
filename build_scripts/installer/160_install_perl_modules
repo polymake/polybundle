@@ -1,0 +1,85 @@
+#!/bin/bash -x
+
+if [[ -z ${VAR_READ} ]]; then
+    DIR="$(cd "$(dirname "$0")" && pwd)"
+    export SCRIPTDIR=${DIR}/..
+    . ${SCRIPTDIR}/versions
+    . ${SCRIPTDIR}/variables
+fi
+
+. ${SCRIPTDIR}/functions
+set_prefix "building perl modules"
+
+CPATH_DIR=
+if [[ "$MACVERSION" == "10.15" ]]; then
+  CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Perl/5.18/darwin-thread-multi-2level/CORE/
+fi
+echo "building perl modules"
+echo "building Term-Readline-Gnu"
+tar xfz ${TAR_DIR}/${TERMRLGNUNAME} -C ${TMP}
+cd ${TMP}/Term-ReadLine-Gnu-${TERMRLGNUVERSION}
+${SED} -i '' -e "s|Config{cc}|Config{cc} -Wl,-rpath,${PREFIX}/lib|g" Makefile.PL
+CPATH=$CPATH_DIR ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL --includedir=${PREFIX}/include --libdir=${PREFIX}/lib
+make
+make install
+cd ${CURDIR}
+
+#tar xfz ${TAR_DIR}/${LIBXSLTNAME} -C ${TMP}   
+#cd ${TMP}/XML-LibXSLT-${LIBXSLTVERSION} 
+#ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+#cd ${CURDIR}
+
+tar xfz ${TAR_DIR}/${SVGNAME} -C ${TMP}  
+cd ${TMP}/SVG-${SVGVERSION}
+ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+cd $CURDIR
+
+tar xfz ${TAR_DIR}/${CANARYNAME} -C ${TMP}  
+cd ${TMP}/Canary-Stability-${CANARYVERSION}
+ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+cd $CURDIR
+
+tar xfz ${TAR_DIR}/${COMMONSENSENAME} -C ${TMP}  
+cd ${TMP}/common-sense-${COMMONSENSEVERSION}
+ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+cd $CURDIR
+
+tar xfz ${TAR_DIR}/${TYPESSERIALISERNAME} -C ${TMP}  
+cd ${TMP}/Types-Serialiser-${TYPESSERIALISERVERSION}
+ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+cd $CURDIR
+
+tar xfz ${TAR_DIR}/${JSONXSNAME} -C ${TMP}  
+cd ${TMP}/JSON-XS-${JSONXSVERSION}
+ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+cd $CURDIR
+
+tar xfz ${TAR_DIR}/${JSONMAYBEXSNAME} -C ${TMP}  
+cd ${TMP}/JSON-MaybeXS-${JSONMAYBEXSVERSION}
+ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+cd $CURDIR
+
+tar xfz ${TAR_DIR}/${JSONNAME} -C ${TMP}  
+cd ${TMP}/JSON-${JSONVERSION}
+ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+cd $CURDIR
+
+tar xfz ${TAR_DIR}/${MODULERUNTIMENAME} -C ${TMP}  
+cd ${TMP}/Module-Runtime-${MODULERUNTIMEVERSION}
+ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+cd $CURDIR
+
+tar xfz ${TAR_DIR}/${NETSSLEAYNAME} -C ${TMP}  
+cd ${TMP}/Net-SSLeay-${NETSSLEAYVERSION}
+yes -N | OPENSSL_PREFIX=/${PREFIX} ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+cd $CURDIR
+
+tar xfz ${TAR_DIR}/${MOZILLACANAME} -C ${TMP}  
+cd ${TMP}/Mozilla-CA-${MOZILLACAVERSION}
+ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+cd $CURDIR
+
+curl -L https://cpanmin.us | perl - App::cpanminus
+cpanm Moo
+cpanm ZEFRAM/Module-Runtime-0.013.tar.gz
+cpanm MongoDB

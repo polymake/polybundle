@@ -6,11 +6,13 @@ if [[ -z ${VAR_READ} ]]; then
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
+. ${SCRIPTDIR}/functions
 
 mkdir -p ${TAR_DIR}
 mkdir -p ${TMP}
 
 echo "creating skeleton"
+set_prefix "creating skeleton"
 mkdir -p polymake.app/Contents/Resources
 mkdir -p polymake.app/Contents/Resources/config
 mkdir -p polymake.app/Contents/Resources/include

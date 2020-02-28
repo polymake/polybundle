@@ -6,9 +6,10 @@ if [[ -z ${VAR_READ} ]]; then
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
-
+. ${SCRIPTDIR}/functions
 
 echo "building glpk"
+set_prefix "building glpk"
 ${FUNCDIR}/build.sh glpk-${GLPKVERSION} ${TAR_DIR} glpk-${GLPKVERSION} "${TMP}" build \
 								--prefix=${PREFIX} --with-gmp CFLAGS="-I${PREFIX}/include"  CXXFLAGS="-I${PREFIX}/include" LDFLAGS="-L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib"
 

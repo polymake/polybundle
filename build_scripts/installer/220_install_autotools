@@ -6,7 +6,9 @@ if [[ -z ${VAR_READ} ]]; then
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
+. ${SCRIPTDIR}/functions
 
+set_prefix "building autotools"
 echo "building autoconf"
 mkdir -p ${TMP}/local
 tar xfz ${TAR_DIR}/autoconf-${AUTOCONFVERSION}.tar.gz -C ${TMP}

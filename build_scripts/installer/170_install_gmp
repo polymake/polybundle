@@ -6,7 +6,9 @@ if [[ -z ${VAR_READ} ]]; then
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
+. ${SCRIPTDIR}/functions
 
+set_prefix "building gmp"
 echo "building gmp"
 ${FUNCDIR}/build.sh gmp-${GMPVERSION} ${TAR_DIR} gmp-${GMPVERSION} "${TMP}" build --prefix=${PREFIX} --enable-cxx=yes CFLAGS="${CFLAGS}" CPPFLAGS="${CXXFLAGS}"
 cd ${CURDIR}

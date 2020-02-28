@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/sh
 
 export VAR_READ=1
 

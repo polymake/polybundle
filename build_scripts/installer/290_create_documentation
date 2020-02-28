@@ -1,11 +1,17 @@
 #!/bin/bash -x
 
+
+
 if [[ -z ${VAR_READ} ]]; then
     DIR="$(cd "$(dirname "$0")" && pwd)"
     export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
+. ${SCRIPTDIR}/functions
+
+set_prefix "creating documentation"
+
 
 echo "create readme source"
 cd ${SCRIPTDIR}
@@ -21,7 +27,7 @@ if [[ README.tex -nt ${PREFIX}/../../../README.pdf ]]; then
 	${SED} -i "" -E "s/READLINEVERSION/${READLINEVERSION}/g" README_tmp.tex
 	${SED} -i "" -E "s/CDDVERSION/${CDDVERSION}/g" README_tmp.tex
 	${SED} -i "" -E "s/GLPKVERSION/${GLPKVERSION}/g" README_tmp.tex
-	${SED} -i "" -E "s/4TI2VERSION/${FTI2VERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/FTI2VERSION/${FTI2VERSION}/g" README_tmp.tex
 	${SED} -i "" -E "s/TERMRLGNUVERSION/${TERMRLGNUVERSION}/g" README_tmp.tex
 	${SED} -i "" -E "s/LIBXSLTVERSION/${LIBXSLTVERSION}/g" README_tmp.tex
 	${SED} -i "" -E "s/JSONXSVERSION/${JSONXSVERSION}/g" README_tmp.tex
@@ -36,6 +42,14 @@ if [[ README.tex -nt ${PREFIX}/../../../README.pdf ]]; then
 	${SED} -i "" -E "s/PERMLIBVERSION/${PERMLIBVERSION}/g" README_tmp.tex 
 	${SED} -i "" -E "s/NTLVERSION/${NTLVERSION}/g" README_tmp.tex
 	${SED} -i "" -E "s/NINJAVERSION/${NINJAVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/JSONMAYBEXSVERSION/${JSONMAYBEXSVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/PERMLIBVERSION/${PERMLIBVERSION}/g" README_tmp.tex 
+	${SED} -i "" -E "s/OPENSSLVERSION/${OPENSSLVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/NTLVERSION/${NTLVERSION}/g" README_tmp.tex	
+	${SED} -i "" -E "s/MODULERUNTIMEVERSION/${MODULERUNTIMEVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/NETSSLEAYVERSION/${NETSSLEAYVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/MOZILLACAVERSION/${MOZILLACAVERSION}/g" README_tmp.tex
+	${SED} -i "" -E "s/COMMONSENSEVERSION/${COMMONSENSEVERSION}/g" README_tmp.tex
 	${SED} -i "" -E "s|POLYMAKEHOME|${POLYMAKEHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|ANTHOME|${ANTHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|MPFRHOME|${MPFRHOME}|g" README_tmp.tex
@@ -44,11 +58,17 @@ if [[ README.tex -nt ${PREFIX}/../../../README.pdf ]]; then
 	${SED} -i "" -E "s|READLINEHOME|${READLINEHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|CDDHOME|${CDDHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|GLPKHOME|${GLPKHOME}|g" README_tmp.tex
-	${SED} -i "" -E "s|4TI2HOME|${4TI2HOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|FTI2HOME|${FTI2HOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|TERMRLGNUHOME|${TERMRLGNUHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|LIBXSLTHOME|${LIBXSLTHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|JSONXSHOME|${JSONXSHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|JSONHOME|${JSONHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|OPENSSLHOME|${OPENSSLHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|JSONMAYBEXSHOME|${JSONMAYBEXSHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|NETSSLEAYHOME|${NETSSLEAYHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|MOZILLACAHOME|${MOZILLACAHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|COMMONSENSEHOME|${COMMONSENSEHOME}|g" README_tmp.tex
+	${SED} -i "" -E "s|MODULERUNTIMEHOME|${MODULERUNTIMEHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|CANARYHOME|${CANARYHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|SINGULARHOME|${SINGULARHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|PPLHOME|${PPLHOME}|g" README_tmp.tex
@@ -59,7 +79,6 @@ if [[ README.tex -nt ${PREFIX}/../../../README.pdf ]]; then
 	${SED} -i "" -E "s|PERMLIBHOME|${PERMLIBHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|NTLHOME|${NTLHOME}|g" README_tmp.tex
 	${SED} -i "" -E "s|NINJAHOME|${NINJAHOME}|g" README_tmp.tex
-	${SED} -i "" -E "s|MACVERSION|${MACVERSION}|g" README_tmp.tex
 fi;
 
 echo "compile readme"
