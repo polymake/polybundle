@@ -3,6 +3,8 @@ polybundle
 
 polymake bundle for Mac OS
 
+2020-03-03 fixes for catalina, polymake version 4.0, support for polyDB
+
 2018-03-02 changes for new polymake version 3.2, support for jupyter notebooks
 
 2017-04-05 changes for new polymake version 3.1
