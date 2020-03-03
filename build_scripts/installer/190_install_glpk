@@ -1,15 +1,15 @@
 #!/bin/bash -x
 
+DIR="$(cd "$(dirname "$0")" && pwd)"
+export SCRIPTDIR=${DIR}/..
 if [[ -z ${VAR_READ} ]]; then
-    DIR="$(cd "$(dirname "$0")" && pwd)"
-    export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
-. ${SCRIPTDIR}/functions
+. ${SCRIPTDIR}/installer/functions
 
 echo "building glpk"
-set_prefix "building glpk"
+#set_prefix "building glpk"
 ${FUNCDIR}/build.sh glpk-${GLPKVERSION} ${TAR_DIR} glpk-${GLPKVERSION} "${TMP}" build \
 								--prefix=${PREFIX} --with-gmp CFLAGS="-I${PREFIX}/include"  CXXFLAGS="-I${PREFIX}/include" LDFLAGS="-L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib"
 

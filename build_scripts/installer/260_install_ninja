@@ -1,16 +1,16 @@
 #!/bin/bash -x
 
 
+DIR="$(cd "$(dirname "$0")" && pwd)"
+export SCRIPTDIR=${DIR}/..
 if [[ -z ${VAR_READ} ]]; then
-    DIR="$(cd "$(dirname "$0")" && pwd)"
-    export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
-. ${SCRIPTDIR}/functions
+. ${SCRIPTDIR}/installer/functions
 
 echo "installing ninja"
-set_prefix "installing ninja"
+#set_prefix "installing ninja"
 cd ${PREFIX}/bin
 if [[ ! -f ninja ]]; then 
     unzip ${TAR_DIR}/ninja-mac.zip;

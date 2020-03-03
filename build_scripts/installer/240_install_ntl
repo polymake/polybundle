@@ -1,18 +1,18 @@
 #!/bin/bash -x
 
+DIR="$(cd "$(dirname "$0")" && pwd)"
+export SCRIPTDIR=${DIR}/..
 if [[ -z ${VAR_READ} ]]; then
-    DIR="$(cd "$(dirname "$0")" && pwd)"
-    export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
-. ${SCRIPTDIR}/functions
+. ${SCRIPTDIR}/installer/functions
 
 ### Caveat: The configure is not a configure but a shell script, we need to source it
 ###         as such it also does not care about extra CXXFLAGS, so we need to modify the makefile
 ### we remove unwanted static lib in the end
 echo "building ntl"
-set_prefix "building ntl"
+#set_prefix "building ntl"
 tar xfz ${TAR_DIR}/ntl-${NTLVERSION}.tar.gz -C ${TMP}
 cd ${TMP}/ntl-${NTLVERSION}/src
 PATH=${TMP}/local/bin:${PATH} . ./configure PREFIX=${PREFIX} SHARED=on NTL_GMP_LIP=on GMP_PREFIX=${PREFIX}

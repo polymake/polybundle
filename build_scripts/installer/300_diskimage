@@ -2,15 +2,15 @@
 
 
 
+DIR="$(cd "$(dirname "$0")" && pwd)"
+export SCRIPTDIR=${DIR}/..
 if [[ -z ${VAR_READ} ]]; then
-    DIR="$(cd "$(dirname "$0")" && pwd)"
-    export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
-. ${SCRIPTDIR}/functions
+. ${SCRIPTDIR}/installer/functions
 
-set_prefix "creating dmg"
+#set_prefix "creating dmg"
 
 if [ -d /Volumes/polybundle ]; then
   echo "bundle dmg is already mounted, exiting";

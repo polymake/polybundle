@@ -1,14 +1,14 @@
 #!/bin/bash -x
 
+DIR="$(cd "$(dirname "$0")" && pwd)"
+export SCRIPTDIR=${DIR}/..
 if [[ -z ${VAR_READ} ]]; then
-    DIR="$(cd "$(dirname "$0")" && pwd)"
-    export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
+. ${SCRIPTDIR}/installer/functions
 
-. ${SCRIPTDIR}/functions
-set_prefix "building perl modules"
+#set_prefix "building perl modules"
 
 CPATH_DIR=
 if [[ "$MACVERSION" == "10.15" ]]; then

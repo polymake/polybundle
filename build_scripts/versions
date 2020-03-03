@@ -26,8 +26,8 @@ export  AUTOMAKEHOME=https://www.gnu.org/software/automake/
 export  AUTOMAKENAME=automake-$AUTOMAKEVERSION.tar.gz
 export  AUTOMAKEBASE=http://ftp.gnu.org/gnu/automake
 
-export  BOOSTVERSION=1_66_0
-export  BOOSTVERSIONDIR=1.66.0
+export  BOOSTVERSION=1_72_0
+export  BOOSTVERSIONDIR=1.72.0
 export  BOOSTHOME=http://www.boost.org/
 export  BOOSTNAME=boost_$BOOSTVERSION.tar.bz2
 export  BOOSTBASE=https://dl.bintray.com/boostorg/release/$BOOSTVERSIONDIR/source

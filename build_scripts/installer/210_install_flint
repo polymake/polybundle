@@ -1,15 +1,15 @@
 #!/bin/bash -x
 
+DIR="$(cd "$(dirname "$0")" && pwd)"
+export SCRIPTDIR=${DIR}/..
 if [[ -z ${VAR_READ} ]]; then
-    DIR="$(cd "$(dirname "$0")" && pwd)"
-    export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
-. ${SCRIPTDIR}/functions
+. ${SCRIPTDIR}/installer/functions
 
 echo "building flint"
-set_prefix "building flint"
+#set_prefix "building flint"
 mkdir -p ${TMP}/flint
 cd ${TMP}/flint 
 if [ ! -d .git ]; then 

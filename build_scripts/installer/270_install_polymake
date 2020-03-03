@@ -2,15 +2,15 @@
 
 
 
+DIR="$(cd "$(dirname "$0")" && pwd)"
+export SCRIPTDIR=${DIR}/..
 if [[ -z ${VAR_READ} ]]; then
-    DIR="$(cd "$(dirname "$0")" && pwd)"
-    export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
-. ${SCRIPTDIR}/functions
+. ${SCRIPTDIR}/installer/functions
 
-set_prefix "installing polymake"
+#set_prefix "installing polymake"
 
 if [ $MACVERSION == "10.15" ]; then
   JNIHEADERS=/Library/Java/JavaVirtualMachines/jdk-12.jdk/Contents/Home/include/

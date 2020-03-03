@@ -1,18 +1,19 @@
 #!/bin/bash -x
 
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+export SCRIPTDIR=${DIR}/..
 if [[ -z ${VAR_READ} ]]; then
-    DIR="$(cd "$(dirname "$0")" && pwd)"
-    export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
-. ${SCRIPTDIR}/functions
+. ${SCRIPTDIR}/installer/functions
 
 mkdir -p ${TAR_DIR}
 mkdir -p ${TMP}
 
 echo "creating skeleton"
-set_prefix "creating skeleton"
+#set_prefix "creating skeleton"
 mkdir -p polymake.app/Contents/Resources
 mkdir -p polymake.app/Contents/Resources/config
 mkdir -p polymake.app/Contents/Resources/include

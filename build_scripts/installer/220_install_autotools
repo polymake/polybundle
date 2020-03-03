@@ -1,14 +1,14 @@
 #!/bin/bash -x
 
+DIR="$(cd "$(dirname "$0")" && pwd)"
+export SCRIPTDIR=${DIR}/..
 if [[ -z ${VAR_READ} ]]; then
-    DIR="$(cd "$(dirname "$0")" && pwd)"
-    export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
-. ${SCRIPTDIR}/functions
+. ${SCRIPTDIR}/installer/functions
 
-set_prefix "building autotools"
+#set_prefix "building autotools"
 echo "building autoconf"
 mkdir -p ${TMP}/local
 tar xfz ${TAR_DIR}/autoconf-${AUTOCONFVERSION}.tar.gz -C ${TMP}

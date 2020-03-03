@@ -2,15 +2,15 @@
 
 
 
+DIR="$(cd "$(dirname "$0")" && pwd)"
+export SCRIPTDIR=${DIR}/..
 if [[ -z ${VAR_READ} ]]; then
-    DIR="$(cd "$(dirname "$0")" && pwd)"
-    export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
-. ${SCRIPTDIR}/functions
+. ${SCRIPTDIR}/installer/functions
 
-set_prefix "fixing installation"
+#set_prefix "fixing installation"
 
 echo "fixing paths in libraries"
 ${FUNCDIR}/fix_load_dylib.sh ${PREFIX}/lib ${PREFIX} dylib

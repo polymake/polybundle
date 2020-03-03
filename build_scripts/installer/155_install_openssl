@@ -1,15 +1,15 @@
 #!/bin/bash -x
 
+DIR="$(cd "$(dirname "$0")" && pwd)"
+export SCRIPTDIR=${DIR}/..
 if [[ -z ${VAR_READ} ]]; then
-    DIR="$(cd "$(dirname "$0")" && pwd)"
-    export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
-. ${SCRIPTDIR}/functions
+. ${SCRIPTDIR}/installer/functions
 
 echo "building openssl"
-set_prefix "building openssl"
+#set_prefix "building openssl"
 ${FUNCDIR}/build.sh openssl-${OPENSSLVERSION} ${TAR_DIR} openssl-${OPENSSLVERSION} "${TMP}" build \
 								--prefix=${PREFIX}  CXXFLAGS="-I${PREFIX}/include" LDFLAGS="-L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib" darwin64-x86_64-cc
 

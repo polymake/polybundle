@@ -1,15 +1,15 @@
 #!/bin/bash -x
 
+DIR="$(cd "$(dirname "$0")" && pwd)"
+export SCRIPTDIR=${DIR}/..
 if [[ -z ${VAR_READ} ]]; then
-    DIR="$(cd "$(dirname "$0")" && pwd)"
-    export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
-. ${SCRIPTDIR}/functions
+. ${SCRIPTDIR}/installer/functions
     
 echo "building 4ti2"
-set_prefix "building 4ti2"
+#set_prefix "building 4ti2"
 tar xfz ${TAR_DIR}/${FTI2NAME} -C ${TMP}
 cd ${TMP}/4ti2-${FTI2VERSION}
 ./configure --prefix=${PREFIX} --with-glpk=${PREFIX} --with-gmp=${PREFIX}

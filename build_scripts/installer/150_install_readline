@@ -1,15 +1,15 @@
 #!/bin/bash -x
 
+DIR="$(cd "$(dirname "$0")" && pwd)"
+export SCRIPTDIR=${DIR}/..
 if [[ -z ${VAR_READ} ]]; then
-    DIR="$(cd "$(dirname "$0")" && pwd)"
-    export SCRIPTDIR=${DIR}/..
     . ${SCRIPTDIR}/versions
     . ${SCRIPTDIR}/variables
 fi
-. ${SCRIPTDIR}/functions
+. ${SCRIPTDIR}/installer/functions
 
 echo "building readline"
-set_prefix "building readline"
+#set_prefix "building readline"
 mkdir -p ${TMP}
 tar xfz ${TAR_DIR}/${READLINENAME} -C ${TMP}
 

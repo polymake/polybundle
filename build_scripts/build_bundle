@@ -8,28 +8,50 @@ if [[ -z ${VAR_READ} ]]; then
   . ${SCRIPTDIR}/versions
   . ${SCRIPTDIR}/variables
 fi
+. ${SCRIPTDIR}/installer/functions
 
 exec 3>&1 4>&2
 
-${INSTALLSCRIPTDIR}/110_create_skeleton
-${INSTALLSCRIPTDIR}/120_fetch_sources
-${INSTALLSCRIPTDIR}/130_install_ant
-${INSTALLSCRIPTDIR}/140_install_boost
-${INSTALLSCRIPTDIR}/150_install_readline
-${INSTALLSCRIPTDIR}/155_install_openssl
-${INSTALLSCRIPTDIR}/160_install_perl_modules
-${INSTALLSCRIPTDIR}/170_install_gmp
-${INSTALLSCRIPTDIR}/180_install_mpfr
-${INSTALLSCRIPTDIR}/190_install_glpk
-${INSTALLSCRIPTDIR}/200_install_4ti2
-${INSTALLSCRIPTDIR}/210_install_flint
-${INSTALLSCRIPTDIR}/220_install_autotools
-${INSTALLSCRIPTDIR}/230_install_ppl
-${INSTALLSCRIPTDIR}/240_install_ntl
-${INSTALLSCRIPTDIR}/250_install_singular
-${INSTALLSCRIPTDIR}/260_install_ninja
-${INSTALLSCRIPTDIR}/270_install_polymake
-${INSTALLSCRIPTDIR}/280_fix_installation
-${INSTALLSCRIPTDIR}/290_create_documentation
-${INSTALLSCRIPTDIR}/300_diskimage
+set_prefix "creating skeleton"
+${INSTALLSCRIPTDIR}/110_create_skeleton | tee $OUTFILE
+set_prefix "fetch sources"
+${INSTALLSCRIPTDIR}/120_fetch_sources | tee -a $OUTFILE
+set_prefix "extracting ant"
+${INSTALLSCRIPTDIR}/130_install_ant | tee -a $OUTFILE
+set_prefix "extracting boost"
+${INSTALLSCRIPTDIR}/140_install_boost 2>&1 | tee -a $OUTFILE
+set_prefix "building readline"
+${INSTALLSCRIPTDIR}/150_install_readline 2>&1 | tee -a $OUTFILE
+set_prefix "building openssl"
+${INSTALLSCRIPTDIR}/155_install_openssl 2>&1 | tee -a $OUTFILE
+set_prefix "building perl modules"
+${INSTALLSCRIPTDIR}/160_install_perl_modules 2>&1 | tee -a $OUTFILE
+set_prefix "building gmp"
+${INSTALLSCRIPTDIR}/170_install_gmp 2>&1 | tee -a $OUTFILE
+set_prefix "building mpfr"
+${INSTALLSCRIPTDIR}/180_install_mpfr 2>&1 | tee -a $OUTFILE
+set_prefix "building glpk"
+${INSTALLSCRIPTDIR}/190_install_glpk 2>&1 | tee -a $OUTFILE
+set_prefix "building 4ti2"
+${INSTALLSCRIPTDIR}/200_install_4ti2 2>&1 | tee -a $OUTFILE
+set_prefix "building flint"
+${INSTALLSCRIPTDIR}/210_install_flint 2>&1 | tee -a $OUTFILE
+set_prefix "building autotools"
+${INSTALLSCRIPTDIR}/220_install_autotools 2>&1 | tee -a $OUTFILE
+set_prefix "building ppl"
+${INSTALLSCRIPTDIR}/230_install_ppl 2>&1 | tee -a $OUTFILE
+set_prefix "building ntl"
+${INSTALLSCRIPTDIR}/240_install_ntl 2>&1 | tee -a $OUTFILE
+set_prefix "installing singular"
+${INSTALLSCRIPTDIR}/250_install_singular 2>&1 | tee -a $OUTFILE
+set_prefix "installing ninja"
+${INSTALLSCRIPTDIR}/260_install_ninja 2>&1 | tee -a $OUTFILE
+set_prefix "installing polymake"
+${INSTALLSCRIPTDIR}/270_install_polymake 2>&1 | tee -a $OUTFILE
+set_prefix "fixing installation"
+${INSTALLSCRIPTDIR}/280_fix_installation 2>&1 | tee -a $OUTFILE
+set_prefix "creating documentation"
+${INSTALLSCRIPTDIR}/290_create_documentation 2>&1 | tee -a $OUTFILE
+set_prefix "creating dmg"
+${INSTALLSCRIPTDIR}/300_diskimage 2>&1 | tee -a $OUTFILE
 
