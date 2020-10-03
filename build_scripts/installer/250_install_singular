@@ -19,10 +19,11 @@ fi
 mkdir -p ${TMP}/singular
 cd ${TMP}/singular
 if [ ! -d .git ]; then 
-    git clone https://github.com/Singular/Sources .; 
+    git clone -b spielwiese https://github.com/Singular/Sources .; 
 else 
-#    git pull; 
-echo "no pull"
+	git checkout spielwiese
+    git pull; 
+#echo "no pull"
 fi
 git archive spielwiese | bzip2 > ${TAR_DIR}/singular-github-version-${DATE}.tar.bz2
 PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} ./autogen.sh

@@ -17,6 +17,7 @@ if [ ! -d .git ]; then
 else 
     git pull;
 fi
+git checkout 272d8eb
 ${SED} -i '' -e 's/"$${OS}" = "Darwin"/"$${FLINT_SHARED}" -eq "1" -a "$${OS}" = "Darwin"/' Makefile.in
 git archive trunk | bzip2 > ${TAR_DIR}/flint-github-${DATE}.tar.bz2
 # FIXME we do not need the shared library, but 

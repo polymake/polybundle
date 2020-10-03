@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export  POLYMAKEVERSION=4.0
-export  POLYMAKELONGVERSION="Release 4.0 of January 2020"
+export  POLYMAKEVERSION=4.2
+export  POLYMAKELONGVERSION="Release 4.2 of September 2020"
 export  POLYMAKEHOME=https://github.com/polymake/polymake
 export  POLYMAKE_GIT_SERVER_RELEASE="https://github.com/polymake/polymake.git"
 export  POLYMAKE_GIT_BRANCH_RELEASE='Releases'
@@ -11,7 +11,7 @@ export  POLYMAKE_GIT_BRANCH_DEVEL='master'
 export  POLYMAKE_GIT_BRANCH=${POLYMAKE_GIT_BRANCH_RELEASE}
 export  POLYMAKE_GIT_SERVER=${POLYMAKE_GIT_SERVER_RELEASE}
 
-export  ANTVERSION=1.10.7
+export  ANTVERSION=1.10.9
 export  ANTHOME=http://ant.apache.org/
 export  ANTNAME=apache-ant-$ANTVERSION-bin.tar.bz2
 export  ANTBASE=http://artfiles.org/apache.org//ant/binaries

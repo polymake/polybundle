@@ -20,7 +20,8 @@ fi
 git archive master | bzip2 > ${TAR_DIR}/ppl-git-${DATE}.tar.bz2
 PATH=${TMP}/local/bin:${PATH} libtoolize --force
 PATH=${TMP}/local/bin:${PATH} autoreconf -fi
-./configure --prefix=${PREFIX} --with-gmp=${PREFIX} --with-mpfr=${PREFIX} LDFLAGS="-Wl,-rpath,${PREFIX}/lib" CXXFLAGS="-m64 -mcpu=generic -march=x86-64 -stdlib=libc++" CFLAGS="-m64 -mcpu=generic -march=x86-64 -stdlib=libc++" 
+export PATH=${TMP}/local/bin:${PATH} 
+./configure --prefix=${PREFIX} --enable-shared --with-gmp=${PREFIX} LDFLAGS="-Wl,-rpath,${PREFIX}/lib" CXXFLAGS="-m64 -mcpu=generic -march=x86-64 -stdlib=libc++ -std=c++11" CFLAGS="-m64 -mcpu=generic -march=x86-64 -stdlib=libc++"
 make
 ${SED} 's/demos doc m4/demos m4/g' Makefile > Makefile.tmp && mv Makefile.tmp Makefile
 
