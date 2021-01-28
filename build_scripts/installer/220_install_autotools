@@ -13,7 +13,7 @@ echo "building autoconf"
 mkdir -p ${TMP}/local
 tar xfz ${TAR_DIR}/autoconf-${AUTOCONFVERSION}.tar.gz -C ${TMP}
 cd ${TMP}/autoconf-${AUTOCONFVERSION}
-./configure --prefix=${TMP}/local
+./configure --prefix=${TMP}/local 
 make && make install
 cd ${CURDIR}
 
