@@ -20,11 +20,16 @@ mkdir -p ${TMP}/singular
 cd ${TMP}/singular
 if [ ! -d .git ]; then 
     git clone -b spielwiese https://github.com/Singular/Sources .; 
+    git fetch --all --tags
+    git checkout tags/${SINGULARTAG}
 else 
 	git checkout spielwiese
     git pull; 
-#echo "no pull"
+    git fetch --all --tags
+    git checkout tags/${SINGULARTAG}
 fi
+
+cd ${TMP}/singular
 git archive spielwiese | bzip2 > ${TAR_DIR}/singular-github-version-${DATE}.tar.bz2
 PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} ./autogen.sh
 PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} \
@@ -34,14 +39,16 @@ PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} \
 				--with-ntl=${PREFIX} \
 				--prefix=${PREFIX} \
 				--disable-gfanlib \
+                --disable-polymake \
 				--enable-arith-rings \
 				--with-flint=${PREFIX} \
 				--with-gmp=${PREFIX}  \
 				--with-mpfr=${PREFIX} \
    PERL5LIB=${PERL5LIB} \
-   CPPFLAGS="-fpic -DPIC -DLIBSINGULAR -m64 -mcpu=generic -march=x86-64 ${PYTHON_CPPFLAGS_VAR}" \
+   CXXFLAGS="-fpic -std=c++11 -DPIC -DLIBSINGULAR -m64 -mcpu=generic -march=x86-64" \
    LDFLAGS="-L${PREFIX}/lib/ -Wl,-rpath,${PREFIX}/lib" \
-   CFLAGS="-I${PREFIX}/include/ -fpic -DPIC -DLIBSINGULAR -m64 -mcpu=generic -march=x86-64 ${PYTHON_CPPFLAGS_VAR}"  \
+   CPPFLAGS="-I${PREFIX}/include/ ${PYTHON_CPPFLAGS_VAR}" \
+   CFLAGS=" -fpic -DPIC -DLIBSINGULAR -m64 -mcpu=generic -march=x86-64"  \
    CC="${CC}" CXX="${CXX}" \
     
 
