@@ -12,7 +12,7 @@ fi
 
 #set_prefix "installing polymake"
 
-if [ $MACVERSION == "10.15" ]; then
+if [ $MACVERSION == "10.14" ] || [ $MACVERSION == "10.15" ] || [ $MACVERSION == "11.1" ]; then
   JNIHEADERS=/Library/Java/JavaVirtualMachines/jdk-12.jdk/Contents/Home/include/
 fi
 
@@ -25,18 +25,23 @@ else
     git checkout -- . && git pull;
 fi
 # FIXME Option without-jreality not working?
+WITH_JAVA="--with-jni-headers=${JNIHEADERS} --with-java=/usr/bin/java --with-ant=${PREFIX}/apache-ant-${ANTVERSION}/bin/ant"
+if [ $MACVERSION == "11.1" ]; then
+	WITH_JAVA="--without-java"
+fi
 git archive ${POLYMAKE_GIT_BRANCH} | bzip2 > ${TAR_DIR}/polymake-${POLYMAKE_GIT_BRANCH_NAME}-${DATE}.tar.bz2
 export PERL5LIB=${PREFIX}/perl5:${PREFIX}/perl5/lib/perl5
 LD_LIBRARY_PATH=${PREFIX}/lib \
     PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} \
 	./configure --prefix=${PREFIX}/polymake \
-				--with-jni-headers=${JNIHEADERS} \
 				--with-boost=${PREFIX}/include/boost_${BOOSTVERSION}/ \
 				--with-gmp=${PREFIX}/ \
 				--with-ppl=${PREFIX}/  \
 				--with-mpfr=${PREFIX}/ \
-				--with-ant=${PREFIX}/apache-ant-${ANTVERSION}/bin/ant  \
-				--with-java=/usr/bin/java \
+				${WITH_JAVA} \
+				--without-bliss \
+				--without-soplex \
+				--without-scip \
 				LDFLAGS="-L${PREFIX}/lib/ "  \
 				CXXFLAGS="-fpic -DPIC -DLIBSINGULAR -m64 -march=x86-64 -I${PREFIX}/include" \
 				CFLAGS="-m64 -march=x86-64 -fpic -DPIC -DLIBSINGULAR"\
