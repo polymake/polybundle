@@ -14,11 +14,16 @@ CPATH_DIR=
 if [[ "$MACVERSION" == "10.15" ]]; then
   CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Perl/5.18/darwin-thread-multi-2level/CORE/
 fi
+if [[ "$MACVERSION" == "11.1" ]]; then
+  CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk/System/Library/Perl/5.28/darwin-thread-multi-2level/CORE
+fi
 echo "building perl modules"
 echo "building Term-Readline-Gnu"
 tar xfz ${TAR_DIR}/${TERMRLGNUNAME} -C ${TMP}
 cd ${TMP}/Term-ReadLine-Gnu-${TERMRLGNUVERSION}
 ${SED} -i '' -e "s|Config{cc}|Config{cc} -Wl,-rpath,${PREFIX}/lib|g" Makefile.PL
+curl -OL https://gist.githubusercontent.com/apaffenholz/9db9fd984d2608f235a73b37a3a09301/raw/99fd09a404ca6d7ed9e24b55d495703dcf3356cd/polymake-homebrew-term-readline-gnu.patch
+patch < polymake-homebrew-term-readline-gnu.patch
 CPATH=$CPATH_DIR ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL --includedir=${PREFIX}/include --libdir=${PREFIX}/lib
 make
 make install
@@ -56,11 +61,16 @@ cd $CURDIR
 
 tar xfz ${TAR_DIR}/${JSONMAYBEXSNAME} -C ${TMP}  
 cd ${TMP}/JSON-MaybeXS-${JSONMAYBEXSVERSION}
-ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+CPATH=$CPATH_DIR  ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
 cd $CURDIR
 
 tar xfz ${TAR_DIR}/${JSONNAME} -C ${TMP}  
 cd ${TMP}/JSON-${JSONVERSION}
+ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+cd $CURDIR
+
+tar xfz ${TAR_DIR}/${XMLSAXNAME} -C ${TMP}  
+cd ${TMP}/JSON-${XMLSAXVERSION}
 ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
 cd $CURDIR
 
