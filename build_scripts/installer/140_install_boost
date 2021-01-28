@@ -12,9 +12,9 @@ echo "extracting boost"
 #set_prefix "extracting boost"
 tar xfj ${TAR_DIR}/${BOOSTNAME} -C ${PREFIX}/include
 
-echo "removing unneeded parets of boost"
-rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSIONDIR}/doc
-rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSIONDIR}/tools
-rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSIONDIR}/status
-rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSIONDIR}/more
-rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSIONDIR}/libs
+echo "removing unneeded parts of boost"
+rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSION}/doc
+rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSION}/tools
+rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSION}/status
+rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSION}/more
+rm -rf polymake.app/Contents/Resources/include/boost_${BOOSTVERSION}/libs
