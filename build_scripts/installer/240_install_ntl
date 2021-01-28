@@ -16,7 +16,7 @@ echo "building ntl"
 tar xfz ${TAR_DIR}/ntl-${NTLVERSION}.tar.gz -C ${TMP}
 cd ${TMP}/ntl-${NTLVERSION}/src
 PATH=${TMP}/local/bin:${PATH} . ./configure PREFIX=${PREFIX} SHARED=on NTL_GMP_LIP=on GMP_PREFIX=${PREFIX}
-${SED} -i '' -e "s|CXXFLAGS=-g -O2|CXXFLAGS=-g -O2 -I\${PREFIX}/include -Wl,-rpath,\${PREFIX}/lib|g" makefile 
+${SED} -i '' -e "s|CXXFLAGS=-g -O2|CXXFLAGS=-g -O2 -std=c++11 -I${PREFIX}/include -Wl,-rpath,${PREFIX}/lib|g" makefile 
 make 
 make install
 rm ${PREFIX}/lib/libntl.a
