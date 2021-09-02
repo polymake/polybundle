@@ -12,7 +12,7 @@ fi
 
 #set_prefix "installing polymake"
 
-if [ $MACVERSION == "10.14" ] || [ $MACVERSION == "10.15" ] || [ $MACVERSION == "11.1" ]; then
+if [ $MACVERSION == "10.14" ] || [ $MACVERSION == "10.15" ] || [ $MACVERSION == "11.1" ] || [ $MACVERSION == "11.3" ]; then
   JNIHEADERS=/Library/Java/JavaVirtualMachines/jdk-12.jdk/Contents/Home/include/
 fi
 
@@ -38,9 +38,9 @@ LD_LIBRARY_PATH=${PREFIX}/lib \
 				--with-gmp=${PREFIX}/ \
 				--with-ppl=${PREFIX}/  \
 				--with-mpfr=${PREFIX}/ \
-				${WITH_JAVA} \
 				--without-bliss \
 				--without-soplex \
+                                --without-java \
 				--without-scip \
 				LDFLAGS="-L${PREFIX}/lib/ "  \
 				CXXFLAGS="-fpic -DPIC -DLIBSINGULAR -m64 -march=x86-64 -I${PREFIX}/include" \
@@ -48,13 +48,14 @@ LD_LIBRARY_PATH=${PREFIX}/lib \
 				CC="${CC}" CXX="${CXX}" \
 				PERL=${PERL}
 
+#				${WITH_JAVA} \
 #				--with-singular=${PREFIX}/ \
 
 echo "building polymake"
-PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} ninja -C build/Opt -l2
+PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} ninja -C build/Opt -j2
 
 echo "installing polymake"  
-PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} ninja -C build/Opt -l2 install
+PATH=${TMP}/local/bin:${PREFIX}/bin:${PATH} ninja -C build/Opt -j2 install
 
 ### compile documentation
 ### last line: fix symbolic links, polymake creates absolute links
