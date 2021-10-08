@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export  POLYMAKEVERSION=4.4
-export  POLYMAKELONGVERSION="Release 4.4 of May 2021"
+export  POLYMAKEVERSION=4.5
+export  POLYMAKELONGVERSION="Release 4.5 of September 2021"
 export  POLYMAKEHOME=https://github.com/polymake/polymake
 export  POLYMAKE_GIT_SERVER_RELEASE="https://github.com/polymake/polymake.git"
 export  POLYMAKE_GIT_BRANCH_RELEASE='Releases'
@@ -11,7 +11,7 @@ export  POLYMAKE_GIT_BRANCH_DEVEL='master'
 export  POLYMAKE_GIT_BRANCH=${POLYMAKE_GIT_BRANCH_RELEASE}
 export  POLYMAKE_GIT_SERVER=${POLYMAKE_GIT_SERVER_RELEASE}
 
-export  ANTVERSION=1.10.9
+export  ANTVERSION=1.10.11
 export  ANTHOME=http://ant.apache.org/
 export  ANTNAME=apache-ant-$ANTVERSION-bin.tar.bz2
 export  ANTBASE=http://artfiles.org/apache.org//ant/binaries
@@ -27,8 +27,8 @@ export  AUTOMAKEHOME=https://www.gnu.org/software/automake/
 export  AUTOMAKENAME=automake-$AUTOMAKEVERSION.tar.gz
 export  AUTOMAKEBASE=http://ftp.gnu.org/gnu/automake
 
-export  BOOSTVERSION=1_76_0
-export  BOOSTVERSIONDIR=1.76.0
+export  BOOSTVERSION=1_77_0
+export  BOOSTVERSIONDIR=1.77.0
 export  BOOSTHOME=http://www.boost.org/
 export  BOOSTNAME=boost_$BOOSTVERSION.tar.bz2
 export  BOOSTBASE=https://boostorg.jfrog.io/artifactory/main/release/$BOOSTVERSIONDIR/source/
@@ -149,10 +149,10 @@ export  NINJANAME=ninja-mac.zip
 export  NINJAHOME=https://ninja-build.org/
 export  NINJABASE=https://github.com/ninja-build/ninja/releases/download/$NINJAVERSION
 
-export  NORMALIZVERSION=3.8.0
+export  NORMALIZVERSION=3.9.1
 export  NORMALIZHOME=https://www.normaliz.uni-osnabrueck.de
 
-export  NTLVERSION=11.4.3
+export  NTLVERSION=11.5.1
 export  NTLNAME=ntl-$NTLVERSION.tar.gz
 export  NTLHOME=http://www.shoup.net/ntl/
 export  NTLBASE=http://www.shoup.net/ntl
