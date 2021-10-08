@@ -78,9 +78,9 @@ export  JSONPPHOME=https://metacpan.org/pod/JSON::PP
 export  JSONPPNAME=JSON-PP-$JSONPPVERSION.tar.gz
 export  JSONPPBASE=https://cpan.metacpan.org/authors/id/I/IS/ISHIGAKI
 
-export  XMLSAXVERSION=4.05
+export  XMLSAXVERSION=1.02
 export  XMLSAXHOME=https://metacpan.org/pod/XML::SAX
-export  XMLSAXNAME=JSON-PP-$XMLSAXVERSION.tar.gz
+export  XMLSAXNAME=XML-SAX-$XMLSAXVERSION.tar.gz
 export  XMLSAXBASE=https://cpan.metacpan.org/authors/id/G/GR/GRANTM/
 
 export  JSONMAYBEXSVERSION=1.004003
