@@ -13,7 +13,7 @@ echo "building ppl"
 cd ${TMP}; mkdir -p ppl
 cd ${TMP}/ppl 
 if [ ! -d .git ]; then 
-    git clone git://git.cs.unipr.it/ppl/ppl.git .; 
+    git clone git://git.bugseng.com/ppl/ppl.git .; 
 else 
     git pull; 
 fi
