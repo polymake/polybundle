@@ -14,6 +14,7 @@ export SED=/usr/bin/sed
 export AWK=/usr/bin/awk
 export PERL=/usr/bin/perl
 export CURL="/usr/bin/curl -O -L"
+export CURL_UNTRUSTED="/usr/bin/curl -k -O -L"
 export DATE=$(date +'%Y-%m-%d')
 
 export MACVERSION=$(sw_vers | grep -o "1[0,1][.][0-9]\+")
