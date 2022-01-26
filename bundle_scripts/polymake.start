@@ -8,7 +8,7 @@ ResourcesDir="${dir%MacOS}Resources"
 unset VERSIONER_PERL_PREFER_32_BIT
 
 export PATH=${ResourcesDir}/polymake/bin:${ResourcesDir}/bin:${ResourcesDir}/perl5/bin${PATH+:$PATH}
-export POLYMAKE_CONFIG_PATH="$ResourcesDir/config;user"
+#export POLYMAKE_CONFIG_PATH="$ResourcesDir/config;user"
 export POLYMAKE_USER_DIR="${HOME}/.polymake-macbundle"
 export POLYMAKE_BASE_PATH=$ResourcesDir/polymake
 export DYLD_LIBRARY_PATH=$ResourcesDir/lib:$ResourcesDir/include/boost_1_66_0/${DYLD_LIBRARY_PATH+:$DYLD_LIBRARY_PATH}
