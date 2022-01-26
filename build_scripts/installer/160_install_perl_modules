@@ -22,8 +22,8 @@ echo "building Term-Readline-Gnu"
 tar xfz ${TAR_DIR}/${TERMRLGNUNAME} -C ${TMP}
 cd ${TMP}/Term-ReadLine-Gnu-${TERMRLGNUVERSION}
 ${SED} -i '' -e "s|Config{cc}|Config{cc} -Wl,-rpath,${PREFIX}/lib|g" Makefile.PL
-curl -OL https://gist.githubusercontent.com/apaffenholz/9db9fd984d2608f235a73b37a3a09301/raw/99fd09a404ca6d7ed9e24b55d495703dcf3356cd/polymake-homebrew-term-readline-gnu.patch
-patch < polymake-homebrew-term-readline-gnu.patch
+#curl -OL https://gist.githubusercontent.com/apaffenholz/9db9fd984d2608f235a73b37a3a09301/raw/99fd09a404ca6d7ed9e24b55d495703dcf3356cd/polymake-homebrew-term-readline-gnu.patch
+#patch < polymake-homebrew-term-readline-gnu.patch
 CPATH=$CPATH_DIR ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL --includedir=${PREFIX}/include --libdir=${PREFIX}/lib
 make
 make install
