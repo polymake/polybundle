@@ -10,6 +10,11 @@ fi
 
 #set_prefix "building perl modules"
 
+tar xfz ${TAR_DIR}/${EXTUTILSNAME} -C ${TMP}  
+cd ${TMP}/ExtUtils-MakeMaker-${EXTUTILSVERSION}
+ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+cd $CURDIR
+
 CPATH_DIR=
 if [[ "$MACVERSION" == "10.15" ]]; then
   CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Perl/5.18/darwin-thread-multi-2level/CORE/
@@ -24,7 +29,7 @@ cd ${TMP}/Term-ReadLine-Gnu-${TERMRLGNUVERSION}
 ${SED} -i '' -e "s|Config{cc}|Config{cc} -Wl,-rpath,${PREFIX}/lib|g" Makefile.PL
 #curl -OL https://gist.githubusercontent.com/apaffenholz/9db9fd984d2608f235a73b37a3a09301/raw/99fd09a404ca6d7ed9e24b55d495703dcf3356cd/polymake-homebrew-term-readline-gnu.patch
 #patch < polymake-homebrew-term-readline-gnu.patch
-CPATH=$CPATH_DIR ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL --includedir=${PREFIX}/include --libdir=${PREFIX}/lib
+CPATH=$CPATH_DIR PERL5LIB=$PERL5LIB ARCHFLAGS='-arch x86_64' ${PERL} Makefile.PL --includedir=${PREFIX}/include --libdir=${PREFIX}/lib
 make
 make install
 cd ${CURDIR}

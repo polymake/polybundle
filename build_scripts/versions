@@ -73,6 +73,11 @@ export  JSONHOME=https://metacpan.org/pod/JSON
 export  JSONNAME=JSON-$JSONVERSION.tar.gz
 export  JSONBASE=https://cpan.metacpan.org/authors/id/I/IS/ISHIGAKI
 
+export  EXTUTILSVERSION=7.64
+export  EXTUTILSHOME=https://metacpan.org/pod/ExtUtils::MakeMaker
+export  EXTUTILSNAME=ExtUtils-MakeMaker-$EXTUTILSVERSION.tar.gz
+export  EXTUTILSBASE=https://cpan.metacpan.org/authors/id/B/BI/BINGOS/
+
 export  JSONPPVERSION=4.07
 export  JSONPPHOME=https://metacpan.org/pod/JSON::PP
 export  JSONPPNAME=JSON-PP-$JSONPPVERSION.tar.gz
