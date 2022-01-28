@@ -22,8 +22,9 @@ if [[ "$MACVERSION" == "10.15" ]]; then
   CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Perl/5.18/darwin-thread-multi-2level/CORE/
 fi
 if [[ "$MACVERSION" == "11.3" ]]; then
-  CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/System/Library/Perl/5.28/darwin-thread-multi-2level/CORE
+  CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/System/Library/Perl/5.30/darwin-thread-multi-2level/CORE
 fi
+export CPATH=$CPATH_DIR
 echo "building perl modules"
 echo "building Term-Readline-Gnu"
 tar xfz ${TAR_DIR}/${TERMRLGNUNAME} -C ${TMP}
