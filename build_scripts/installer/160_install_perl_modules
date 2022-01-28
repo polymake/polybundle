@@ -15,12 +15,14 @@ cd ${TMP}/ExtUtils-MakeMaker-${EXTUTILSVERSION}
 ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
 cd $CURDIR
 
-CPATH_DIR=
+if [[ "$MACVERSION" == "10.14" ]]; then
+  CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/System/Library/Perl/5.18/darwin-thread-multi-2level/CORE/
+fi
 if [[ "$MACVERSION" == "10.15" ]]; then
   CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Perl/5.18/darwin-thread-multi-2level/CORE/
 fi
-if [[ "$MACVERSION" == "11.1" ]]; then
-  CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk/System/Library/Perl/5.28/darwin-thread-multi-2level/CORE
+if [[ "$MACVERSION" == "11.3" ]]; then
+  CPATH_DIR=/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/System/Library/Perl/5.28/darwin-thread-multi-2level/CORE
 fi
 echo "building perl modules"
 echo "building Term-Readline-Gnu"
