@@ -63,7 +63,7 @@ cd $CURDIR
 
 tar xfz ${TAR_DIR}/${JSONXSNAME} -C ${TMP}  
 cd ${TMP}/JSON-XS-${JSONXSVERSION}
-yes | ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
+yes | CPATH=$CPATH_DIR  ARCHFLAGS='-arch x86_64' perl Makefile.PL INSTALL_BASE=${CPAN_BASE} && make && make install
 cd $CURDIR
 
 tar xfz ${TAR_DIR}/${JSONMAYBEXSNAME} -C ${TMP}  
