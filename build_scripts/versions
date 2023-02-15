@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export  POLYMAKEVERSION=4.6
-export  POLYMAKELONGVERSION="Release 4.6 of January 2022"
+export  POLYMAKEVERSION=4.9
+export  POLYMAKELONGVERSION="Release 4.9 of January 2023"
 export  POLYMAKEHOME=https://github.com/polymake/polymake
 export  POLYMAKE_GIT_SERVER_RELEASE="https://github.com/polymake/polymake.git"
 export  POLYMAKE_GIT_BRANCH_RELEASE='Releases'
@@ -11,7 +11,7 @@ export  POLYMAKE_GIT_BRANCH_DEVEL='master'
 export  POLYMAKE_GIT_BRANCH=${POLYMAKE_GIT_BRANCH_RELEASE}
 export  POLYMAKE_GIT_SERVER=${POLYMAKE_GIT_SERVER_RELEASE}
 
-export  ANTVERSION=1.10.12
+export  ANTVERSION=1.10.13
 export  ANTHOME=http://ant.apache.org/
 export  ANTNAME=apache-ant-$ANTVERSION-bin.tar.bz2
 export  ANTBASE=http://artfiles.org/apache.org//ant/binaries
@@ -27,8 +27,8 @@ export  AUTOMAKEHOME=https://www.gnu.org/software/automake/
 export  AUTOMAKENAME=automake-$AUTOMAKEVERSION.tar.gz
 export  AUTOMAKEBASE=http://ftp.gnu.org/gnu/automake
 
-export  BOOSTVERSION=1_78_0
-export  BOOSTVERSIONDIR=1.78.0
+export  BOOSTVERSION=1_81_0
+export  BOOSTVERSIONDIR=1.81.0
 export  BOOSTHOME=http://www.boost.org/
 export  BOOSTNAME=boost_$BOOSTVERSION.tar.bz2
 export  BOOSTBASE=https://boostorg.jfrog.io/artifactory/main/release/$BOOSTVERSIONDIR/source/
@@ -54,7 +54,7 @@ export  GLPKHOME=https://www.gnu.org/software/glpk/
 export  GLPKNAME=glpk-$GLPKVERSION.tar.gz
 export  GLPKBASE=http://ftp.gnu.org/gnu/glpk
 
-export  OPENSSLVERSION=1.1.1m
+export  OPENSSLVERSION=1.1.1t
 export  OPENSSLHOME=https://www.openssl.org
 export  OPENSSLNAME=openssl-$OPENSSLVERSION.tar.gz
 export  OPENSSLBASE=https://www.openssl.org/source/
@@ -68,17 +68,17 @@ export  GMPBASE=https://gmplib.org/download/gmp
 export  JREALITYVERSION=
 export  JREALITYHOME=http://www3.math.tu-berlin.de/jreality
 
-export  JSONVERSION=4.05
+export  JSONVERSION=4.10
 export  JSONHOME=https://metacpan.org/pod/JSON
 export  JSONNAME=JSON-$JSONVERSION.tar.gz
 export  JSONBASE=https://cpan.metacpan.org/authors/id/I/IS/ISHIGAKI
 
-export  EXTUTILSVERSION=7.64
+export  EXTUTILSVERSION=7.66
 export  EXTUTILSHOME=https://metacpan.org/pod/ExtUtils::MakeMaker
 export  EXTUTILSNAME=ExtUtils-MakeMaker-$EXTUTILSVERSION.tar.gz
 export  EXTUTILSBASE=https://cpan.metacpan.org/authors/id/B/BI/BINGOS/
 
-export  JSONPPVERSION=4.07
+export  JSONPPVERSION=4.16
 export  JSONPPHOME=https://metacpan.org/pod/JSON::PP
 export  JSONPPNAME=JSON-PP-$JSONPPVERSION.tar.gz
 export  JSONPPBASE=https://cpan.metacpan.org/authors/id/I/IS/ISHIGAKI
@@ -88,7 +88,7 @@ export  XMLSAXHOME=https://metacpan.org/pod/XML::SAX
 export  XMLSAXNAME=XML-SAX-$XMLSAXVERSION.tar.gz
 export  XMLSAXBASE=https://cpan.metacpan.org/authors/id/G/GR/GRANTM/
 
-export  JSONMAYBEXSVERSION=1.004003
+export  JSONMAYBEXSVERSION=1.004004
 export  JSONMAYBEXSHOME=https://metacpan.org/pod/JSON::MaybeXS
 export  JSONMAYBEXSNAME=JSON-MaybeXS-$JSONMAYBEXSVERSION.tar.gz
 export  JSONMAYBEXSBASE=https://cpan.metacpan.org/authors/id/E/ET/ETHER
@@ -108,7 +108,7 @@ export  JSONXSHOME=https://metacpan.org/pod/JSON::XS
 export  JSONXSNAME=JSON-XS-$JSONXSVERSION.tar.gz
 export  JSONXSBASE=https://cpan.metacpan.org/authors/id/M/ML/MLEHMANN
 
-export MODULERUNTIMEVERSION=0.013
+export MODULERUNTIMEVERSION=0.016
 export MODULERUNTIMEHOME=https://metacpan.org/pod/Module::Runtime
 export MODULERUNTIMENAME=Module-Runtime-$MODULERUNTIMEVERSION.tar.gz
 export MODULERUNTIMEBASE=https://cpan.metacpan.org/authors/id/Z/ZE/ZEFRAM/
@@ -123,7 +123,7 @@ export MONGODBHOME=https://metacpan.org/pod/MongoDB#VERSION
 export MONGODBNAME=MongoDB-$MONGODBVERSION.tar.gz
 export MONGODBBASE=https://cpan.metacpan.org/authors/id/M/MO/MONGODB/
 
-export MOZILLACAVERSION=20211001
+export MOZILLACAVERSION=20221114
 export MOZILLACAHOME=https://metacpan.org/pod/Mozilla::CA
 export MOZILLACANAME=Mozilla-CA-$MOZILLACAVERSION.tar.gz
 export MOZILLACABASE=https://cpan.metacpan.org/authors/id/A/AB/ABH/
@@ -133,15 +133,15 @@ export  LIBTOOLHOME=
 export  LIBTOOLNAME=libtool-$LIBTOOLVERSION.tar.gz
 export  LIBTOOLBASE=http://ftp.gnu.org/gnu/libtool
 
-export  LIBXSLTVERSION=1.99
+export  LIBXSLTVERSION=2.002001
 export  LIBXSLTHOME=http://search.cpan.org/~shlomif/XML-LibXSLT/
 export  LIBXSLTNAME=XML-LibXSLT-$LIBXSLTVERSION.tar.gz
 export  LIBXSLTBASE=http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF
 
-export  LRSVERSION=7.1
+export  LRSVERSION=7.2
 export  LRSHOME=http://cgm.cs.mcgill.ca/~avis/C/lrs.html
 
-export  MPFRVERSION=4.1.0
+export  MPFRVERSION=4.2.0
 export  MPFRHOME=http://mpfr.org/
 export  MPFRNAME=mpfr-$MPFRVERSION.tar.bz2
 export  MPFRBASE=http://www.mpfr.org/mpfr-$MPFRVERSION
@@ -149,7 +149,7 @@ export  MPFRBASE=http://www.mpfr.org/mpfr-$MPFRVERSION
 export  NAUTYVERSION=
 export  NAUTYHOME=http://cs.anu.edu.au/~bdm/nauty/
 
-export  NINJAVERSION="v1.10.2"
+export  NINJAVERSION="v1.11.1"
 export  NINJANAME=ninja-mac.zip
 export  NINJAHOME=https://ninja-build.org/
 export  NINJABASE=https://github.com/ninja-build/ninja/releases/download/$NINJAVERSION
@@ -168,7 +168,7 @@ export  PERMLIBHOME=http://www.math.uni-rostock.de/~rehn/software/permlib.html
 export  PPLVERSION=1.2
 export  PPLHOME=http://bugseng.com/products/ppl/
 
-export  READLINEVERSION=8.1
+export  READLINEVERSION=8.2
 export  READLINEHOME=http://tiswww.case.edu/php/chet/readline/rltop.html
 export  READLINENAME=readline-$READLINEVERSION.tar.gz
 export  READLINEBASE=ftp://ftp.cwru.edu/pub/bash/
@@ -177,12 +177,12 @@ export  SINGULARVERSION=4.2.0
 export  SINGULARTAG=Release-4-2-0
 export  SINGULARHOME=https://github.com/Singular/
 
-export  SVGVERSION=2.86
+export  SVGVERSION=2.87
 export  SVGHOME=http://search.cpan.org/~manwar/SVG/
 export  SVGNAME=SVG-$SVGVERSION.tar.gz
 export  SVGBASE=http://search.cpan.org/CPAN/authors/id/M/MA/MANWAR
 
-export  TERMRLGNUVERSION=1.42
+export  TERMRLGNUVERSION=1.45
 export  TERMRLGNUHOME=http://search.cpan.org/dist/Term-ReadLine-Gnu/
 export  TERMRLGNUNAME=Term-ReadLine-Gnu-$TERMRLGNUVERSION.tar.gz
 export  TERMRLGNUBASE=http://search.cpan.org/CPAN/authors/id/H/HA/HAYASHI
